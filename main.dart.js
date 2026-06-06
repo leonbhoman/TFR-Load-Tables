@@ -78587,8 +78587,7 @@ a8.a=a8.b=a8.c=""
 a8.d=!1
 if(r>20)a8.b="\u26a0\ufe0f EXCEEDS MAX 20 t/a"
 if(a7.f==="Hauler"){q=a7.Q.h(0,a7.w)
-if(q==null)q=8
-if(a7.w==="Durban Complex"&&a7.as==="36_Class"&&a9>1330)a8.b="\u26a0\ufe0f 36 CLASS DURBAN HAULER LIMIT EXCEEDED (Max 1330t)"}else{p=a7.ch?"Airbrake":"Vacuum"
+if(q==null)q=8}else{p=a7.ch?"Airbrake":"Vacuum"
 o=a7.y.h(0,a7.w)
 q=o==null?null:o.h(0,p)
 if(q==null)q=5}if(a7.ch)if(r<=7){a8.c="AB27"
