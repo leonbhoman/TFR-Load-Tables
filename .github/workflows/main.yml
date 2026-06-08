@@ -1,0 +1,27 @@
+name: Automated Flutter Web Deploy
+
+on:
+  push:
+    branches:
+      - main # Triggers whenever you save a change on your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Flutter Framework
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Compile Production Web Build
+        run: flutter build web --release --base-href "/load_tables/"
+
+      - name: Deploy Live Assets to GitHub Pages Branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages
