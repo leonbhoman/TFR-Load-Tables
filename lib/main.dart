@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
 import 'package:flutter/cupertino.dart';
 
 void main() {
@@ -36,7 +37,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.0";
+  final String currentAppVersion = "1.0.1";
   
   // Train Operational Types
   String selectedTrainType = 'Mainline';
@@ -117,9 +118,11 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     super.initState();
     loadJsonData();
 
-    // Safely check the web server for database/app updates in the background
-    WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-  }
+    // ONLY check for updates if the application is NOT running in a web browser
+    if (!kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
+    }
+    }
 
   Future<void> checkForUpdates() async {
     final String url = "https://raw.githubusercontent.com/leonbhoman/load_tables/gh-pages/assets/version.json";
@@ -421,18 +424,18 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
                     groupValue: isAirbrake,
                     selectedColor: Colors.green.shade600,
                     unselectedColor: Colors.grey.shade200,
-                    borderColor: Colors.grey.shade400,
+                    borderColor: Colors.transparent, // <-- Clears the boxy border outline!
                     pressedColor: Colors.green.shade700,
                     children: {
                       true: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 14), 
+                        padding: const EdgeInsets.symmetric(vertical: 16), 
                         child: const Text(                      
                           "AIRBRAKE",
                           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1),
                         ),
                       ),
                       false: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 14), 
+                        padding: const EdgeInsets.symmetric(vertical: 16), 
                         child: const Text(                     
                           "VACUUM",
                           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1),
