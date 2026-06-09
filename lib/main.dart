@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
-import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(const RailCalcApp());
@@ -37,7 +36,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.1";
+  final String currentAppVersion = "1.0.2";
   
   // Train Operational Types
   String selectedTrainType = 'Mainline';
@@ -415,42 +414,49 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
                 onChanged: (val) => setState(() => selectedLocoCount = val!),
               ),
               
-              // --- BRAKE SYSTEM SELECTOR (SLIDING PILL) ---
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: CupertinoSegmentedControl<bool>(
-                    groupValue: isAirbrake,
-                    selectedColor: Colors.green.shade600,
-                    unselectedColor: Colors.grey.shade200,
-                    borderColor: Colors.transparent, // <-- Clears the boxy border outline!
-                    pressedColor: Colors.green.shade700,
-                    children: {
-                      true: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16), 
-                        child: const Text(                      
-                          "AIRBRAKE",
-                          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1),
-                        ),
-                      ),
-                      false: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16), 
-                        child: const Text(                     
-                          "VACUUM",
-                          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1),
-                        ),
-                      ),
-                    },
-                    onValueChanged: (bool newValue) {
-                      setState(() {
-                        isAirbrake = newValue;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              
+// --- BRAKE SYSTEM SELECTOR (MODERN MATERIAL PILL) ---
+Padding(
+  padding: const EdgeInsets.symmetric(vertical: 16.0),
+  child: SizedBox(
+    width: double.infinity,
+    child: SegmentedButton<bool>(
+      segments: const <ButtonSegment<bool>>[
+        ButtonSegment<bool>(
+          value: true,
+          label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
+        ),
+        ButtonSegment<bool>(
+          value: false,
+          label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
+        ),
+      ],
+      selected: <bool>{isAirbrake},
+      onSelectionChanged: (Set<bool> newSelection) {
+        setState(() {
+          isAirbrake = newSelection.first;
+        });
+      },
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
+            return Colors.green.shade600;
+          }
+          return Colors.grey.shade200;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
+            return Colors.white;
+          }
+          return Colors.green.shade900;
+        }),
+        side: WidgetStateProperty.all(BorderSide.none), // Completely removes the square borders
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Perfectly rounds the corners
+        ),
+      ),
+    ),
+  ),
+),              
               const SizedBox(height: 15),
               TextField(
                 controller: tonsController, 
