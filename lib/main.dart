@@ -436,25 +436,28 @@ Padding(
           isAirbrake = newSelection.first;
         });
       },
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-          if (states.contains(WidgetState.selected)) {
-            return Colors.green.shade600;
-          }
-          return Colors.grey.shade200;
-        }),
-        foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-          if (states.contains(WidgetState.selected)) {
-            return Colors.white;
-          }
-          return Colors.green.shade900;
-        }),
-        side: WidgetStateProperty.all(BorderSide.none), // Completely removes the square borders
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Perfectly rounds the corners
-        ),
-      ),
+style: ButtonStyle(
+  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    if (states.contains(WidgetState.selected)) {
+      return Colors.green.shade700;
+    }
+    return Colors.grey.shade300;
+  }),
+  foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    if (states.contains(WidgetState.selected)) {
+      return Colors.white;
+    }
+    return Colors.green.shade900;
+  }),
+  // Explicitly force a soft pill border shape
+  shape: WidgetStateProperty.all<OutlinedBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(25.0),
     ),
+  ),
+  // Explicitly eliminate the harsh default square outline frame
+  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+),    ),
   ),
 ),              
               const SizedBox(height: 15),
