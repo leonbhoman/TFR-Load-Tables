@@ -1,486 +1,409 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
-  runApp(const RailCalcApp());
+  runApp(const LoadTableApp());
 }
 
-class RailCalcApp extends StatelessWidget {
-  const RailCalcApp({super.key});
+class LoadTableApp extends StatelessWidget {
+  const LoadTableApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('TFR Load Calculator')),
-        body: const LoadCalculatorForm(),
+      title: 'TFR Load Tables',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        useMaterial3: true,
       ),
+      home: const LoadTableScreen(),
     );
   }
 }
 
-class LoadCalculatorForm extends StatefulWidget {
-  const LoadCalculatorForm({super.key});
+class LoadTableScreen extends StatefulWidget {
+  const LoadTableScreen({super.key});
 
   @override
-  State<LoadCalculatorForm> createState() => _LoadCalculatorFormState();
+  State<LoadTableScreen> createState() => _LoadTableScreenState();
 }
 
-class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
-  final tonsController = TextEditingController();
-  final axlesController = TextEditingController();
-
-  // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.2";
-  
-  // Train Operational Types
+class _LoadTableScreenState extends State<LoadTableScreen> {
+  // State variables for user inputs
+  String selectedLocoClass = '18E_Class';
+  String selectedRoute = 'Durban Complex';
   String selectedTrainType = 'Mainline';
+  bool isAirbrake = true;
+  int numLocos = 1;
+  double tons = 0.0;
+  double axles = 0.0;
+  bool isFlyover = true; // New state variable for Hauler route selection
+
+  // State variables for calculation results
+  int calculatedLoad = 0;
+  double axleMass = 0.0;
+  String warningMessage = "";
+  int targetGC = 5;
+
+  // JSON Data storage
+  Map<String, dynamic>? jsonData;
+
+  // Static catalog mappings
+  final List<String> locoClasses = ['18E_Class', '5E1_Class'];
   final List<String> trainTypes = ['Mainline', 'Hauler', 'LightAirbrake'];
 
-  // Single Route selection string used for both Mainline pairs and Hauler complexes
-  String selectedRoute = 'Durban to Reef';
-
-  // Mainline Route Definitions
-  final List<String> mainlineRoutes = [
-    'Durban to Reef',
-    'Reef to Durban',
-    'Durban to Richards Bay',
-    'Richards Bay to Durban',
-    'Richards Bay to Golela',
-    'Golela to Richards Bay',
-    'Richards Bay to Ermelo',
-    'Ermelo to Richards Bay'
-  ];
-
-  // Embedded Mainline Route Lookup Matrix
   final Map<String, Map<String, int>> routeCatalog = {
-    'Durban to Reef': {'Airbrake': 5, 'Vacuum': 4},
-    'Reef to Durban': {'Airbrake': 7, 'Vacuum': 6},
-    'Durban to Richards Bay': {'Airbrake': 5, 'Vacuum': 5},
-    'Richards Bay to Durban': {'Airbrake': 8, 'Vacuum': 8},
-    'Richards Bay to Golela': {'Airbrake': 6, 'Vacuum': 6},
-    'Golela to Richards Bay': {'Airbrake': 9, 'Vacuum': 9},
-    'Richards Bay to Ermelo': {'Airbrake': 8, 'Vacuum': 8},
-    'Ermelo to Richards Bay': {'Airbrake': 9, 'Vacuum': 9},
+    'Durban Complex': {'Airbrake': 5, 'Vacuum': 5},
+    'North Coast': {'Airbrake': 6, 'Vacuum': 6},
+    'South Coast': {'Airbrake': 7, 'Vacuum': 7},
+    'Mainline Up': {'Airbrake': 8, 'Vacuum': 8},
   };
-
-  // Hauler Regional Definitions
-  final List<String> haulerRoutes = ['Durban Complex', 'Richards Bay Complex', 'Reef Complex'];
-
-  // Embedded Hauler Area Lookup (Maps directly to a static GC)
-  final Map<String, int> haulerCatalog = {
-    'Durban Complex': 8,
-    'Richards Bay Complex': 15,
-    'Reef Complex': 12,
-  };
-
-  // Locomotive Selection Configuration
-  String selectedLoco = '18E_Class'; // Holds the active backend JSON key value
-  
-  final List<Map<String, String>> locos = [
-    {'display': '5E1', 'value': '5E1_Class'},
-    {'display': '6E', 'value': '6E_Class'},
-    {'display': '6E1', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '16E', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '17E', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '7E', 'value': '7E_10E_Class'},       
-    {'display': '10E', 'value': '7E_10E_Class'},      
-    {'display': '8E', 'value': '8E_Class'},
-    {'display': '14E', 'value': '14E_Class'},
-    {'display': '18E', 'value': '18E_Class'},
-    {'display': '19E', 'value': '19E_Class'},
-    {'display': '33D', 'value': '33D_Class'},
-    {'display': '34D', 'value': '34D_Class'},          
-    {'display': '35D', 'value': '35D_Class'},
-    {'display': '36D', 'value': '36D_Class'},
-    {'display': '37D', 'value': '37D_Class'},
-    {'display': '38D', 'value': '38D_Class'},
-    {'display': '39-000D', 'value': '39-000D_Class'},
-    {'display': '39-200D', 'value': '39-200D_Class'},
-    {'display': '43D', 'value': '43D_Class'}, 
-  ];
-  
-  // Consist Sizing
-  int selectedLocoCount = 4; 
-  final List<int> locoCounts = [1, 2, 3, 4, 5, 6];
-
-  bool isAirbrake = true; 
-  Map<String, dynamic> locoData = {};
 
   @override
   void initState() {
     super.initState();
     loadJsonData();
-
-    // ONLY check for updates if the application is NOT running in a web browser
-    if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-    }
-    }
-
-  Future<void> checkForUpdates() async {
-    final String url = "https://raw.githubusercontent.com/leonbhoman/load_tables/gh-pages/assets/version.json";
-
-    try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
-      
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        String latestVersion = data['version'];
-        String downloadUrl = data['url'];
-
-        if (latestVersion != currentAppVersion && mounted) {
-          showUpdateDialog(latestVersion, downloadUrl);
-        }
-      }
-    } catch (e) {
-      debugPrint("Update check failed: $e");
-    }
   }
 
-  void showUpdateDialog(String newVersion, String downloadUrl) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, 
-      builder: (dialogContext) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.system_update, color: Colors.blue),
-            SizedBox(width: 10),
-            Text("Update Available"),
-          ],
-        ),
-        content: Text(
-          "A new database configuration version ($newVersion) is available. "
-          "Please download the latest version to ensure calculation parameters match field guidelines."
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("Later"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: downloadUrl));
-              
-              // This is the essential safety guard that clears the async gap errors:
-              if (mounted && dialogContext.mounted) {
-                ScaffoldMessenger.of(dialogContext).showSnackBar(
-                  const SnackBar(content: Text("Download link copied to clipboard! Open in browser.")),
-                );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text("Get Update"),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Future<void> loadJsonData() async {
-    try {
-      final String response = await rootBundle.loadString('assets/test_data.json');
-      final data = await json.decode(response);
+  // Load and parse the JSON file from assets
+Future<void> loadJsonData() async {
+      try {
+      String jsonString = await rootBundle.loadString('assets/test_data.json');
       setState(() {
-        locoData = data;
+        jsonData = json.decode(jsonString);
       });
+      calculate();
     } catch (e) {
-      // Gracefully handled during processing if data is missing
+      setState(() {
+        warningMessage = "Error loading data file.";
+      });
     }
   }
-  
-  void calculate() {
-    double tons = double.tryParse(tonsController.text) ?? 0;
-    double axles = double.tryParse(axlesController.text) ?? 1;
-    double axleMass = (axles > 0) ? tons / axles : 0;
-    
-    String blockKey = "";
-    String warning = "";
-    String isolationWarningMessage = "";
-    bool showIsolationWarning = false;
-    int targetGC = 5; 
 
-    // 1. Safety Boundary Check
-    if (axleMass > 20) {
-      warning = "⚠️ EXCEEDS MAX 20 t/a";
+  // Core Calculation Engine
+  void calculate() {
+    // Calculate raw axle mass safely
+    if (axles > 0) {
+      axleMass = tons / axles;
+    } else {
+      axleMass = 0.0;
+    }
+
+    // 1. Dynamic Brake Safety Boundary Check (18.5 t/a for Vacuum, 20 t/a for Airbrake)
+    double maxAllowedAxleMass = isAirbrake ? 20.0 : 18.5;
+
+    if (axleMass > maxAllowedAxleMass) {
+      setState(() {
+        warningMessage = "⚠️ EXCEEDS MAX ${maxAllowedAxleMass.toStringAsFixed(1)} t/a FOR ${isAirbrake ? 'AIRBRAKE' : 'VACUUM'} TRAINS";
+        calculatedLoad = 0;
+      });
+      return;
+    } else {
+      warningMessage = "";
     }
 
     // 2. Routed Matrix Lookup (Hauler vs Mainline Branches)
     if (selectedTrainType == 'Hauler') {
-      targetGC = haulerCatalog[selectedRoute] ?? 8;
+      targetGC = isFlyover ? 8 : 12;
     } else {
       String brakeKey = isAirbrake ? 'Airbrake' : 'Vacuum';
       targetGC = routeCatalog[selectedRoute]?[brakeKey] ?? 5;
     }
 
-    // 3. Determine Block Token based on Brake Type and Calculated Axle Mass (AAM)
-    if (isAirbrake) {
-      if (axleMass <= 7) { blockKey = "AB27"; }
-      else if (axleMass <= 12.5) { blockKey = "AB712"; }
-      else if (axleMass <= 17) { blockKey = "AB1217"; }
-      else if (axleMass <= 19) { blockKey = "AB1719"; }
-      else { blockKey = "AB1920"; }
-    } else {
-      if (axleMass <= 10) { blockKey = "VB10"; }
-      else { blockKey = "VB10P"; }
+    // 3. Find matching section in JSON data
+    if (jsonData == null || !jsonData!.containsKey(selectedLocoClass)) {
+      setState(() {
+        calculatedLoad = 0;
+      });
+      return;
     }
 
-    int baselineMaxTons = 0;
-    bool foundRowMatch = false;
+    var locoData = jsonData![selectedLocoClass];
+    String brakeCategory = isAirbrake
+        ? "AIRBRAKE TRAINS >12.5 to 17 t/a"
+        : "VACUUM BRAKED TRAINS > 10 TONS PER AXLE";
 
-    // 4. Extract Load Ceiling from Dataset with Auto-Isolation Guard
-    if (locoData.containsKey(selectedLoco)) {
-      var classData = locoData[selectedLoco];
-      if (classData != null && classData.containsKey(blockKey)) {
-        List<dynamic> blockDataList = classData[blockKey];
-        Map<String, dynamic>? rowMatch;
-        for (var row in blockDataList) {
-          if (row['GC'] == targetGC) {
-            rowMatch = Map<String, dynamic>.from(row);
-            break;
-          }
-        }
-        
-        if (rowMatch != null) {
-          foundRowMatch = true;
-          int requestedCount = selectedLocoCount;
-          
-          int maxAvailableCount = rowMatch.keys
-              .where((key) => int.tryParse(key) != null)
-              .map((key) => int.parse(key))
-              .fold(0, (max, element) => element > max ? element : max);
+    if (locoData is Map && locoData.containsKey(brakeCategory)) {
+      var rows = locoData[brakeCategory] as List;
+      var matchingRow = rows.firstWhere(
+        (row) => row['GC'] == targetGC,
+        orElse: () => null,
+      );
 
-          int actualLookupKey = requestedCount;
-          String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
-
-          if (requestedCount > maxAvailableCount && maxAvailableCount > 0) {
-            actualLookupKey = maxAvailableCount;
-            showIsolationWarning = true;
-            isolationWarningMessage = "No provision for more than $maxAvailableCount x $displayLocoName locos on this route. Extra locos must be isolated.";
-          }
-
-          String countKey = actualLookupKey.toString();
-          if (rowMatch.containsKey(countKey)) {
-            baselineMaxTons = rowMatch[countKey];
-          }
+      if (matchingRow != null) {
+        String consistKey = numLocos.toString();
+        if (matchingRow.containsKey(consistKey)) {
+          setState(() {
+            calculatedLoad = matchingRow[consistKey];
+          });
+          return;
         }
       }
     }
 
-    // 5. Apply Wagon Allowance
-    double estimatedWagons = axles / 4;
-    int allowanceTons = estimatedWagons.floor(); 
-    int totalAllowedTons = baselineMaxTons + allowanceTons;
-
-    // 6. Trigger Centered Pop-up Modal Window
-    if (warning.isNotEmpty || foundRowMatch) {
-      bool overWeight = warning.isEmpty && (tons > totalAllowedTons);
-      String titleText = warning.isNotEmpty ? "⚠️ SYSTEM WARNING" : (overWeight ? "❌ OVERWEIGHT" : "✅ CLEAR TO RUN");
-      Color headerColor = warning.isNotEmpty ? Colors.orange : (overWeight ? Colors.red : Colors.green);
-      
-      String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
-      
-      String dialogBody = warning.isNotEmpty 
-          ? warning 
-          : "Consist: $selectedLocoCount x $displayLocoName ($blockKey)\n"
-            "Setting: $selectedRoute (GC $targetGC)\n"
-            "Base Capacity: ${baselineMaxTons}t\n"
-            "Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)\n"
-            "Total Limit: ${totalAllowedTons}t\n"
-            "---------------------------\n"
-            "${overWeight ? "Over max limit by" : "Remaining margin"}: ${(totalAllowedTons - tons).abs().toInt()}t";
-
-      showDialog(
-        context: context,
-        barrierDismissible: false, 
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            title: Text(titleText, style: TextStyle(color: headerColor, fontWeight: FontWeight.bold)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(dialogBody, style: const TextStyle(fontSize: 16, height: 1.4)),
-                if (showIsolationWarning && warning.isEmpty) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      border: Border.all(color: Colors.amber.shade600),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      isolationWarningMessage,
-                      style: TextStyle(
-                        color: Colors.amber.shade900,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("🔍 No Entries Found"),
-            content: Text("AAM: ${axleMass.toStringAsFixed(2)} t/a\nBlock Key: $blockKey\n\nNo data matching these configuration parameters was found in the database."),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    setState(() {
+      calculatedLoad = 0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> activeRouteOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
-
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('TFR Load Tables'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedTrainType,
-                isExpanded: true,
-                items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                onChanged: (val) {
-                  setState(() {
-                    selectedTrainType = val!;
-                    List<String> nextOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
-                    selectedRoute = nextOptions.first;
-                  });
-                },
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. LOCOMOTIVE CLASS DROPDOWN
+            DropdownButtonFormField<String>(
+              initialValue: selectedLocoClass,
+              decoration: const InputDecoration(labelText: 'Locomotive Class'),
+              items: locoClasses.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value.replaceAll('_', ' ')),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedLocoClass = newValue!;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // 2. ROUTE DROPDOWN
+            DropdownButtonFormField<String>(
+              initialValue: selectedRoute,
+              decoration: const InputDecoration(labelText: 'Route'),
+              items: routeCatalog.keys.map((String route) {
+                return DropdownMenuItem<String>(
+                  value: route,
+                  child: Text(route),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedRoute = newValue!;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // DYNAMIC HAULER ROUTE TYPE TOGGLE (Flyover vs Non-Flyover)
+            if (selectedTrainType == 'Hauler') ...[
+              const Text(
+                "Hauler Route Type:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
-              const SizedBox(height: 10),
-              const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedRoute,
-                isExpanded: true,
-                items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                onChanged: (val) => setState(() => selectedRoute = val!),
-              ),
-              const SizedBox(height: 10),
-              const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedLoco,
-                isExpanded: true,
-                items: locos.map((loco) => DropdownMenuItem<String>(
-                  value: loco['value'], 
-                  child: Text(loco['display']!),
-                )).toList(),
-                onChanged: (val) => setState(() => selectedLoco = val!),
-              ),
-              const SizedBox(height: 10),
-              const Text("Number of Locos in Consist:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<int>(
-                value: selectedLocoCount,
-                isExpanded: true,
-                items: locoCounts.map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
-                  );
-                }).toList(),
-                onChanged: (val) => setState(() => selectedLocoCount = val!),
-              ),
-              
-// --- BRAKE SYSTEM SELECTOR (MODERN MATERIAL PILL) ---
-Padding(
-  padding: const EdgeInsets.symmetric(vertical: 16.0),
-  child: SizedBox(
-    width: double.infinity,
-    child: SegmentedButton<bool>(
-      segments: const <ButtonSegment<bool>>[
-        ButtonSegment<bool>(
-          value: true,
-          label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
-        ),
-        ButtonSegment<bool>(
-          value: false,
-          label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
-        ),
-      ],
-      selected: <bool>{isAirbrake},
-      onSelectionChanged: (Set<bool> newSelection) {
-        setState(() {
-          isAirbrake = newSelection.first;
-        });
-      },
-style: ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.selected)) {
-      return Colors.green.shade700;
-    }
-    return Colors.grey.shade300;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.selected)) {
-      return Colors.white;
-    }
-    return Colors.green.shade900;
-  }),
-  // Explicitly force a soft pill border shape
-  shape: WidgetStateProperty.all<OutlinedBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(25.0),
-    ),
-  ),
-  // Explicitly eliminate the harsh default square outline frame
-  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-),    ),
-  ),
-),              
-              const SizedBox(height: 15),
-              TextField(
-                controller: tonsController, 
-                keyboardType: TextInputType.number, 
-                decoration: const InputDecoration(labelText: "Actual Total Tons")
-              ),
-              TextField(
-                controller: axlesController, 
-                keyboardType: TextInputType.number, 
-                decoration: const InputDecoration(labelText: "Total Axles")
-              ),
-              const SizedBox(height: 30),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(minimumSize: const Size(200, 50)),
-                  onPressed: calculate, 
-                  child: const Text("Verify Load"),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: ToggleButtons(
+                  isSelected: [isFlyover, !isFlyover],
+                  onPressed: (int index) {
+                    setState(() {
+                      isFlyover = index == 0;
+                      calculate();
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(25.0),
+                  fillColor: Colors.green.shade700,
+                  selectedColor: Colors.white,
+                  color: Colors.green.shade900,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text('FLYOVER (GC 8)', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text('NON-FLYOVER (GC 12)', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(height: 16),
             ],
-          ),
+
+            // 3. TRAIN OPERATION MODE
+            DropdownButtonFormField<String>(
+              initialValue: selectedTrainType,
+              decoration: const InputDecoration(labelText: 'Train Operation Mode'),
+              items: trainTypes.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedTrainType = newValue!;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // 4. AIRBRAKE VS VACUUM PILL SLIDER
+            const Text(
+              "Brake System:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ToggleButtons(
+                isSelected: [isAirbrake, !isAirbrake],
+                onPressed: (int index) {
+                  setState(() {
+                    isAirbrake = index == 0;
+                    calculate();
+                  });
+                },
+                borderRadius: BorderRadius.circular(25.0),
+                fillColor: Colors.green.shade700,
+                selectedColor: Colors.white,
+                color: Colors.green.shade900,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // 5. NUMBER OF LOCOS IN CONSIST
+            DropdownButtonFormField<int>(
+              initialValue: numLocos,
+              decoration: const InputDecoration(labelText: 'Number of Locos in Consist'),
+              items: [1, 2, 3, 4].map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('$value'),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                setState(() {
+                  numLocos = newValue!;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // 6. TOTAL TONS INPUT
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Total Tons',
+                hintText: 'Enter total train mass',
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  tons = double.tryParse(value) ?? 0.0;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // 7. TOTAL AXLES INPUT
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Total Axles',
+                hintText: 'Enter total number of axles',
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  axles = double.tryParse(value) ?? 0.0;
+                  calculate();
+                });
+              },
+            ),
+            const SizedBox(height: 24),
+
+            // WARNING ALERT DISPLAY
+            if (warningMessage.isNotEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade400),
+                ),
+                child: Text(
+                  warningMessage,
+                  style: TextStyle(color: Colors.red.shade900, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+            // OUTPUT INFOPANEL CARDS
+            Card(
+              elevation: 4,
+              color: Colors.green.shade50,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Target Route Gradient:', style: TextStyle(fontSize: 16)),
+                        Text('GC $targetGC', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Average Axle Mass:', style: TextStyle(fontSize: 16)),
+                        Text('${axleMass.toStringAsFixed(2)} t/a', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // VERIFY LOAD RESULT BOX
+            SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: warningMessage.isNotEmpty ? Colors.grey : Colors.green.shade800,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: warningMessage.isNotEmpty ? null : () {},
+                child: Text(
+                  calculatedLoad > 0 
+                      ? 'MAX AUTHORIZED LOAD: $calculatedLoad TONS'
+                      : 'CALCULATE LOAD LIMIT',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
