@@ -368,8 +368,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   Widget build(BuildContext context) {
     List<String> activeRouteOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
 
-    return Scaffold(
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -503,7 +502,7 @@ style: ButtonStyle(
             ],
           ),
         ),
-      ),
+      
     );
   }
 }
