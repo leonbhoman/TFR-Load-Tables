@@ -15,9 +15,16 @@ class RailCalcApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(useMaterial3: true,
+        colorSchemeSeed: Colors.green,),
       home: Scaffold(
-        appBar: AppBar(title: const Text('TFR Load Calculator')),
+        appBar: AppBar(title: const Text(
+            'TFR Load Calculator', 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+          ),
+          backgroundColor: Colors.green.shade700,
+          elevation: 2,
+        ),
         body: const LoadCalculatorForm(),
       ),
     );
@@ -474,9 +481,23 @@ style: ButtonStyle(
               const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(minimumSize: const Size(200, 50)),
-                  onPressed: calculate, 
-                  child: const Text("Verify Load"),
+                style: ButtonStyle(
+                  minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+                    if (states.contains(WidgetState.pressed)) return Colors.green.shade900;
+                    return Colors.green.shade700;
+                  }),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                  shape: WidgetStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
+                  ),
+                  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                  elevation: WidgetStateProperty.all<double>(3),
+                ),
+                onPressed: calculate, 
+                child: const Text(
+                  "VERIFY LOAD", 
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),)
                 ),
               ),
             ],
