@@ -119,16 +119,16 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   bool isAirbrake = true; 
   Map<String, dynamic> locoData = {};
 
-  @override
-  void initState() {
-    super.initState();
-    loadJsonData();
+    @override
+    void initState() {
+      super.initState();
+      loadJsonData();
 
-    // ONLY check for updates if the application is NOT running in a web browser
-    if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-    }
-    }
+      // ONLY check for updates if the application is NOT running in a web browser
+      if (!kIsWeb) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
+      }
+      }
 
   Future<void> checkForUpdates() async {
     final String url = "https://raw.githubusercontent.com/leonbhoman/load_tables/gh-pages/assets/version.json";
