@@ -17,8 +17,7 @@ jobs:
           channel: 'stable'
 
       - name: Compile Production Web Build
-        run: flutter build web --release --pwa-strategy=none
-
+        run: flutter build web --release --base-href "/TFR-Load-Tables/" --pwa-strategy=none
       - name: Deploy Live Assets to GitHub Pages Branch
         uses: peaceiris/actions-gh-pages@v3
         with:
