@@ -44,7 +44,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.6";
+  final String currentAppVersion = "1.0.5";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
