@@ -22,7 +22,7 @@ class RailCalcApp extends StatelessWidget {
             'TFR Load Calculator', 
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
           ),
-          backgroundColor: Colors.green.shade700,
+          backgroundColor: const Color.fromARGB(255, 223, 1, 1),
           elevation: 2,
         ),
         body: const LoadCalculatorForm(),
