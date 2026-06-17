@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
+import 'package:url_launcher/url_launcher.dart'; // <-- Add this import at the very top of main.dart
 
 void main() {
   runApp(const RailCalcApp());
@@ -44,6 +45,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
 
   // The version hardcoded into this specific build string
   final String currentAppVersion = "1.0.6";
+  // Track if the user clicked "Later" so we don't spam them during this app session
+  bool _hasDeferredUpdate = false;
   
   // Train Operational Types
   String selectedTrainType = 'Mainline';
@@ -131,7 +134,9 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       }
 
   Future<void> checkForUpdates() async {
-    final String url = "https://raw.githubusercontent.com/leonbhoman/load_tables/gh-pages/assets/version.json";
+    if (_hasDeferredUpdate) return; // Silent exit if they already clicked Later
+          // FIXED: Pointing to the exact repository name casing
+      final String url = "https://raw.githubusercontent.com/leonbhoman/TFR-Load-Tables/gh-pages/assets/version.json";
 
     try {
       final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
@@ -166,20 +171,38 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
           "A new database configuration version ($newVersion) is available. "
           "Please download the latest version to ensure calculation parameters match field guidelines."
         ),
-        actions: [
+actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
+            onPressed: () {
+              setState(() {
+                _hasDeferredUpdate = true; // Block dialog until app restarts
+              });
+              Navigator.pop(dialogContext);
+            },
             child: const Text("Later"),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade700,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: downloadUrl));
+              final Uri downloadUri = Uri.parse(downloadUrl);
               
-              // This is the essential safety guard that clears the async gap errors:
+              // Try launching the native browser directly
+              if (await canLaunchUrl(downloadUri)) {
+                await launchUrl(downloadUri, mode: LaunchMode.externalApplication);
+              } else {
+                // Fallback plan if browser routing fails: copy to clipboard
+                await Clipboard.setData(ClipboardData(text: downloadUrl));
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Could not launch browser. Download link copied to clipboard!")),
+                  );
+                }
+              }
+              
               if (mounted && dialogContext.mounted) {
-                ScaffoldMessenger.of(dialogContext).showSnackBar(
-                  const SnackBar(content: Text("Download link copied to clipboard! Open in browser.")),
-                );
                 Navigator.pop(dialogContext);
               }
             },
