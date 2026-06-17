@@ -477,32 +477,32 @@ style: ButtonStyle(
                 keyboardType: TextInputType.number, 
                 decoration: const InputDecoration(labelText: "Total Axles")
               ),
-              const SizedBox(height: 30),
+const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
-                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                    if (states.contains(WidgetState.pressed)) return Colors.green.shade900;
-                    return Colors.green.shade700;
-                  }),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                  shape: WidgetStateProperty.all<OutlinedBorder>(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
+                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+                      if (states.contains(WidgetState.pressed)) return Colors.green.shade900;
+                      return Colors.green.shade700;
+                    }),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    shape: WidgetStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
+                    ),
+                    side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                    elevation: WidgetStateProperty.all<double>(3),
                   ),
-                  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                  elevation: WidgetStateProperty.all<double>(3),
-                ),
-                onPressed: calculate, 
-                child: const Text(
-                  "VERIFY LOAD", 
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),)
+                  onPressed: calculate, 
+                  child: const Text(
+                    "VERIFY LOAD", 
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      
-    );
+    ); // <-- Balanced correctly here
   }
 }
