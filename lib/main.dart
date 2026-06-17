@@ -16,13 +16,13 @@ class RailCalcApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true,
-        colorSchemeSeed: Colors.green,),
+        colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),),
       home: Scaffold(
         appBar: AppBar(title: const Text(
             'TFR Load Calculator', 
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
           ),
-          backgroundColor: const Color.fromARGB(255, 223, 1, 1),
+          backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
           elevation: 2,
         ),
         body: const LoadCalculatorForm(),
