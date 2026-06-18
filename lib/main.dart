@@ -44,7 +44,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.7";
+  final String currentAppVersion = "1.0.8";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
@@ -125,27 +125,29 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     @override
     void initState() {
       super.initState();
-      loadJsonData();
-
-      // ONLY check for updates if the application is NOT running in a web browser
+    loadJsonData().then((_) { 
       if (!kIsWeb) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
+    }
+    });
+      // ONLY check for updates if the application is NOT running in a web browser
+      //if (!kIsWeb) {
+      //  WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
+      //}
       }
 
   Future<void> checkForUpdates() async {
     if (_hasDeferredUpdate) return; // Silent exit if they already clicked Later
           // FIXED: Pointing to the exact repository name casing
-      final String url = "https://raw.githubusercontent.com/leonbhoman/TFR-Load-Tables/gh-pages/assets/version.json";
+      final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
 
     try {
       final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
       
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        String latestVersion = data['version'];
-        String downloadUrl = data['url'];
-
+        String latestVersion = data['version'] ?? '1.0.0';
+        String downloadUrl = data['url'] ?? 'https://github.com/leonbhoman/TFR-Load-Tables';
         if (latestVersion != currentAppVersion && mounted) {
           showUpdateDialog(latestVersion, downloadUrl);
         }
