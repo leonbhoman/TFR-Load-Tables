@@ -131,9 +131,9 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     }
     });
       // ONLY check for updates if the application is NOT running in a web browser
-      if (!kIsWeb) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-      }
+      //if (!kIsWeb) {
+      //  WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
+      //}
       }
 
   Future<void> checkForUpdates() async {
@@ -146,8 +146,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        String latestVersion = data['version'];
-        String downloadUrl = data['url'];
+        String latestVersion = data['version'] ?? '1.0.0';
+        String downloadUrl = data['url'] ?? 'https://github.com/leonbhoman/TFR-Load-Tables';
 
         if (latestVersion != currentAppVersion && mounted) {
           showUpdateDialog(latestVersion, downloadUrl);
