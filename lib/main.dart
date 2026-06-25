@@ -44,7 +44,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.5";
+  final String currentAppVersion = "1.0.10";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
@@ -239,10 +239,27 @@ actions: [
     bool showIsolationWarning = false;
     int targetGC = 5; 
 
-    // 1. Safety Boundary Check
-    if (axleMass > 20) {
-      warning = "⚠️ EXCEEDS MAX 20 t/a";
+    // 1. Dynamic Safety Boundary Check based on Brake Type
+    double maxAllowedAxleMass = isAirbrake ? 20.0 : 18.5;
+    int maxAllowedAxles = isAirbrake ? 200 : 160;
+    int maxAllowedWagons = isAirbrake ? 50 : 40;
+    String brakeName = isAirbrake ? "AIRBRAKE" : "VACUUM";
+
+    // Check Axle Mass Threshold
+    if (axleMass > maxAllowedAxleMass) {
+      warning = "⚠️ EXCEEDS MAX $maxAllowedAxleMass t/a FOR $brakeName";
     }
+
+    // Check Consist Length / Axle Count Threshold
+    double estimatedWagons = axles / 4;
+    if (axles > maxAllowedAxles || estimatedWagons > maxAllowedWagons) {
+      if (warning.isNotEmpty) warning += "\n";
+      warning += "⚠️ $brakeName LIMIT EXCEEDED:\nMax $maxAllowedWagons Wagons / $maxAllowedAxles Axles allowed.";
+    }
+    // 1. Safety Boundary Check
+    // if (axleMass > 20) {
+    //  warning = "⚠️ EXCEEDS MAX 20 t/a";
+    // }
 
     // 2. Routed Matrix Lookup (Hauler vs Mainline Branches)
     if (selectedTrainType == 'Hauler') {
@@ -307,8 +324,8 @@ actions: [
     }
 
     // 5. Apply Wagon Allowance
-    double estimatedWagons = axles / 4;
-    int allowanceTons = estimatedWagons.floor(); 
+    double safetyWagonsCheck = axles / 4;
+    int allowanceTons = safetyWagonsCheck.floor(); 
     int totalAllowedTons = baselineMaxTons + allowanceTons;
 
     // 6. Trigger Centered Pop-up Modal Window
