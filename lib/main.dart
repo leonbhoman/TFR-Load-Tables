@@ -379,11 +379,22 @@ actions: [
                 ],
               ],
             ),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
+            actions: [Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all<Size>(const Size(160, 48)),
+                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                    elevation: WidgetStateProperty.all<double>(2),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 1.1)),
+                ),
               ),
+            ),
             ],
           );
         },
