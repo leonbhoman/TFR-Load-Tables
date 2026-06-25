@@ -25225,7 +25225,7 @@ $S:2}
 A.alR.prototype={
 $1(a){var s=A.cP().b
 s=s==null?null:s.canvasKitBaseUrl
-return(s==null?"https://www.gstatic.com/flutter-canvaskit/77e2e94772b6eb43759e34ed1ad7da4674e19cab/":s)+a},
+return(s==null?"https://www.gstatic.com/flutter-canvaskit/a10d8ac38de835021c8d2f920dbf50a920ccc030/":s)+a},
 $S:202}
 A.FZ.prototype={
 SD(){var s=this.a6E(),r=$.b6.bj().ImageFilter.MakeColorFilter(s,null)
@@ -79533,65 +79533,73 @@ break
 case 5:return A.P(null,r)
 case 1:return A.O(p.at(-1),r)}})
 return A.Q($async$tj,r)},
-adQ(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7=this,a8={},a9=A.oq(a7.d.a.a)
-if(a9==null)a9=0
-s=A.oq(a7.e.a.a)
+adQ(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2=this,b3={},b4=A.oq(b2.d.a.a)
+if(b4==null)b4=0
+s=A.oq(b2.e.a.a)
 if(s==null)s=1
-r=s>0?a9/s:0
-a8.a=a8.b=a8.c=""
-a8.d=!1
-if(r>20)a8.b="\u26a0\ufe0f EXCEEDS MAX 20 t/a"
-if(a7.w==="Hauler"){q=a7.at.h(0,a7.y)
-if(q==null)q=8}else{p=a7.cx?"Airbrake":"Vacuum"
-o=a7.Q.h(0,a7.y)
-q=o==null?null:o.h(0,p)
-if(q==null)q=5}if(a7.cx)if(r<=7){a8.c="AB27"
-o="AB27"}else if(r<=12.5){a8.c="AB712"
-o="AB712"}else if(r<=17){a8.c="AB1217"
-o="AB1217"}else if(r<=19){a8.c="AB1719"
-o="AB1719"}else{a8.c="AB1920"
-o="AB1920"}else if(r<=10){a8.c="VB10"
-o="VB10"}else{a8.c="VB10P"
-o="VB10P"}n=0
-m=!1
-if(a7.cy.ai(a7.ax)){l=a7.cy.h(0,a7.ax)
-if(l!=null&&l.ai(o)){o=J.bu(J.j9(l,o))
-for(;;){if(!o.u()){k=null
-break}j=o.gM()
-if(J.d(J.j9(j,"GC"),q)){k=A.asU(j,t.N,t.z)
-break}}m=k!=null
-if(m){i=a7.ch
-o=A.l(k).i("b3<1>")
-h=new A.dL(new A.aN(new A.b3(k,o),new A.agP(),o.i("aN<x.E>")),new A.agQ(),o.i("dL<x.E,v>")).t0(0,0,new A.agR())
-o=B.b.rZ(a7.ay,new A.agS(a7)).h(0,"display")
-o.toString
-if(i>h&&h>0){a8.d=!0
-a8.a="No provision for more than "+h+" x "+o+" locos on this route. Extra locos must be isolated."
-g=h}else g=i
-f=B.j.k(g)
-n=k.ai(f)?k.h(0,f):0}}}e=s/4
-d=B.c.h8(e)
-c=n+d
-o=a8.b.length===0
-if(!o||m){b=o&&a9>c
-o=!o
-if(o)a="\u26a0\ufe0f SYSTEM WARNING"
-else a=b?"\u274c OVERWEIGHT":"\u2705 CLEAR TO RUN"
-if(o)a0=B.J_
-else a0=b?B.J0:B.J1
-o=B.b.rZ(a7.ay,new A.agT(a7)).h(0,"display")
-o.toString
-a1=a8.b
-if(!(a1.length!==0)){a2=a7.ch
-a3=a8.c
-a4=a7.y
-a5=B.c.a2(e,0)
-a6=b?"Over max limit by":"Remaining margin"
-a1="Consist: "+a2+" x "+o+" ("+a3+")\nSetting: "+a4+" (GC "+q+")\nBase Capacity: "+n+"t\nWagon Allowance: +"+d+"t ("+a5+" wagons)\nTotal Limit: "+c+"t\n---------------------------\n"+a6+": "+B.c.fN(Math.abs(c-a9))+"t"}o=a7.c
-o.toString
-A.axh(!1,new A.agU(a8,a,a0,a1),o,t.z)}else{o=a7.c
-o.toString
-A.axh(!0,new A.agV(a8,r),o,t.z)}},
+r=s>0?b4/s:0
+b3.a=b3.b=b3.c=""
+b3.d=!1
+q=b2.cx
+p=q?20:18.5
+o=q?200:160
+n=q?50:40
+m=q?"AIRBRAKE":"VACUUM"
+if(r>p){l="\u26a0\ufe0f EXCEEDS MAX "+A.m(p)+" t/a FOR "+m
+b3.b=l
+k=l}else k=""
+j=s/4
+if(s>o||j>n){if(k.length!==0)k=b3.b=k+"\n"
+b3.b=k+("\u26a0\ufe0f "+m+" LIMIT EXCEEDED:\nMax "+n+" Wagons / "+o+" Axles allowed.")}if(b2.w==="Hauler"){i=b2.at.h(0,b2.y)
+if(i==null)i=8}else{h=q?"Airbrake":"Vacuum"
+q=b2.Q.h(0,b2.y)
+i=q==null?null:q.h(0,h)
+if(i==null)i=5}if(b2.cx)if(r<=7){b3.c="AB27"
+q="AB27"}else if(r<=12.5){b3.c="AB712"
+q="AB712"}else if(r<=17){b3.c="AB1217"
+q="AB1217"}else if(r<=19){b3.c="AB1719"
+q="AB1719"}else{b3.c="AB1920"
+q="AB1920"}else if(r<=10){b3.c="VB10"
+q="VB10"}else{b3.c="VB10P"
+q="VB10P"}g=0
+f=!1
+if(b2.cy.ai(b2.ax)){e=b2.cy.h(0,b2.ax)
+if(e!=null&&e.ai(q)){q=J.bu(J.j9(e,q))
+for(;;){if(!q.u()){d=null
+break}c=q.gM()
+if(J.d(J.j9(c,"GC"),i)){d=A.asU(c,t.N,t.z)
+break}}f=d!=null
+if(f){b=b2.ch
+q=A.l(d).i("b3<1>")
+a=new A.dL(new A.aN(new A.b3(d,q),new A.agP(),q.i("aN<x.E>")),new A.agQ(),q.i("dL<x.E,v>")).t0(0,0,new A.agR())
+q=B.b.rZ(b2.ay,new A.agS(b2)).h(0,"display")
+q.toString
+if(b>a&&a>0){b3.d=!0
+b3.a="No provision for more than "+a+" x "+q+" locos on this route. Extra locos must be isolated."
+a0=a}else a0=b
+a1=B.j.k(a0)
+g=d.ai(a1)?d.h(0,a1):0}}}a2=B.c.h8(j)
+a3=g+a2
+q=b3.b.length===0
+if(!q||f){a4=q&&b4>a3
+q=!q
+if(q)a5="\u26a0\ufe0f SYSTEM WARNING"
+else a5=a4?"\u274c OVERWEIGHT":"\u2705 CLEAR TO RUN"
+if(q)a6=B.J_
+else a6=a4?B.J0:B.J1
+q=B.b.rZ(b2.ay,new A.agT(b2)).h(0,"display")
+q.toString
+a7=b3.b
+if(!(a7.length!==0)){k=b2.ch
+a8=b3.c
+a9=b2.y
+b0=B.c.a2(j,0)
+b1=a4?"Over max limit by":"Remaining margin"
+a7="Consist: "+k+" x "+q+" ("+a8+")\nSetting: "+a9+" (GC "+i+")\nBase Capacity: "+g+"t\nWagon Allowance: +"+a2+"t ("+b0+" wagons)\nTotal Limit: "+a3+"t\n---------------------------\n"+b1+": "+B.c.fN(Math.abs(a3-b4))+"t"}q=b2.c
+q.toString
+A.axh(!1,new A.agU(b3,a5,a6,a7),q,t.z)}else{q=b2.c
+q.toString
+A.axh(!0,new A.agV(b3,r),q,t.z)}},
 K(a){var s,r,q,p,o,n=this,m=null,l=n.w,k=l==="Hauler"?n.as:n.z,j=n.x,i=A.Y(j).i("a3<1,ey<D>>")
 j=A.Z(new A.a3(j,new A.agB(),i),i.i("ak.E"))
 i=t.N
