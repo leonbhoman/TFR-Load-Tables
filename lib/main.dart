@@ -101,9 +101,9 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     {'display': '7E', 'value': '7E_10E_Class'},       
     {'display': '10E', 'value': '7E_10E_Class'},      
     {'display': '8E', 'value': '8E_Class'},
-    {'display': '14E', 'value': '14E_Class'},
+    // {'display': '14E', 'value': '14E_Class'},
     {'display': '18E', 'value': '18E_Class'},
-    {'display': '19E', 'value': '19E_Class'},
+    // {'display': '19E', 'value': '19E_Class'},
     {'display': '33D', 'value': '33D_Class'},
     {'display': '34D', 'value': '34D_Class'},          
     {'display': '35D', 'value': '35D_Class'},
@@ -424,13 +424,12 @@ actions: [
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Triggers wide desktop grid mode if the window width is over 600 pixels
         bool isWideScreen = constraints.maxWidth > 600;
 
         return Form( // Invisible wrapper enabling clean web keyboard submission
           child: Column(
             children: [
-              // Scrollable Input Area
+              // Scrollable Input Core Engine Area
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24.0),
@@ -528,27 +527,40 @@ actions: [
                             ),
                           ],
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 20),
 
-                        // GROUP 3: Brake Type (Narrow width matches the action button)
-                        Center(
-                          child: SizedBox(
-                            width: 240, 
-                            child: SegmentedButton<bool>(
-                              segments: const <ButtonSegment<bool>>[
-                                ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.0))),
-                                ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.0))),
-                              ],
-                              selected: <bool>{isAirbrake},
-                              onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
-                                foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
-                                shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                                side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                        // GROUP 3: Brake Type Row (Left Column Label | Right Column Slider)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft, // Left aligns slider in its column
+                                child: SizedBox(
+                                  width: 480, // Expanded width ensures active checkmark and text fit perfectly on one line
+                                  child: SegmentedButton<bool>(
+                                    showSelectedIcon: true, // Enabled checkmark to ensure clear selected distinction
+                                    segments: const <ButtonSegment<bool>>[
+                                      ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8))),
+                                      ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8))),
+                                    ],
+                                    selected: <bool>{isAirbrake},
+                                    onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
+                                      foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
+                                      shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                                      side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 24),
 
@@ -560,7 +572,7 @@ actions: [
                               child: TextField(
                                 controller: tonsController, 
                                 keyboardType: TextInputType.number, 
-                                onSubmitted: (_) => calculate(), // Fire calculation on Enter
+                                onSubmitted: (_) => calculate(), // Triggers verification on web Enter key
                                 decoration: const InputDecoration(labelText: "Actual Total Tons", border: OutlineInputBorder())
                               ),
                             ),
@@ -569,7 +581,7 @@ actions: [
                               child: TextField(
                                 controller: axlesController, 
                                 keyboardType: TextInputType.number, 
-                                onSubmitted: (_) => calculate(), // Fire calculation on Enter
+                                onSubmitted: (_) => calculate(), // Triggers verification on web Enter key
                                 decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder())
                               ),
                             ),
@@ -625,10 +637,13 @@ actions: [
                           onChanged: (val) => setState(() => selectedLocoCount = val!),
                         ),
                         const SizedBox(height: 16),
+                        const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 6),
                         Center(
                           child: SizedBox(
-                            width: 440,
+                            width: double.infinity,
                             child: SegmentedButton<bool>(
+                              showSelectedIcon: true,
                               segments: const <ButtonSegment<bool>>[
                                 ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
                                 ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold))),
