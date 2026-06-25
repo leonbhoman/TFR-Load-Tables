@@ -1,9 +1,9 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+// import 'dart:convert';
+// import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
-import 'package:url_launcher/url_launcher.dart'; // <-- Add this import at the very top of main.dart
+// import 'package:http/http.dart' as http;
+// import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
+// import 'package:url_launcher/url_launcher.dart'; // <-- Add this import at the very top of main.dart
 
 void main() {
   runApp(const RailCalcApp());
@@ -40,15 +40,12 @@ class LoadCalculatorForm extends StatefulWidget {
 }
 
 class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
-  // Input Controllers
   final TextEditingController tonsController = TextEditingController();
   final TextEditingController axlesController = TextEditingController();
-  final TextEditingController wagonsController = TextEditingController();
+  final TextEditingController wagonsController = TextEditingController(); // Added
 
-  // Flag to prevent infinite feedback loops when fields update each other
-  bool _isUpdatingAxlesOrWagons = false;
+  bool _isUpdatingAxlesOrWagons = false; // Added to prevent feedback loops
 
-  // Selected State Form Values
   String selectedTrainType = 'Mainline';
   String selectedRoute = 'Dbn_Sth_Loop';
   String selectedLoco = '18E_Class';
@@ -58,8 +55,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   @override
   void initState() {
     super.initState();
-    
-    // Set up bidirectional listeners to sync Axles and Wagons automatically
+    // Bidirectional listeners that sync the fields automatically
     axlesController.addListener(_onAxlesChanged);
     wagonsController.addListener(_onWagonsChanged);
   }
@@ -77,7 +73,6 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   void _onAxlesChanged() {
     if (_isUpdatingAxlesOrWagons) return;
     _isUpdatingAxlesOrWagons = true;
-
     final axlesText = axlesController.text;
     if (axlesText.isEmpty) {
       wagonsController.text = "";
@@ -94,7 +89,6 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   void _onWagonsChanged() {
     if (_isUpdatingAxlesOrWagons) return;
     _isUpdatingAxlesOrWagons = true;
-
     final wagonsText = wagonsController.text;
     if (wagonsText.isEmpty) {
       axlesController.text = "";
@@ -107,33 +101,23 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     }
     _isUpdatingAxlesOrWagons = false;
   }
-
-  void calculate() {
-    // 1. MANDATORY FIELDS VALIDATION (Checks all 3 fields)
+void calculate() {
+    // 1. MANDATORY FIELDS VALIDATION
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty) {
       showDialog(
         context: context,
-        barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: const Text("⚠️ Missing Information", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
-          content: const Text("All input fields are mandatory.\n\nPlease enter values for Total Tons, Axles, and Wagons before verifying."),
+          content: const Text("All fields are mandatory. Please fill in Total Tons, Axles, and Wagons before verifying."),
           actions: [
             Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all<Size>(const Size(140, 44)),
-                    backgroundColor: WidgetStateProperty.all<Color>(Colors.green.shade700),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                    shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0))),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700, foregroundColor: Colors.white),
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -146,6 +130,32 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     final int? axles = int.tryParse(axlesController.text);
 
     if (tons == null || axles == null) return;
+
+    // 2. MULTIPLE OF 4 RAILWAY VALIDATION
+    if (axles % 4 != 0) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: const Text("🚂 Operational Input Error", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+          content: Text("Total Axles ($axles) must be a multiple of 4 to match standard wagon configurations (e.g., ${(axles ~/ 4) * 4} or ${((axles ~/ 4) + 1) * 4} axles)."),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700, foregroundColor: Colors.white),
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    // final double? tons = double.tryParse(tonsController.text);
+    // final int? axles = int.tryParse(axlesController.text);
+
+    // if (tons == null || axles == null) return;
 
     // 2. MULTIPLE OF 4 RAILWAY VALIDATION
     if (axles % 4 != 0) {
@@ -395,92 +405,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
                         // ===================================================================
                         // DESKTOP WIDE GRID VIEW
                         // ===================================================================
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  DropdownButton<String>(
-                                    value: selectedTrainType,
-                                    isExpanded: true,
-                                    items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        selectedTrainType = val!;
-                                        List<String> nextOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
-                                        selectedRoute = nextOptions.first;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  DropdownButton<String>(
-                                    value: selectedRoute,
-                                    isExpanded: true,
-                                    items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                    onChanged: (val) => setState(() => selectedRoute = val!),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  DropdownButton<String>(
-                                    value: selectedLoco,
-                                    isExpanded: true,
-                                    items: locos.map((loco) => DropdownMenuItem<String>(
-                                      value: loco['value'], 
-                                      child: Text(loco['display']!),
-                                    )).toList(),
-                                    onChanged: (val) => setState(() => selectedLoco = val!),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Number of Locos in Consist (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  DropdownButton<int>(
-                                    value: selectedLocoCount,
-                                    isExpanded: true,
-                                    items: locoCounts.map((int value) {
-                                      return DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
-                                      );
-                                    }).toList(),
-                                    onChanged: (val) => setState(() => selectedLocoCount = val!),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
+                       // BRAKE TYPE ROW (Option 2: Left column stacked label + slider)
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -515,10 +440,46 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
                               ),
                             ),
                             const SizedBox(width: 24),
-                            const Expanded(child: SizedBox()),
+                            const Expanded(child: SizedBox()), // Symmetrical blank grid cell
                           ],
                         ),
                         const SizedBox(height: 24),
+
+                        // INTERACTIVE INPUTS: TONS & AXLES / WAGONS
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: tonsController, 
+                                keyboardType: TextInputType.number, 
+                                decoration: const InputDecoration(labelText: "Actual Total Tons", border: OutlineInputBorder())
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: axlesController, 
+                                      keyboardType: TextInputType.number, 
+                                      decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder())
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: wagonsController, 
+                                      keyboardType: TextInputType.number, 
+                                      decoration: const InputDecoration(labelText: "Total Wagons", border: OutlineInputBorder())
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
 
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
