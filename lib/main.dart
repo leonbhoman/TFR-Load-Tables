@@ -402,18 +402,27 @@ actions: [
     } else {
       showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("🔍 No Entries Found"),
-            content: Text("AAM: ${axleMass.toStringAsFixed(2)} t/a\nBlock Key: $blockKey\n\nNo data matching these configuration parameters was found in the database."),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
+        builder: (context) => AlertDialog(
+          title: const Text("Error", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+          content: Text("No entries found for ${selectedLoco.replaceAll('_Class', '')} with $blockKey at GC $targetGC."),
+actions: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      minimumSize: WidgetStateProperty.all<Size>(const Size(160, 48)),
+                      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
+                      foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                      shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                      elevation: WidgetStateProperty.all<double>(2),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 1.1)),
+                  ),
+                ),
               ),
-            ],
-          );
-        },
+            ],        ),
       );
     }
   }
