@@ -44,7 +44,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.10";
+  final String currentAppVersion = "1.0.11";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
@@ -616,7 +616,7 @@ actions: [
                         const SizedBox(height: 16),
                         Center(
                           child: SizedBox(
-                            width: 240,
+                            width: 440,
                             child: SegmentedButton<bool>(
                               segments: const <ButtonSegment<bool>>[
                                 ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
