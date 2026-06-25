@@ -407,145 +407,274 @@ actions: [
     }
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     List<String> activeRouteOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
 
-    return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Triggers wide desktop grid mode if the window width is over 600 pixels
+        bool isWideScreen = constraints.maxWidth > 600;
+
+        return Form( // Invisible wrapper enabling clean web keyboard submission
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedTrainType,
-                isExpanded: true,
-                items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                onChanged: (val) {
-                  setState(() {
-                    selectedTrainType = val!;
-                    List<String> nextOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
-                    selectedRoute = nextOptions.first;
-                  });
-                },
-              ),
-              const SizedBox(height: 10),
-              const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedRoute,
-                isExpanded: true,
-                items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                onChanged: (val) => setState(() => selectedRoute = val!),
-              ),
-              const SizedBox(height: 10),
-              const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                value: selectedLoco,
-                isExpanded: true,
-                items: locos.map((loco) => DropdownMenuItem<String>(
-                  value: loco['value'], 
-                  child: Text(loco['display']!),
-                )).toList(),
-                onChanged: (val) => setState(() => selectedLoco = val!),
-              ),
-              const SizedBox(height: 10),
-              const Text("Number of Locos in Consist:", style: TextStyle(fontWeight: FontWeight.bold)),
-              DropdownButton<int>(
-                value: selectedLocoCount,
-                isExpanded: true,
-                items: locoCounts.map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
-                  );
-                }).toList(),
-                onChanged: (val) => setState(() => selectedLocoCount = val!),
-              ),
-              
-// --- BRAKE SYSTEM SELECTOR (MODERN MATERIAL PILL) ---
-Padding(
-  padding: const EdgeInsets.symmetric(vertical: 16.0),
-  child: SizedBox(
-    width: double.infinity,
-    child: SegmentedButton<bool>(
-      segments: const <ButtonSegment<bool>>[
-        ButtonSegment<bool>(
-          value: true,
-          label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
-        ),
-        ButtonSegment<bool>(
-          value: false,
-          label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
-        ),
-      ],
-      selected: <bool>{isAirbrake},
-      onSelectionChanged: (Set<bool> newSelection) {
-        setState(() {
-          isAirbrake = newSelection.first;
-        });
-      },
-style: ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.selected)) {
-      return Colors.green.shade700;
-    }
-    return Colors.grey.shade300;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.selected)) {
-      return Colors.white;
-    }
-    return Colors.green.shade900;
-  }),
-  // Explicitly force a soft pill border shape
-  shape: WidgetStateProperty.all<OutlinedBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(25.0),
-    ),
-  ),
-  // Explicitly eliminate the harsh default square outline frame
-  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-),    ),
-  ),
-),              
-              const SizedBox(height: 15),
-              TextField(
-                controller: tonsController, 
-                keyboardType: TextInputType.number, 
-                decoration: const InputDecoration(labelText: "Actual Total Tons")
-              ),
-              TextField(
-                controller: axlesController, 
-                keyboardType: TextInputType.number, 
-                decoration: const InputDecoration(labelText: "Total Axles")
-              ),
-const SizedBox(height: 30),
-              Center(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
-                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                      if (states.contains(WidgetState.pressed)) return Colors.green.shade900;
-                      return Colors.green.shade700;
-                    }),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                    shape: WidgetStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
-                    ),
-                    side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                    elevation: WidgetStateProperty.all<double>(3),
+              // Scrollable Input Area
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (isWideScreen) ...[
+                        // ===================================================================
+                        // DESKTOP WIDE GRID VIEW (Grouped Pairs)
+                        // ===================================================================
+                        
+                        // GROUP 1: Train Operation Mode & Route
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  DropdownButton<String>(
+                                    value: selectedTrainType,
+                                    isExpanded: true,
+                                    items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        selectedTrainType = val!;
+                                        List<String> nextOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
+                                        selectedRoute = nextOptions.first;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  DropdownButton<String>(
+                                    value: selectedRoute,
+                                    isExpanded: true,
+                                    items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                                    onChanged: (val) => setState(() => selectedRoute = val!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+
+                        // GROUP 2: Locomotive Class & Number of Locomotives
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  DropdownButton<String>(
+                                    value: selectedLoco,
+                                    isExpanded: true,
+                                    items: locos.map((loco) => DropdownMenuItem<String>(
+                                      value: loco['value'], 
+                                      child: Text(loco['display']!),
+                                    )).toList(),
+                                    onChanged: (val) => setState(() => selectedLoco = val!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Number of Locos in Consist (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  DropdownButton<int>(
+                                    value: selectedLocoCount,
+                                    isExpanded: true,
+                                    items: locoCounts.map((int value) {
+                                      return DropdownMenuItem<int>(
+                                        value: value,
+                                        child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
+                                      );
+                                    }).toList(),
+                                    onChanged: (val) => setState(() => selectedLocoCount = val!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // GROUP 3: Brake Type (Narrow width matches the action button)
+                        Center(
+                          child: SizedBox(
+                            width: 240, 
+                            child: SegmentedButton<bool>(
+                              segments: const <ButtonSegment<bool>>[
+                                ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.0))),
+                                ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.0))),
+                              ],
+                              selected: <bool>{isAirbrake},
+                              onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
+                                foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
+                                shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                                side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // GROUP 4: Tons & Axles
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: tonsController, 
+                                keyboardType: TextInputType.number, 
+                                onSubmitted: (_) => calculate(), // Fire calculation on Enter
+                                decoration: const InputDecoration(labelText: "Actual Total Tons", border: OutlineInputBorder())
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: TextField(
+                                controller: axlesController, 
+                                keyboardType: TextInputType.number, 
+                                onSubmitted: (_) => calculate(), // Fire calculation on Enter
+                                decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder())
+                              ),
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        // ===================================================================
+                        // MOBILE PORTRAIT VIEW (Compact Single Stack)
+                        // ===================================================================
+                        const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        DropdownButton<String>(
+                          value: selectedTrainType,
+                          isExpanded: true,
+                          items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              selectedTrainType = val!;
+                              List<String> nextOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
+                              selectedRoute = nextOptions.first;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        DropdownButton<String>(
+                          value: selectedRoute,
+                          isExpanded: true,
+                          items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                          onChanged: (val) => setState(() => selectedRoute = val!),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        DropdownButton<String>(
+                          value: selectedLoco,
+                          isExpanded: true,
+                          items: locos.map((loco) => DropdownMenuItem<String>(
+                            value: loco['value'], 
+                            child: Text(loco['display']!),
+                          )).toList(),
+                          onChanged: (val) => setState(() => selectedLoco = val!),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text("Number of Locos in Consist (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        DropdownButton<int>(
+                          value: selectedLocoCount,
+                          isExpanded: true,
+                          items: locoCounts.map((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
+                            );
+                          }).toList(),
+                          onChanged: (val) => setState(() => selectedLocoCount = val!),
+                        ),
+                        const SizedBox(height: 16),
+                        Center(
+                          child: SizedBox(
+                            width: 240,
+                            child: SegmentedButton<bool>(
+                              segments: const <ButtonSegment<bool>>[
+                                ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
+                                ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold))),
+                              ],
+                              selected: <bool>{isAirbrake},
+                              onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
+                                foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
+                                shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                                side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(controller: tonsController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Actual Total Tons")),
+                        const SizedBox(height: 12),
+                        TextField(controller: axlesController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Axles")),
+                      ],
+
+                      const SizedBox(height: 40),
+
+                      // GROUP 5: Verify Load Button
+                      Center(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
+                            backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
+                            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                            shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0))),
+                            elevation: WidgetStateProperty.all<double>(3),
+                          ),
+                          onPressed: calculate, 
+                          child: const Text("VERIFY LOAD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2)),
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: calculate, 
-                  child: const Text(
-                    "VERIFY LOAD", 
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
-                  ),
+                ),
+              ),
+
+              // Co-authored Footer Bar
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                color: Colors.grey.shade100,
+                child: Text(
+                  "v$currentAppVersion | Developed by Leon and Gemini",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade600, letterSpacing: 0.5),
                 ),
               ),
             ],
           ),
-        ),
-    ); // <-- Balanced correctly here
+        );
+      },
+    );
   }
 }
