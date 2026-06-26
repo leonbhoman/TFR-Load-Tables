@@ -539,40 +539,74 @@ actions: [
                         const SizedBox(height: 20),
 
                         // GROUP 3: Brake Type Row (Left Column Label | Right Column Slider)
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft, // Left aligns slider in its column
-                                child: SizedBox(
-                                  width: 480, // Expanded width ensures active checkmark and text fit perfectly on one line
-                                  child: SegmentedButton<bool>(
-                                    showSelectedIcon: true, // Enabled checkmark to ensure clear selected distinction
-                                    segments: const <ButtonSegment<bool>>[
-                                      ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8))),
-                                      ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8))),
-                                    ],
-                                    selected: <bool>{isAirbrake},
-                                    onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
-                                    style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
-                                      foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
-                                      shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                                      side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-
+Row(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Brake Type:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: double.infinity, // Let it fill the layout column naturally
+              child: SegmentedButton<bool>(
+                showSelectedIcon: true,
+                segments: const <ButtonSegment<bool>>[
+                  ButtonSegment<bool>(
+                    value: true,
+                    label: FittedBox(
+                      child: Text(
+                        'AIRBRAKE',
+                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8),
+                      ),
+                    ),
+                  ),
+                  ButtonSegment<bool>(
+                    value: false,
+                    label: FittedBox(
+                      child: Text(
+                        'VACUUM',
+                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8),
+                      ),
+                    ),
+                  ),
+                ],
+                selected: <bool>{isAirbrake},
+                onSelectionChanged: (Set<bool> newSelection) {
+                  setState(() {
+                    isAirbrake = newSelection.first;
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                    if (states.contains(WidgetState.selected)) return Colors.green.shade700;
+                    return Colors.grey.shade200;
+                  }),
+                  foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                    if (states.contains(WidgetState.selected)) return Colors.white;
+                    return Colors.green.shade900;
+                  }),
+                  shape: WidgetStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+                  ),
+                  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    const SizedBox(width: 24), // Maintains symmetry with the 2-column layout spacing
+    const Expanded(child: SizedBox()), // Empty right column placeholder
+  ],
+),
                         // GROUP 4: Tons & Axles
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
