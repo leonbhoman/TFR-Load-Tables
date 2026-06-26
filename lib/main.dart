@@ -607,6 +607,7 @@ Row(
     const Expanded(child: SizedBox()), // Empty right column placeholder
   ],
 ),
+const SizedBox(height: 20),
                         // GROUP 4: Tons & Axles
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -616,7 +617,7 @@ Row(
                                 controller: tonsController, 
                                 keyboardType: TextInputType.number, 
                                 onSubmitted: (_) => calculate(), // Triggers verification on web Enter key
-                                decoration: const InputDecoration(labelText: "Actual Total Tons", border: OutlineInputBorder())
+                                decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder())
                               ),
                             ),
                             const SizedBox(width: 24),
@@ -667,7 +668,7 @@ Row(
                           onChanged: (val) => setState(() => selectedLoco = val!),
                         ),
                         const SizedBox(height: 12),
-                        const Text("Number of Locos in Consist (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
                         DropdownButton<int>(
                           value: selectedLocoCount,
                           isExpanded: true,
