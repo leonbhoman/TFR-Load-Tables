@@ -607,7 +607,7 @@ Row(
     const Expanded(child: SizedBox()), // Empty right column placeholder
   ],
 ),
-const SizedBox(height: 20),
+const SizedBox(height: 40),
                         // GROUP 4: Tons & Axles
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
