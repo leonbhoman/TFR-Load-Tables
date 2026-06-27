@@ -42,6 +42,42 @@ class LoadCalculatorForm extends StatefulWidget {
 class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final tonsController = TextEditingController();
   final axlesController = TextEditingController();
+  final TextEditingController wagonsController = TextEditingController();
+  bool _isUpdatingAxlesOrWagons = false;
+
+  void _onAxlesChanged() {
+    if (_isUpdatingAxlesOrWagons) return;
+    _isUpdatingAxlesOrWagons = true;
+
+    final axlesText = axlesController.text;
+    if (axlesText.isEmpty) {
+      wagonsController.text = "";
+    } else {
+      final axles = int.tryParse(axlesText);
+      if (axles != null) {
+        double wagons = axles / 4;
+        wagonsController.text = wagons % 1 == 0 ? wagons.toInt().toString() : wagons.toStringAsFixed(1);
+      }
+    }
+    _isUpdatingAxlesOrWagons = false;
+  }
+
+  void _onWagonsChanged() {
+    if (_isUpdatingAxlesOrWagons) return;
+    _isUpdatingAxlesOrWagons = true;
+
+    final wagonsText = wagonsController.text;
+    if (wagonsText.isEmpty) {
+      axlesController.text = "";
+    } else {
+      final wagons = double.tryParse(wagonsText);
+      if (wagons != null) {
+        int axles = (wagons * 4).round();
+        axlesController.text = axles.toString();
+      }
+    }
+    _isUpdatingAxlesOrWagons = false;
+  }
 
   // The version hardcoded into this specific build string
   final String currentAppVersion = "1.0.11";
@@ -445,16 +481,19 @@ actions: [
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (isWideScreen) ...[
+if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Grouped Pairs)
+                        // DESKTOP WIDE GRID VIEW (Balanced 4-Column Layout Frame)
                         // ===================================================================
-                        
-                        // GROUP 1: Train Operation Mode & Route
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // 1. Far Left Column (Empty Margin)
+                            const Spacer(flex: 1),
+
+                            // 2. Mid-Left Column (Inputs Side A)
                             Expanded(
+                              flex: 2,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -471,36 +510,7 @@ actions: [
                                       });
                                     },
                                   ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  DropdownButton<String>(
-                                    value: selectedRoute,
-                                    isExpanded: true,
-                                    items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                    onChanged: (val) => setState(() => selectedRoute = val!),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
-                        // GROUP 2: Locomotive Class & Number of Locomotives
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                  const SizedBox(height: 16),
                                   const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
                                   DropdownButton<String>(
                                     value: selectedLoco,
@@ -511,14 +521,64 @@ actions: [
                                     )).toList(),
                                     onChanged: (val) => setState(() => selectedLoco = val!),
                                   ),
+                                  const SizedBox(height: 24),
+                                  InputDecorator(
+                                    decoration: const InputDecoration(
+                                      labelText: "Brake Type",
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: RadioListTile<bool>(
+                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            value: true,
+                                            groupValue: isAirbrake,
+                                            contentPadding: EdgeInsets.zero,
+                                            onChanged: (val) => setState(() => isAirbrake = val!),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: RadioListTile<bool>(
+                                            title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            value: false,
+                                            groupValue: isAirbrake,
+                                            contentPadding: EdgeInsets.zero,
+                                            onChanged: (val) => setState(() => isAirbrake = val!),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  TextField(
+                                    controller: tonsController, 
+                                    keyboardType: TextInputType.number, 
+                                    onSubmitted: (_) => calculate(),
+                                    decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder())
+                                  ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 24),
+
+                            // Dynamic Spacer Gap between Middle Panels
+                            const SizedBox(width: 32),
+
+                            // 3. Mid-Right Column (Inputs Side B)
                             Expanded(
+                              flex: 2,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  DropdownButton<String>(
+                                    value: selectedRoute,
+                                    isExpanded: true,
+                                    items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                                    onChanged: (val) => setState(() => selectedRoute = val!),
+                                  ),
+                                  const SizedBox(height: 16),
                                   const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
                                   DropdownButton<int>(
                                     value: selectedLocoCount,
@@ -531,108 +591,24 @@ actions: [
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
+                                  // This empty box fills the structural gap next to the Brake Type field perfectly
+                                  const SizedBox(height: 64),
+                                  const SizedBox(height: 24),
+                                  TextField(
+                                    controller: axlesController, 
+                                    keyboardType: TextInputType.number, 
+                                    onSubmitted: (_) => calculate(),
+                                    decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder())
+                                  ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
 
-                        // GROUP 3: Brake Type Row (Left Column Label | Right Column Slider)
-Row(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Brake Type:",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: double.infinity, // Let it fill the layout column naturally
-              child: SegmentedButton<bool>(
-                showSelectedIcon: true,
-                segments: const <ButtonSegment<bool>>[
-                  ButtonSegment<bool>(
-                    value: true,
-                    label: FittedBox(
-                      child: Text(
-                        'AIRBRAKE',
-                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8),
-                      ),
-                    ),
-                  ),
-                  ButtonSegment<bool>(
-                    value: false,
-                    label: FittedBox(
-                      child: Text(
-                        'VACUUM',
-                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8),
-                      ),
-                    ),
-                  ),
-                ],
-                selected: <bool>{isAirbrake},
-                onSelectionChanged: (Set<bool> newSelection) {
-                  setState(() {
-                    isAirbrake = newSelection.first;
-                  });
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                    if (states.contains(WidgetState.selected)) return Colors.green.shade700;
-                    return Colors.grey.shade200;
-                  }),
-                  foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                    if (states.contains(WidgetState.selected)) return Colors.white;
-                    return Colors.green.shade900;
-                  }),
-                  shape: WidgetStateProperty.all<OutlinedBorder>(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
-                  ),
-                  side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-    const SizedBox(width: 24), // Maintains symmetry with the 2-column layout spacing
-    const Expanded(child: SizedBox()), // Empty right column placeholder
-  ],
-),
-const SizedBox(height: 40),
-                        // GROUP 4: Tons & Axles
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: tonsController, 
-                                keyboardType: TextInputType.number, 
-                                onSubmitted: (_) => calculate(), // Triggers verification on web Enter key
-                                decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder())
-                              ),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              child: TextField(
-                                controller: axlesController, 
-                                keyboardType: TextInputType.number, 
-                                onSubmitted: (_) => calculate(), // Triggers verification on web Enter key
-                                decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder())
-                              ),
-                            ),
+                            // 4. Far Right Column (Empty Margin)
+                            const Spacer(flex: 1),
                           ],
                         ),
-                      ] else ...[
-                        // ===================================================================
+                      ] else ...[                        // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
                         // ===================================================================
                         const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
