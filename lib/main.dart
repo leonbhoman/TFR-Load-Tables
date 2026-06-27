@@ -483,7 +483,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Surgically Repaired Framework)
+                        // DESKTOP WIDE GRID VIEW (Structural Pillar Framework)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,34 +531,48 @@ if (isWideScreen) ...[
                                     )).toList(),
                                     onChanged: (val) => setState(() => selectedLoco = val!),
                                   ),
-                                  const SizedBox(height: 24),
-                                  InputDecorator(
-                                    decoration: const InputDecoration(
-                                      labelText: "Brake Type",
-                                      border: OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: RadioListTile<bool>(
-                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                            value: true,
-                                            groupValue: isAirbrake,
-                                            contentPadding: EdgeInsets.zero,
-                                            onChanged: (val) => setState(() => isAirbrake = val!),
+                                  const SizedBox(height: 20),
+                                  const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 6),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 50, // Hardcoded height to prevent layout drift
+                                    child: SegmentedButton<bool>(
+                                      showSelectedIcon: true,
+                                      segments: const <ButtonSegment<bool>>[
+                                        ButtonSegment<bool>(
+                                          value: true,
+                                          label: FittedBox(
+                                            child: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8)),
                                           ),
                                         ),
-                                        Expanded(
-                                          child: RadioListTile<bool>(
-                                            title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                            value: false,
-                                            groupValue: isAirbrake,
-                                            contentPadding: EdgeInsets.zero,
-                                            onChanged: (val) => setState(() => isAirbrake = val!),
+                                        ButtonSegment<bool>(
+                                          value: false,
+                                          label: FittedBox(
+                                            child: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8)),
                                           ),
                                         ),
                                       ],
+                                      selected: <bool>{isAirbrake},
+                                      onSelectionChanged: (Set<bool> newSelection) {
+                                        setState(() {
+                                          isAirbrake = newSelection.first;
+                                        });
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                                          if (states.contains(WidgetState.selected)) return Colors.green.shade700;
+                                          return Colors.grey.shade200;
+                                        }),
+                                        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                                          if (states.contains(WidgetState.selected)) return Colors.white;
+                                          return Colors.green.shade900;
+                                        }),
+                                        shape: WidgetStateProperty.all<OutlinedBorder>(
+                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+                                        ),
+                                        side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 32),
@@ -575,7 +589,7 @@ if (isWideScreen) ...[
                               ),
                             ),
 
-                            // Balanced Structural Spacer Gap
+                            // Balanced Grid Spacer
                             const SizedBox(width: 32),
 
                             // 3. Mid-Right Column (Inputs Side B)
@@ -614,8 +628,8 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // This structural gap matches the visual vertical height of the Brake Type field perfectly
-                                  const SizedBox(height: 94),
+                                  // This structural space balances out the height of the Segmented Brake button on the left column
+                                  const SizedBox(height: 104), 
                                   TextField(
                                     controller: axlesController, 
                                     keyboardType: TextInputType.number, 
