@@ -680,7 +680,7 @@ if (isWideScreen) ...[
                           ),
                         ),
                         const SizedBox(height: 16),
-                        TextField(controller: tonsController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Actual Total Tons")),
+                        TextField(controller: tonsController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Tons")),
                         const SizedBox(height: 12),
                         TextField(controller: axlesController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Axles")),
                       ],
