@@ -483,7 +483,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Production-Optimized Theme Enforcement)
+                        // DESKTOP WIDE GRID VIEW (Surgically Repaired Framework)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,8 +503,8 @@ if (isWideScreen) ...[
                                     value: selectedTrainType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(), 
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                     onChanged: (val) {
@@ -515,15 +515,15 @@ if (isWideScreen) ...[
                                       });
                                     },
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 20),
                                   const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedLoco,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(), 
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: locos.map((loco) => DropdownMenuItem<String>(
                                       value: loco['value'], 
@@ -561,7 +561,7 @@ if (isWideScreen) ...[
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: 32),
                                   TextField(
                                     controller: tonsController, 
                                     keyboardType: TextInputType.number, 
@@ -575,7 +575,7 @@ if (isWideScreen) ...[
                               ),
                             ),
 
-                            // Dynamic Spacer Gap between Middle Panels
+                            // Balanced Structural Spacer Gap
                             const SizedBox(width: 32),
 
                             // 3. Mid-Right Column (Inputs Side B)
@@ -590,21 +590,21 @@ if (isWideScreen) ...[
                                     value: selectedRoute,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(), 
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                     onChanged: (val) => setState(() => selectedRoute = val!),
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 20),
                                   const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<int>(
                                     value: selectedLocoCount,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(), 
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: locoCounts.map((int value) {
                                       return DropdownMenuItem<int>(
@@ -614,7 +614,7 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // Perfectly matches the vertical space taken by the Brake Type box on the left column
+                                  // This structural gap matches the visual vertical height of the Brake Type field perfectly
                                   const SizedBox(height: 94),
                                   TextField(
                                     controller: axlesController, 
