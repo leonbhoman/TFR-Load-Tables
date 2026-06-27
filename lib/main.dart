@@ -483,7 +483,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Surgically Repaired Framework)
+                        // DESKTOP WIDE GRID VIEW (Production-Optimized Theme Enforcement)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -498,11 +498,14 @@ if (isWideScreen) ...[
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedTrainType,
                                     isExpanded: true,
-                                    decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(), 
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                    ),
                                     items: trainTypes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                     onChanged: (val) {
                                       setState(() {
@@ -514,29 +517,32 @@ if (isWideScreen) ...[
                                   ),
                                   const SizedBox(height: 16),
                                   const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedLoco,
                                     isExpanded: true,
-                                    decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(), 
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                    ),
                                     items: locos.map((loco) => DropdownMenuItem<String>(
                                       value: loco['value'], 
                                       child: Text(loco['display']!),
                                     )).toList(),
                                     onChanged: (val) => setState(() => selectedLoco = val!),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 24),
                                   InputDecorator(
                                     decoration: const InputDecoration(
                                       labelText: "Brake Type",
                                       border: OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                     ),
                                     child: Row(
                                       children: [
                                         Expanded(
                                           child: RadioListTile<bool>(
-                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                             value: true,
                                             groupValue: isAirbrake,
                                             contentPadding: EdgeInsets.zero,
@@ -545,7 +551,7 @@ if (isWideScreen) ...[
                                         ),
                                         Expanded(
                                           child: RadioListTile<bool>(
-                                            title: const Text('VACUUM', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                            title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                             value: false,
                                             groupValue: isAirbrake,
                                             contentPadding: EdgeInsets.zero,
@@ -555,7 +561,7 @@ if (isWideScreen) ...[
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 28),
+                                  const SizedBox(height: 24),
                                   TextField(
                                     controller: tonsController, 
                                     keyboardType: TextInputType.number, 
@@ -563,7 +569,6 @@ if (isWideScreen) ...[
                                     decoration: const InputDecoration(
                                       labelText: "Total Tons", 
                                       border: OutlineInputBorder(),
-                                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -580,21 +585,27 @@ if (isWideScreen) ...[
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedRoute,
                                     isExpanded: true,
-                                    decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(), 
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                    ),
                                     items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                     onChanged: (val) => setState(() => selectedRoute = val!),
                                   ),
                                   const SizedBox(height: 16),
                                   const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<int>(
                                     value: selectedLocoCount,
                                     isExpanded: true,
-                                    decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(), 
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                                    ),
                                     items: locoCounts.map((int value) {
                                       return DropdownMenuItem<int>(
                                         value: value,
@@ -603,8 +614,8 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // This explicitly calculated gap ensures the text box starts on the exact same vertical plane as Total Tons
-                                  const SizedBox(height: 87),
+                                  // Perfectly matches the vertical space taken by the Brake Type box on the left column
+                                  const SizedBox(height: 94),
                                   TextField(
                                     controller: axlesController, 
                                     keyboardType: TextInputType.number, 
@@ -612,7 +623,6 @@ if (isWideScreen) ...[
                                     decoration: const InputDecoration(
                                       labelText: "Total Axles", 
                                       border: OutlineInputBorder(),
-                                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
