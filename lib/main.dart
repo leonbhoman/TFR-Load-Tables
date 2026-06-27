@@ -608,7 +608,9 @@ if (isWideScreen) ...[
                             const Spacer(flex: 1),
                           ],
                         ),
-                      ] else ...[                        // ===================================================================
+                      ] else ...[
+                        
+                        // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
                         // ===================================================================
                         const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
