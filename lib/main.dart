@@ -623,7 +623,7 @@ if (isWideScreen) ...[
                                   ),
                                   // This empty container cleanly mirrors the entire physical vertical footprint 
                                   // of the Brake Type field on the left, keeping the final row level.
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 16),
                                   const SizedBox(
                                     height: 58, // Precise layout clearance matching standard InputDecorator heights
                                   ),
