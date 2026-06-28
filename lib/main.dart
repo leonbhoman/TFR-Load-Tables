@@ -494,7 +494,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Balanced Horizontal Field Grid)
+                        // DESKTOP WIDE GRID VIEW (Unified Floating Label Architecture)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -508,12 +508,11 @@ if (isWideScreen) ...[
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedTrainType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
+                                      labelText: "Train Operation Mode",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -526,13 +525,12 @@ if (isWideScreen) ...[
                                       });
                                     },
                                   ),
-                                  const SizedBox(height: 20),
-                                  const Text("Locomotive Class:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 24),
                                   DropdownButtonFormField<String>(
                                     value: selectedLoco,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
+                                      labelText: "Locomotive Class",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -579,7 +577,7 @@ if (isWideScreen) ...[
                                     onSubmitted: (_) => calculate(),
                                     decoration: const InputDecoration(
                                       labelText: "Total Tons", 
-                                      border: OutlineInputBorder(), // Forces the floating label border clean
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                 ],
@@ -595,25 +593,23 @@ if (isWideScreen) ...[
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Route:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
                                     value: selectedRoute,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
+                                      labelText: "Route",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: activeRouteOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                     onChanged: (val) => setState(() => selectedRoute = val!),
                                   ),
-                                  const SizedBox(height: 20),
-                                  const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 24),
                                   DropdownButtonFormField<int>(
                                     value: selectedLocoCount,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
+                                      labelText: "Number of Locos (Live locomotives only)",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -625,8 +621,13 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // Balanced spacing perfectly aligns the bottom edges of the input boxes
-                                  const SizedBox(height: 106), 
+                                  // This empty container cleanly mirrors the entire physical vertical footprint 
+                                  // of the Brake Type field on the left, keeping the final row level.
+                                  const SizedBox(height: 24),
+                                  const SizedBox(
+                                    height: 58, // Precise layout clearance matching standard InputDecorator heights
+                                  ),
+                                  const SizedBox(height: 24),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
