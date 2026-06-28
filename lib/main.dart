@@ -494,7 +494,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Aligned Controls Frame)
+                        // DESKTOP WIDE GRID VIEW (Balanced Horizontal Field Grid)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -579,7 +579,7 @@ if (isWideScreen) ...[
                                     onSubmitted: (_) => calculate(),
                                     decoration: const InputDecoration(
                                       labelText: "Total Tons", 
-                                      border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(), // Forces the floating label border clean
                                     ),
                                   ),
                                 ],
@@ -625,10 +625,10 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // Matches the vertical footprint of the Brake Type Selector perfectly
-                                  const SizedBox(height: 104), 
+                                  // Balanced spacing perfectly aligns the bottom edges of the input boxes
+                                  const SizedBox(height: 106), 
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: TextField(
