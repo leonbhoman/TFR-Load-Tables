@@ -158,20 +158,31 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   bool isAirbrake = true; 
   Map<String, dynamic> locoData = {};
 
-    @override
-    void initState() {
-      super.initState();
+@override
+  void initState() {
+    super.initState();
+    
+    // Bind your existing bidirectional functions to the controllers
+    axlesController.addListener(_onAxlesChanged);
+    wagonsController.addListener(_onWagonsChanged);
+
     loadJsonData().then((_) { 
-      if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
-    }
-    });
-      // ONLY check for updates if the application is NOT running in a web browser
       if (!kIsWeb) {
         WidgetsBinding.instance.addPostFrameCallback((_) => checkForUpdates());
       }
-      }
+    });
+  }
 
+  @override
+  void dispose() {
+    // Standard cleanup to stop listeners when widget destroys
+    axlesController.removeListener(_onAxlesChanged);
+    wagonsController.removeListener(_onWagonsChanged);
+    tonsController.dispose();
+    axlesController.dispose();
+    wagonsController.dispose();
+    super.dispose();
+  }
   Future<void> checkForUpdates() async {
     if (_hasDeferredUpdate) return; // Silent exit if they already clicked Later
           // FIXED: Pointing to the exact repository name casing
@@ -483,7 +494,7 @@ actions: [
                     children: [
 if (isWideScreen) ...[
                         // ===================================================================
-                        // DESKTOP WIDE GRID VIEW (Bidirectional Axles & Wagons Frame)
+                        // DESKTOP WIDE GRID VIEW (Aligned Controls Frame)
                         // ===================================================================
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,51 +542,37 @@ if (isWideScreen) ...[
                                     )).toList(),
                                     onChanged: (val) => setState(() => selectedLoco = val!),
                                   ),
-                                  const SizedBox(height: 20),
-                                  const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 50,
-                                    child: SegmentedButton<bool>(
-                                      showSelectedIcon: true,
-                                      segments: const <ButtonSegment<bool>>[
-                                        ButtonSegment<bool>(
-                                          value: true,
-                                          label: FittedBox(
-                                            child: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8)),
+                                  const SizedBox(height: 24),
+                                  InputDecorator(
+                                    decoration: const InputDecoration(
+                                      labelText: "Brake Type",
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: RadioListTile<bool>(
+                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            value: true,
+                                            groupValue: isAirbrake,
+                                            contentPadding: EdgeInsets.zero,
+                                            onChanged: (val) => setState(() => isAirbrake = val!),
                                           ),
                                         ),
-                                        ButtonSegment<bool>(
-                                          value: false,
-                                          label: FittedBox(
-                                            child: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8)),
+                                        Expanded(
+                                          child: RadioListTile<bool>(
+                                            title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            value: false,
+                                            groupValue: isAirbrake,
+                                            contentPadding: EdgeInsets.zero,
+                                            onChanged: (val) => setState(() => isAirbrake = val!),
                                           ),
                                         ),
                                       ],
-                                      selected: <bool>{isAirbrake},
-                                      onSelectionChanged: (Set<bool> newSelection) {
-                                        setState(() {
-                                          isAirbrake = newSelection.first;
-                                        });
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                                          if (states.contains(WidgetState.selected)) return Colors.green.shade700;
-                                          return Colors.grey.shade200;
-                                        }),
-                                        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                                          if (states.contains(WidgetState.selected)) return Colors.white;
-                                          return Colors.green.shade900;
-                                        }),
-                                        shape: WidgetStateProperty.all<OutlinedBorder>(
-                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
-                                        ),
-                                        side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 32),
+                                  const SizedBox(height: 24),
                                   TextField(
                                     controller: tonsController, 
                                     keyboardType: TextInputType.number, 
@@ -628,9 +625,10 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // Perfectly matches the vertical depth of the Brake Type field section on Side A
-                                  const SizedBox(height: 108), 
+                                  // Matches the vertical footprint of the Brake Type Selector perfectly
+                                  const SizedBox(height: 104), 
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Expanded(
                                         child: TextField(
@@ -643,7 +641,7 @@ if (isWideScreen) ...[
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 16), // Gap between side-by-side text inputs
+                                      const SizedBox(width: 16),
                                       Expanded(
                                         child: TextField(
                                           controller: wagonsController, 
@@ -665,8 +663,7 @@ if (isWideScreen) ...[
                             const Spacer(flex: 1),
                           ],
                         ),
-                      ] else ...[
-                        
+                      ] else ...[                        
                         
                         // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
