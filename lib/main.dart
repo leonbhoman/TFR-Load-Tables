@@ -45,6 +45,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final TextEditingController wagonsController = TextEditingController();
   bool _isUpdatingAxlesOrWagons = false;
   String? axleValidationError;
+  double totalTrainLength = 0.0;
+  double totalBufferPlay = 0.0;
 
   void _onAxlesChanged() {
     if (_isUpdatingAxlesOrWagons) return;
@@ -80,6 +82,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
         });
       }
     }
+    _updateTrainLength(); // <-- Add here
     _isUpdatingAxlesOrWagons = false;
   }
 
@@ -103,7 +106,33 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
         });
       }
     }
+    _updateTrainLength(); // <-- Add here
     _isUpdatingAxlesOrWagons = false;
+  }
+
+  void _updateTrainLength() {
+    final wagonsText = wagonsController.text;
+    if (wagonsText.isEmpty) {
+      setState(() {
+        totalTrainLength = 0.0;
+        totalBufferPlay = 0.0;
+      });
+      return;
+    }
+
+    final wagons = double.tryParse(wagonsText) ?? 0.0;
+    if (wagons > 0) {
+      // 1. Base length using standard 16 meters per wagon
+      double baseLength = wagons * 16.0;
+      
+      // 2. Buffer play: Add 1 meter for every complete block of 10 wagons
+      double bufferPlay = (wagons / 10).floorToDouble() * 1.0;
+
+      setState(() {
+        totalBufferPlay = bufferPlay;
+        totalTrainLength = baseLength + bufferPlay;
+      });
+    }
   }
 
   // The version hardcoded into this specific build string
@@ -419,6 +448,10 @@ actions: [
             "Base Capacity: ${baselineMaxTons}t\n"
             "Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)\n"
             "Total Limit: ${totalAllowedTons}t\n"
+            "---------------------------\n"
+            "Physical Footprint Dynamics:\n"
+            "Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m\n"
+            "Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m\n"
             "---------------------------\n"
             "${overWeight ? "Over max limit by" : "Remaining margin"}: ${(totalAllowedTons - tons).abs().toInt()}t";
 
@@ -782,7 +815,41 @@ if (isWideScreen) ...[
                           ),
 
                       ],
+                      const SizedBox(height: 24),
+                      
+                      // Live Physical Clearance Framework 
+                      if (totalTrainLength > 0 && axleValidationError == null) ...[
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Text("TOTAL LENGTH", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  const SizedBox(height: 4),
+                                  Text("${totalTrainLength.toStringAsFixed(1)} m", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
+                                ],
+                              ),
+                              Container(height: 30, width: 1, color: Colors.grey.shade300),
+                              Column(
+                                children: [
+                                  Text("BUFFER PLAY", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  const SizedBox(height: 4),
+                                  Text("+${totalBufferPlay.toStringAsFixed(0)} m", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
 
+                      //const SizedBox(height: 40), // Existing spacer below
                       const SizedBox(height: 40),
 
                       // GROUP 5: Verify Load Button
