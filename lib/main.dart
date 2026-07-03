@@ -44,6 +44,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final axlesController = TextEditingController();
   final TextEditingController wagonsController = TextEditingController();
   bool _isUpdatingAxlesOrWagons = false;
+  String? axleValidationError;
 
   void _onAxlesChanged() {
     if (_isUpdatingAxlesOrWagons) return;
@@ -51,12 +52,32 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
 
     final axlesText = axlesController.text;
     if (axlesText.isEmpty) {
-      wagonsController.text = "";
+      setState(() {
+        axleValidationError = null;
+        wagonsController.text = "";
+      });
     } else {
       final axles = int.tryParse(axlesText);
       if (axles != null) {
-        double wagons = axles / 4;
-        wagonsController.text = wagons % 1 == 0 ? wagons.toInt().toString() : wagons.toStringAsFixed(1);
+        if (axles % 4 == 0) {
+          // Valid multiple of 4
+          setState(() {
+            axleValidationError = null;
+          });
+          double wagons = axles / 4;
+          wagonsController.text = wagons.toInt().toString();
+        } else {
+          // Invalid: trigger native validation error state & clear wagons
+          setState(() {
+            axleValidationError = "Must be a multiple of 4";
+            wagonsController.text = "";
+          });
+        }
+      } else {
+        setState(() {
+          axleValidationError = "Invalid number";
+          wagonsController.text = "";
+        });
       }
     }
     _isUpdatingAxlesOrWagons = false;
@@ -69,11 +90,17 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     final wagonsText = wagonsController.text;
     if (wagonsText.isEmpty) {
       axlesController.text = "";
+      setState(() {
+        axleValidationError = null;
+      });
     } else {
       final wagons = double.tryParse(wagonsText);
       if (wagons != null) {
         int axles = (wagons * 4).round();
         axlesController.text = axles.toString();
+        setState(() {
+          axleValidationError = null; // Typing wagons always results in a multiple of 4
+        });
       }
     }
     _isUpdatingAxlesOrWagons = false;
@@ -276,6 +303,8 @@ actions: [
   }
   
   void calculate() {
+    // Safety guard: halt submission sequence if validation fails
+    if (axleValidationError != null) return;
     double tons = double.tryParse(tonsController.text) ?? 0;
     double axles = double.tryParse(axlesController.text) ?? 1;
     double axleMass = (axles > 0) ? tons / axles : 0;
@@ -636,9 +665,10 @@ if (isWideScreen) ...[
                                           controller: axlesController, 
                                           keyboardType: TextInputType.number, 
                                           onSubmitted: (_) => calculate(),
-                                          decoration: const InputDecoration(
+                                          decoration: InputDecoration(
                                             labelText: "Total Axles", 
-                                            border: OutlineInputBorder(),
+                                            border: const OutlineInputBorder(),
+                                            errorText: axleValidationError, // <-- Dynamic state hook
                                           ),
                                         ),
                                       ),
@@ -716,7 +746,7 @@ if (isWideScreen) ...[
                         ),
                         const SizedBox(height: 16),
                         const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 6),
+                        // const   (height: 6),
                         Center(
                           child: SizedBox(
                             width: double.infinity,
@@ -740,7 +770,17 @@ if (isWideScreen) ...[
                         const SizedBox(height: 24),
                         TextField(controller: tonsController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder(),)),
                         const SizedBox(height: 12),
-                        TextField(controller: axlesController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Axles", border: OutlineInputBorder(),)),
+                        TextField(
+                          controller: axlesController, 
+                          keyboardType: TextInputType.number, 
+                          onSubmitted: (_) => calculate(), 
+                          decoration: InputDecoration(
+                            labelText: "Total Axles", 
+                            border: OutlineInputBorder(),
+                            errorText: axleValidationError, // <-- Dynamic state hook
+                          )
+                          ),
+
                       ],
 
                       const SizedBox(height: 40),
