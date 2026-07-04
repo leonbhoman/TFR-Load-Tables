@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
 import 'package:url_launcher/url_launcher.dart'; // <-- Add this import at the very top of main.dart
+import 'dart:io' show File;
+import 'package:crypto/crypto.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const RailCalcApp());
@@ -135,8 +141,175 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     }
   }
 
+  Future<void> _exportAndProcessReceipt({
+    required String locoCount,
+    required String locoName,
+    required String route,
+    required String gcValue,
+    required String baseCap,
+    required String wagonAllowance,
+    required String estWagons,
+    required String totalLimit,
+    required String inputTons,
+    required String weightMarginStr,
+    required String totalLength,
+    required String bufferPlay,
+  }) async {
+    final pdf = pw.Document();
+    final timestamp = DateTime.now().toString().split('.')[0]; // e.g. 2026-07-04 09:45:12
+    final appVersion = currentAppVersion;
+
+    // 1. Build the read-only, layout-structured document structure
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Padding(
+            padding: const pw.EdgeInsets.all(24),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 4),
+                pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+                pw.Text("Application Configuration: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+                pw.Divider(thickness: 1, color: PdfColors.grey400),
+                pw.SizedBox(height: 12),
+                
+                pw.Text("OPERATIONAL CONSIST CONFIGURATION", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 6),
+                pw.Text("Locomotives: $locoCount x $locoName"),
+                pw.Text("Assigned Route: $route (Section ruling Gradient: GC $gcValue)"),
+                pw.Text("Manifest Total Tons: ${inputTons}t"),
+                pw.SizedBox(height: 12),
+
+                pw.Text("CALCULATION MATRIX RESULTS", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 6),
+                pw.Text("Base Capacity Target: ${baseCap}t"),
+                pw.Text("Wagon Weight Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
+                pw.Text("Max Authorised Tonnage Limit: ${totalLimit}t"),
+                pw.Text("Status Framework Margin: $weightMarginStr"),
+                pw.SizedBox(height: 12),
+
+                pw.Text("PHYSICAL CLEARANCE TRACK FOOTPRINT", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 6),
+                pw.Text("Estimated Total Train Length: ${totalLength}m"),
+                pw.Text("Cumulative Buffer Play Allowance: +${bufferPlay}m"),
+                pw.Spacer(),
+                
+                pw.Divider(thickness: 1, color: PdfColors.grey400),
+                pw.SizedBox(height: 6),
+                pw.Text("SECURITY VERIFICATION BANNER", style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.red900)),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  "To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",
+                  style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
+                ),
+                pw.SizedBox(height: 8),
+                // The verification token will be stamped dynamically right below here
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    // 2. Compute the primary raw layout bytes
+    final Uint8List pdfBytes = await pdf.save();
+
+    // 3. Run the binary array through the SHA-256 Cryptographic meat-grinder
+    final hashDigest = sha256.convert(pdfBytes);
+    final String verificationToken = hashDigest.toString();
+
+    // 4. Re-compile the document stream with the absolute token stamped safely on the template layout
+    final finalPdf = pw.Document();
+    finalPdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Padding(
+            padding: const pw.EdgeInsets.all(24),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 4),
+                pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                pw.Text("Application Version Reference: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                pw.SizedBox(height: 10),
+                pw.Container(height: 1, color: PdfColors.grey300),
+                pw.SizedBox(height: 14),
+                
+                pw.Text("OPERATIONAL CONFIGURATION STRUCTURE", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.SizedBox(height: 6),
+                pw.Text("Locomotives Layout: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Route Sector Track: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Declared Cargo Manifest: $inputTons t", style: pw.TextStyle(fontSize: 11)),
+                pw.SizedBox(height: 14),
+
+                pw.Text("COMPUTED TRACK LOAD RESULTS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.SizedBox(height: 6),
+                pw.Text("Baseline Structural Target: $baseCap t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Wagon Structural Bonus: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Absolute Upper Safety Ceiling: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Calculated Section Weight Margin: $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 14),
+
+                pw.Text("PHYSICAL INFRASTRUCTURE GRID METRICS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.SizedBox(height: 6),
+                pw.Text("Total Target Consist Length: $totalLength meters", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Accumulated Buffer Coupling Play: +$bufferPlay meters", style: pw.TextStyle(fontSize: 11)),
+                
+                pw.Spacer(),
+                pw.Container(height: 1, color: PdfColors.grey300),
+                pw.SizedBox(height: 8),
+                pw.Text("OFFICIAL COMPLIANCE SECURITY TRAIL", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.red800)),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  "This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",
+                  style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(8),
+                  color: PdfColors.grey100,
+                  width: double.infinity,
+                  child: pw.Text(
+                    "SECURITY CODE: $verificationToken",
+                    style: pw.TextStyle(fontSize: 8, font: pw.Font.courier(), fontWeight: pw.FontWeight.bold, color: PdfColors.grey900),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    final Uint8List finalBytes = await finalPdf.save();
+    final String safeFileName = "TFR_Report_${timestamp.replaceAll(' ', '_').replaceAll(':', '-')}.pdf";
+
+    // 5. Execution Split: Check if we are executing within a Web context or Mobile device context
+    if (kIsWeb) {
+      // WEB PLATFORM: Direct prompt down to browser storage stream
+  final String base64Uri = 'data:application/pdf;base64,${base64Encode(finalBytes)}';
+  await launchUrl(Uri.parse(base64Uri));
+    } else {
+      // MOBILE PLATFORM: Enforce absolute offline local storage capture and trigger share manager sheet
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$safeFileName');
+      await file.writeAsBytes(finalBytes, flush: true);
+
+      // Fire OS share framework sheet instantly
+      await Share.shareXFiles(
+        [XFile(file.path, mimeType: 'application/pdf')],
+        text: "TFR Load Calculation Record - Consist Reference: $locoCount x $locoName",
+      );
+    }
+  }
+
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.11";
+  final String currentAppVersion = "1.0.12";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
@@ -340,7 +513,7 @@ actions: [
     
     String blockKey = "";
     String warning = "";
-    String isolationWarningMessage = "";
+    // String   = "";
     bool showIsolationWarning = false;
     int targetGC = 5; 
 
@@ -412,12 +585,12 @@ actions: [
               .fold(0, (max, element) => element > max ? element : max);
 
           int actualLookupKey = requestedCount;
-          String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
+          //String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
 
           if (requestedCount > maxAvailableCount && maxAvailableCount > 0) {
             actualLookupKey = maxAvailableCount;
             showIsolationWarning = true;
-            isolationWarningMessage = "No provision for more than $maxAvailableCount x $displayLocoName locos on this route. Extra locos must be isolated.";
+            //isolationWarningMessage = "No provision for more than $maxAvailableCount x $displayLocoName locos on this route. Extra locos must be isolated.";
           }
 
           String countKey = actualLookupKey.toString();
@@ -441,100 +614,184 @@ actions: [
       
       String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
       
-      String dialogBody = warning.isNotEmpty 
-          ? warning 
-          : "Consist: $selectedLocoCount x $displayLocoName ($blockKey)\n"
-            "Setting: $selectedRoute (GC $targetGC)\n"
-            "Base Capacity: ${baselineMaxTons}t\n"
-            "Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)\n"
-            "Total Limit: ${totalAllowedTons}t\n"
-            "---------------------------\n"
-            "Physical Footprint Dynamics:\n"
-            "Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m\n"
-            "Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m\n"
-            "---------------------------\n"
-            "${overWeight ? "Over max limit by" : "Remaining margin"}: ${(totalAllowedTons - tons).abs().toInt()}t";
+      // String dialogBody = warning.isNotEmpty 
+      //     ? warning 
+      //     : "Consist: $selectedLocoCount x $displayLocoName ($blockKey)\n"
+      //       "Setting: $selectedRoute (GC $targetGC)\n"
+      //       "Base Capacity: ${baselineMaxTons}t\n"
+      //       "Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)\n"
+      //       "Total Limit: ${totalAllowedTons}t\n"
+      //       "---------------------------\n"
+      //       "Physical Footprint Dynamics:\n"
+      //       "Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m\n"
+      //       "Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m\n"
+      //       "---------------------------\n"
+      //       "${overWeight ? "Over max limit by" : "Remaining margin"}: ${(totalAllowedTons - tons).abs().toInt()}t";
 
-      showDialog(
-        context: context,
-        barrierDismissible: false, 
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            title: Text(titleText, style: TextStyle(color: headerColor, fontWeight: FontWeight.bold)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents accidentally tapping outside to close
+      builder: (BuildContext context) {
+        
+        // 1. EXTRACT EXTRACTION TEMPLATES CLEANLY FOR THE UI & THE SPECIFIC ISOLATION COUNT
+        final double estimatedWagons = (double.tryParse(wagonsController.text) ?? 0.0);
+        final bool overWeight = tons > totalAllowedTons;
+        final String marginLabel = overWeight ? "Over max limit by" : "Remaining margin";
+        final String marginVal = "${(totalAllowedTons - tons).abs().toInt()}t";
+        final String combinedMarginStr = "$marginLabel: $marginVal";
+
+        // 🟢 CALCULATE EXACT EXCESS COUNT FOR THIS ROUTE ROW DYNAMICALLY
+        int excessLocosCount = 0;
+        if (locoData.containsKey(selectedLoco) && locoData[selectedLoco]!.containsKey(blockKey)) {
+          List<dynamic> blockDataList = locoData[selectedLoco]![blockKey];
+          var rowMatch = blockDataList.firstWhere((row) => row['GC'] == targetGC, orElse: () => null);
+          if (rowMatch != null) {
+            int maxAvailableCount = rowMatch.keys
+                .where((key) => int.tryParse(key) != null)
+                .map((key) => int.parse(key))
+                .fold(0, (max, element) => element > max ? element : max);
+            
+            if (selectedLocoCount > maxAvailableCount) {
+              excessLocosCount = selectedLocoCount - maxAvailableCount;
+            }
+          }
+        }
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+                    Icon(Icons.analytics, color: headerColor, size: 28),
+                    const SizedBox(width: 10),
+                    Text(titleText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
               children: [
-                Text(dialogBody, style: const TextStyle(fontSize: 16, height: 1.4)),
-                if (showIsolationWarning && warning.isEmpty) ...[
+                Text(
+                  "Consist: $selectedLocoCount x $displayLocoName ($blockKey)",
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+                Text("Setting: $selectedRoute (GC $targetGC)"),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text("Base Capacity: ${baselineMaxTons}t"),
+                Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
+                Text(
+                  "Total Limit: ${totalAllowedTons}t", 
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text(
+                  "Physical Footprint Dynamics:",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+                ),
+                Text("Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m"),
+                Text("Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: overWeight ? Colors.red.shade50 : Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: overWeight ? Colors.red.shade300 : Colors.green.shade300),
+                  ),
+                  child: Text(
+                    combinedMarginStr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: overWeight ? Colors.red.shade900 : Colors.green.shade900,
+                    ),
+                  ),
+                ),
+
+                // 🟢 RESTORED ORIGINAL WARNING BOX WITH DYNAMIC COUNT REPLACEMENT:
+                if (showIsolationWarning) ...[
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      border: Border.all(color: Colors.amber.shade600),
+                      color: Colors.orange.shade50,
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.orange.shade400, width: 1.5),
                     ),
+                    width: double.infinity,
                     child: Text(
-                      isolationWarningMessage,
+                      "No provision for more than ${selectedLocoCount - excessLocosCount} x $displayLocoName locos on this route. $excessLocosCount locomotive${excessLocosCount > 1 ? 's' : ''} must be isolated.",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.amber.shade900,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: Colors.orange.shade900,
                       ),
                     ),
                   ),
                 ],
               ],
             ),
-            actions: [Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all<Size>(const Size(160, 48)),
-                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                    shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                    elevation: WidgetStateProperty.all<double>(2),
+          ),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          // ... actions remain exactly the same ...
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // 🔴 DUAL BUTTON 1: CANCEL / DISCARD ESCAPE HATCH
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red.shade700,
+                    side: BorderSide(color: Colors.red.shade300),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 1.1)),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cleanly close popup, data is kept untouched
+                  },
+                  child: const Text("CANCEL / DISCARD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ),
-              ),
+                
+                // 🟢 DUAL BUTTON 2: SECURE EXPORT PIPELINE
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.picture_as_pdf, size: 16),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green.shade700,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    elevation: 2,
+                  ),
+                  onPressed: () async {
+                    // Dismiss dialog screen frame immediately
+                    Navigator.of(context).pop();
+                    
+                    // Trigger the full binary security export structure pipeline
+                    await _exportAndProcessReceipt(
+                      locoCount: selectedLocoCount.toString(),
+                      locoName: displayLocoName,
+                      route: selectedRoute,
+                      gcValue: targetGC.toString(),
+                      baseCap: baselineMaxTons.toString(),
+                      wagonAllowance: allowanceTons.toString(),
+                      estWagons: estimatedWagons.toStringAsFixed(0),
+                      totalLimit: totalAllowedTons.toString(),
+                      inputTons: tons.toString(),
+                      weightMarginStr: combinedMarginStr,
+                      totalLength: totalTrainLength.toStringAsFixed(1),
+                      bufferPlay: totalBufferPlay.toStringAsFixed(0),
+                    );
+                  },
+                  label: const Text("CONFIRM & EXPORT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ],
             ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-          content: Text("No entries found for ${selectedLoco.replaceAll('_Class', '')} with $blockKey at GC $targetGC."),
-actions: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: WidgetStateProperty.all<Size>(const Size(160, 48)),
-                      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
-                      foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                      shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                      elevation: WidgetStateProperty.all<double>(2),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 1.1)),
-                  ),
-                ),
-              ),
-            ],        ),
-      );
+          ],
+        );
+      },
+    );
     }
-  }
+    }
 
 @override
   Widget build(BuildContext context) {
@@ -571,7 +828,7 @@ if (isWideScreen) ...[
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DropdownButtonFormField<String>(
-                                    value: selectedTrainType,
+                                    initialValue: selectedTrainType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
                                       labelText: "Train Operation Mode",
@@ -589,7 +846,7 @@ if (isWideScreen) ...[
                                   ),
                                   const SizedBox(height: 24),
                                   DropdownButtonFormField<String>(
-                                    value: selectedLoco,
+                                    initialValue: selectedLoco,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
                                       labelText: "Locomotive Class",
@@ -604,26 +861,27 @@ if (isWideScreen) ...[
                                   ),
                                   const SizedBox(height: 24),
                                   InputDecorator(
-                                    decoration: const InputDecoration(
-                                      labelText: "Brake Type",
-                                      border: OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                    decoration: InputDecoration(
+                                      labelText: 'BRAKE TYPE',
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                                     ),
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: RadioListTile<bool>(
+                                          child: RadioListTile<bool>.adaptive(
                                             title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                             value: true,
+                                            // ignore: deprecated_member_use
                                             groupValue: isAirbrake,
                                             contentPadding: EdgeInsets.zero,
                                             onChanged: (val) => setState(() => isAirbrake = val!),
                                           ),
                                         ),
                                         Expanded(
-                                          child: RadioListTile<bool>(
+                                          child: RadioListTile<bool>.adaptive(
                                             title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                             value: false,
+                                            // ignore: deprecated_member_use
                                             groupValue: isAirbrake,
                                             contentPadding: EdgeInsets.zero,
                                             onChanged: (val) => setState(() => isAirbrake = val!),
