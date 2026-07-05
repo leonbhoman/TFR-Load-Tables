@@ -515,6 +515,23 @@ actions: [
   void calculate() {
     // Safety guard: halt submission sequence if validation fails
     if (axleValidationError != null) return;
+
+    // 🟢 NEW VALIDATION: Check if primary user input fields are left blank
+    if (tonsController.text.trim().isEmpty || 
+        axlesController.text.trim().isEmpty || 
+        wagonsController.text.trim().isEmpty) {
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in all fields (Tons, Axles, and Wagons) before verifying."),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return; // 👈 CRITICAL: Stops the rest of the calculate() function from running
+    }
+
+    
     double tons = double.tryParse(tonsController.text) ?? 0;
     double axles = double.tryParse(axlesController.text) ?? 1;
     double axleMass = (axles > 0) ? tons / axles : 0;
