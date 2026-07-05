@@ -387,6 +387,14 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   String selectedBrakeType = 'AIRBRAKE';
   Map<String, dynamic> locoData = {};
 
+  // Brake Type Selection Configuration
+  final List<Map<String, String>> brakeTypes = [
+    {'display': 'AIRBRAKE', 'value': 'AIRBRAKE'},
+    {'display': 'VACUUM', 'value': 'VACUUM'},
+    // Future corporate expansions go here natively:
+    // {'display': 'DUAL CONTROL', 'value': 'DUAL'},
+  ];
+
 @override
   void initState() {
     super.initState();
@@ -863,23 +871,16 @@ if (isWideScreen) ...[
                                   DropdownButtonFormField<String>(
                                     initialValue: selectedBrakeType,
                                     isExpanded: true,
-                                    decoration: InputDecoration(
-                                      labelText: 'Brake Type',
+                                    decoration: const InputDecoration(
+                                      labelText: "Brake Type",
                                       border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
-                                    items: const [
-                                      DropdownMenuItem(value: 'AIRBRAKE', child: Text('AIRBRAKE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                                      DropdownMenuItem(value: 'VACUUM', child: Text('VACUUM', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                                      // Future expansion options can be added right here cleanly:
-                                      // DropdownMenuItem(value: 'DUAL', child: Text('DUAL', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
-                                    ],
-                                    onChanged: (String? val) {
-                                      if (val != null) {
-                                        setState(() {
-                                          selectedBrakeType = val;
-                                        });
-                                      }
-                                    },
+                                    items: brakeTypes.map((brake) => DropdownMenuItem<String>(
+                                      value: brake['value'], 
+                                      child: Text(brake['display']!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                    )).toList(),
+                                    onChanged: (val) => setState(() => selectedBrakeType = val!),
                                   ),
                                   const SizedBox(height: 24),
                                   TextField(
