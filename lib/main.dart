@@ -393,8 +393,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
 
   // Brake Type Selection Configuration
   final List<Map<String, String>> brakeTypes = [
-    {'display': 'Airbrake', 'value': 'Airbrake'},
-    {'display': 'Vacuum', 'value': 'Vacuum'},
+    {'display': 'Airbrake', 'value': 'AIRBRAKE'},
+    {'display': 'Vacuum', 'value': 'VACUUM'},
     // Future corporate expansions go here natively:
     // {'display': 'DUAL CONTROL', 'value': 'DUAL'},
   ];
@@ -524,7 +524,7 @@ actions: [
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty ||
-        (selectedBrakeType != 'Airbrake' && selectedBrakeType != 'Vacuum')) 
+        (selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM')) 
         {
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
