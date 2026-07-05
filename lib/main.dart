@@ -520,10 +520,10 @@ actions: [
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty ||
-        // selectedBrakeType == null || 
-        selectedBrakeType.isEmpty) {
-      
-      ScaffoldMessenger.of(context).showSnackBar(
+        selectedBrakeType.isEmpty) 
+        
+    {
+       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please fill in all fields (Tons, Axles, and Wagons) before verifying."),
           backgroundColor: Colors.orange,
