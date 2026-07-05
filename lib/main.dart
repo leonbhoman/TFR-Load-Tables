@@ -523,8 +523,8 @@ actions: [
     // 🟢 NEW VALIDATION: Check if primary user input fields are left blank
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
-        wagonsController.text.trim().isEmpty ||
-        (selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM')) 
+        wagonsController.text.trim().isEmpty) //||
+        //(selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM')) 
         {
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
