@@ -384,7 +384,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   int selectedLocoCount = 4; 
   final List<int> locoCounts = [1, 2, 3, 4, 5, 6];
 
-  bool isAirbrake = true; 
+  String selectedBrakeType = 'AIRBRAKE';
   Map<String, dynamic> locoData = {};
 
 @override
@@ -518,10 +518,10 @@ actions: [
     int targetGC = 5; 
 
     // 1. Dynamic Safety Boundary Check based on Brake Type
-    double maxAllowedAxleMass = isAirbrake ? 20.0 : 18.5;
-    int maxAllowedAxles = isAirbrake ? 200 : 160;
-    int maxAllowedWagons = isAirbrake ? 50 : 40;
-    String brakeName = isAirbrake ? "AIRBRAKE" : "VACUUM";
+    double maxAllowedAxleMass = (selectedBrakeType == 'AIRBRAKE') ? 20.0 : 18.5;
+    int maxAllowedAxles = (selectedBrakeType == 'AIRBRAKE') ? 200 : 160;
+    int maxAllowedWagons = (selectedBrakeType == 'AIRBRAKE') ? 50 : 40;
+    String brakeName = selectedBrakeType; // ? "AIRBRAKE" : "VACUUM";
 
     // Check Axle Mass Threshold
     if (axleMass > maxAllowedAxleMass) {
@@ -543,12 +543,12 @@ actions: [
     if (selectedTrainType == 'Hauler') {
       targetGC = haulerCatalog[selectedRoute] ?? 8;
     } else {
-      String brakeKey = isAirbrake ? 'Airbrake' : 'Vacuum';
+      String brakeKey = (selectedBrakeType == 'AIRBRAKE') ? 'Airbrake' : 'Vacuum';
       targetGC = routeCatalog[selectedRoute]?[brakeKey] ?? 5;
     }
 
     // 3. Determine Block Token based on Brake Type and Calculated Axle Mass (AAM)
-    if (isAirbrake) {
+    if (selectedBrakeType == 'AIRBRAKE') {
       if (axleMass <= 7) { blockKey = "AB27"; }
       else if (axleMass <= 12.5) { blockKey = "AB712"; }
       else if (axleMass <= 17) { blockKey = "AB1217"; }
@@ -750,7 +750,7 @@ showDialog(
                   onPressed: () {
                     Navigator.of(context).pop(); // Cleanly close popup, data is kept untouched
                   },
-                  child: const Text("CANCEL / DISCARD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  child: const Text("CANCEL", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ),
                 
                 // 🟢 DUAL BUTTON 2: SECURE EXPORT PIPELINE
@@ -782,7 +782,7 @@ showDialog(
                       bufferPlay: totalBufferPlay.toStringAsFixed(0),
                     );
                   },
-                  label: const Text("CONFIRM & EXPORT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  label: const Text("CONFIRM", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ),
               ],
             ),
@@ -860,35 +860,27 @@ if (isWideScreen) ...[
                                     onChanged: (val) => setState(() => selectedLoco = val!),
                                   ),
                                   const SizedBox(height: 24),
-                                  InputDecorator(
+                                  DropdownButtonFormField<String>(
+                                    initialValue: selectedBrakeType, // e.g., 'AIRBRAKE'
                                     decoration: InputDecoration(
                                       labelText: 'BRAKE TYPE',
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12), // 🟢 Keeps your exact corner profile
+                                      ),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: RadioListTile<bool>.adaptive(
-                                            title: const Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                            value: true,
-                                            // ignore: deprecated_member_use
-                                            groupValue: isAirbrake,
-                                            contentPadding: EdgeInsets.zero,
-                                            onChanged: (val) => setState(() => isAirbrake = val!),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: RadioListTile<bool>.adaptive(
-                                            title: const Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                            value: false,
-                                            // ignore: deprecated_member_use
-                                            groupValue: isAirbrake,
-                                            contentPadding: EdgeInsets.zero,
-                                            onChanged: (val) => setState(() => isAirbrake = val!),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    items: const [
+                                      DropdownMenuItem(value: 'AIRBRAKE', child: Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                                      DropdownMenuItem(value: 'VACUUM', child: Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                                      // Future expansion options can be added right here cleanly:
+                                      // DropdownMenuItem(value: 'DUAL', child: Text('DUAL', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                                    ],
+                                    onChanged: (String? val) {
+                                      if (val != null) {
+                                        setState(() {
+                                          selectedBrakeType = val;
+                                        });
+                                      }
+                                    },
                                   ),
                                   const SizedBox(height: 24),
                                   TextField(
@@ -1041,21 +1033,20 @@ if (isWideScreen) ...[
                         Center(
                           child: SizedBox(
                             width: double.infinity,
-                            child: SegmentedButton<bool>(
-                              showSelectedIcon: true,
-                              segments: const <ButtonSegment<bool>>[
-                                ButtonSegment<bool>(value: true, label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
-                                ButtonSegment<bool>(value: false, label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold))),
-                              ],
-                              selected: <bool>{isAirbrake},
-                              onSelectionChanged: (Set<bool> newSelection) => setState(() => isAirbrake = newSelection.first),
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
-                                foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
-                                shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                                side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                              ),
+                            child: SegmentedButton<String>(
+                            showSelectedIcon: true,
+                            segments: const <ButtonSegment<String>>[
+                              ButtonSegment<String>(value: 'AIRBRAKE', label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
+                              ButtonSegment<String>(value: 'VACUUM', label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold))),
+                            ],
+                            selected: <String>{selectedBrakeType},
+                            onSelectionChanged: (Set<String> newSelection) => setState(() => selectedBrakeType = newSelection.first),
+                            style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
+                              foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
+                              shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
+                              side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
                             ),
+                          )
                           ),
                         ),
                         const SizedBox(height: 24),
