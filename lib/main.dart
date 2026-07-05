@@ -519,7 +519,9 @@ actions: [
     // 🟢 NEW VALIDATION: Check if primary user input fields are left blank
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
-        wagonsController.text.trim().isEmpty) {
+        wagonsController.text.trim().isEmpty ||
+        // selectedBrakeType == null || 
+        selectedBrakeType.isEmpty) {
       
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -531,7 +533,7 @@ actions: [
       return; // 👈 CRITICAL: Stops the rest of the calculate() function from running
     }
 
-    
+
     double tons = double.tryParse(tonsController.text) ?? 0;
     double axles = double.tryParse(axlesController.text) ?? 1;
     double axleMass = (axles > 0) ? tons / axles : 0;
