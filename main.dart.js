@@ -85150,35 +85150,33 @@ return B.P($async$uv,r)},
 pV(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7=this,a8={}
 if(a7.w!=null)return
 s=a7.d.a.a
-r=!0
-if(A.u.jI(s).length!==0)if(A.u.jI(a7.e.a.a).length!==0)if(A.u.jI(a7.f.a.a).length!==0){r=a7.fr
-r=r!=="AIRBRAKE"&&r!=="VACUUM"}if(r){a7.c.ah(t.Pu).f.YO(A.aF3)
-return}q=B.jC(s)
-if(q==null)q=0
-p=B.jC(a7.e.a.a)
-if(p==null)p=1
-o=p>0?q/p:0
+if(A.u.jI(s).length===0||A.u.jI(a7.e.a.a).length===0||A.u.jI(a7.f.a.a).length===0){a7.c.ah(t.Pu).f.YO(A.aF3)
+return}r=B.jC(s)
+if(r==null)r=0
+q=B.jC(a7.e.a.a)
+if(q==null)q=1
+p=q>0?r/q:0
 a8.a=""
 a8.b=!1
-n=a8.c=5
+o=a8.c=5
 s=a7.fr
-r=s==="AIRBRAKE"
-m=r?20:18.5
-l=r?200:160
-k=r?50:40
-j=o>m?"\u26a0\ufe0f EXCEEDS MAX "+B.j(m)+" t/a FOR "+s:""
-i=p/4
-if(p>l||i>k){if(j.length!==0)j+="\n"
-j+="\u26a0\ufe0f "+s+" LIMIT EXCEEDED:\nMax "+k+" Wagons / "+l+" Axles allowed."}if(a7.as==="Hauler"){n=a7.cx.h(0,a7.ax)
-a8.c=n==null?8:n}else{h=r?"Airbrake":"Vacuum"
+n=s==="AIRBRAKE"
+m=n?20:18.5
+l=n?200:160
+k=n?50:40
+j=p>m?"\u26a0\ufe0f EXCEEDS MAX "+B.j(m)+" t/a FOR "+s:""
+i=q/4
+if(q>l||i>k){if(j.length!==0)j+="\n"
+j+="\u26a0\ufe0f "+s+" LIMIT EXCEEDED:\nMax "+k+" Wagons / "+l+" Axles allowed."}if(a7.as==="Hauler"){o=a7.cx.h(0,a7.ax)
+a8.c=o==null?8:o}else{h=n?"Airbrake":"Vacuum"
 s=a7.ch.h(0,a7.ax)
 g=s==null?null:s.h(0,h)
-a8.c=g==null?n:g}if(a7.fr==="AIRBRAKE")if(o<=7){a8.a="AB27"
-s="AB27"}else if(o<=12.5){a8.a="AB712"
-s="AB712"}else if(o<=17){a8.a="AB1217"
-s="AB1217"}else if(o<=19){a8.a="AB1719"
+a8.c=g==null?o:g}if(a7.fr==="AIRBRAKE")if(p<=7){a8.a="AB27"
+s="AB27"}else if(p<=12.5){a8.a="AB712"
+s="AB712"}else if(p<=17){a8.a="AB1217"
+s="AB1217"}else if(p<=19){a8.a="AB1719"
 s="AB1719"}else{a8.a="AB1920"
-s="AB1920"}else if(o<=10){a8.a="VB10"
+s="AB1920"}else if(p<=10){a8.a="VB10"
 s="VB10"}else{a8.a="VB10P"
 s="VB10P"}a8.d=0
 f=!1
@@ -85197,7 +85195,7 @@ a1=A.C.k(a0)
 if(d.ag(a1))a8.d=d.h(0,a1)}}}a2=A.q.ht(i)
 a3=a8.d+a2
 s=j.length===0
-if(!s||f){a4=s&&q>a3
+if(!s||f){a4=s&&r>a3
 s=!s
 if(s)a5="\u26a0\ufe0f SYSTEM WARNING"
 else a5=a4?"\u274c OVERWEIGHT":"\u2705 CLEAR TO RUN"
@@ -85205,9 +85203,9 @@ if(s)a6=A.DG
 else a6=a4?A.azx:A.DH
 s=A.m.yS(a7.db,new B.ams(a7)).h(0,"display")
 s.toString
-r=a7.c
-r.toString
-B.aRF(!1,new B.amt(a8,a7,q,a3,a6,a5,s,a2),r,t.z)}},
+n=a7.c
+n.toString
+B.aRF(!1,new B.amt(a8,a7,r,a3,a6,a5,s,a2),n,t.z)}},
 J(a){var s=this
 return B.ayX(new B.amh(s,s.as==="Hauler"?s.CW:s.ay))}}
 B.alz.prototype={
