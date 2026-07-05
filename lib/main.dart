@@ -1,3 +1,7 @@
+//==================================
+//All the imports grouped together.
+//==================================
+
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -521,6 +525,7 @@ actions: [
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty ||
         (selectedBrakeType != 'Airbrake' && selectedBrakeType != 'Vacuum')) { //Checking to see if capitalization makes a difference
+        // Github failed. So i'm adding some text so I can re-upload.  
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please ensure all criteria hav been selected and all fields filled in before verifying."),
