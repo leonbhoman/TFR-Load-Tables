@@ -520,7 +520,7 @@ actions: [
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty ||
-        (selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM')) {
+        (selectedBrakeType != 'Airbrake' && selectedBrakeType != 'Vacuum')) { //Checking to see if capitalization makes a difference
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please ensure all criteria hav been selected and all fields filled in before verifying."),
