@@ -389,8 +389,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
 
   // Brake Type Selection Configuration
   final List<Map<String, String>> brakeTypes = [
-    {'display': 'AIRBRAKE', 'value': 'AIRBRAKE'},
-    {'display': 'VACUUM', 'value': 'VACUUM'},
+    {'display': 'Airbrake', 'value': 'AIRBRAKE'},
+    {'display': 'Vacuum', 'value': 'VACUUM'},
     // Future corporate expansions go here natively:
     // {'display': 'DUAL CONTROL', 'value': 'DUAL'},
   ];
