@@ -545,7 +545,7 @@ actions: [
     // 1. Safety Boundary Check
     // if (axleMass > 20) {
     //  warning = "⚠️ EXCEEDS MAX 20 t/a";
-    // }
+    // *****************************************************************************************************************************}
 
     // 2. Routed Matrix Lookup (Hauler vs Mainline Branches)
     if (selectedTrainType == 'Hauler') {
