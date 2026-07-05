@@ -384,7 +384,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   int selectedLocoCount = 4; 
   final List<int> locoCounts = [1, 2, 3, 4, 5, 6];
 
-  String selectedBrakeType = 'AIRBRAKE';
+  String selectedBrakeType = '';
   Map<String, dynamic> locoData = {};
 
   // Brake Type Selection Configuration
