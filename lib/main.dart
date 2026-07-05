@@ -524,8 +524,8 @@ actions: [
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
         wagonsController.text.trim().isEmpty ||
-        (selectedBrakeType != 'Airbrake' && selectedBrakeType != 'Vacuum')) { //Checking to see if capitalization makes a difference
-        // Github failed. So i'm adding some text so I can re-upload.  
+        (selectedBrakeType != 'Airbrake' && selectedBrakeType != 'Vacuum')) 
+        {
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please ensure all criteria hav been selected and all fields filled in before verifying."),
