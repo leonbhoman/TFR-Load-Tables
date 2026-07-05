@@ -85150,33 +85150,35 @@ return B.P($async$uv,r)},
 pV(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7=this,a8={}
 if(a7.w!=null)return
 s=a7.d.a.a
-if(A.u.jI(s).length===0||A.u.jI(a7.e.a.a).length===0||A.u.jI(a7.f.a.a).length===0||a7.fr.length===0){a7.c.ah(t.Pu).f.YO(A.aF3)
-return}r=B.jC(s)
-if(r==null)r=0
-q=B.jC(a7.e.a.a)
-if(q==null)q=1
-p=q>0?r/q:0
+r=!0
+if(A.u.jI(s).length!==0)if(A.u.jI(a7.e.a.a).length!==0)if(A.u.jI(a7.f.a.a).length!==0){r=a7.fr
+r=r!=="AIRBRAKE"&&r!=="VACUUM"}if(r){a7.c.ah(t.Pu).f.YO(A.aF3)
+return}q=B.jC(s)
+if(q==null)q=0
+p=B.jC(a7.e.a.a)
+if(p==null)p=1
+o=p>0?q/p:0
 a8.a=""
 a8.b=!1
-o=a8.c=5
+n=a8.c=5
 s=a7.fr
-n=s==="AIRBRAKE"
-m=n?20:18.5
-l=n?200:160
-k=n?50:40
-j=p>m?"\u26a0\ufe0f EXCEEDS MAX "+B.j(m)+" t/a FOR "+s:""
-i=q/4
-if(q>l||i>k){if(j.length!==0)j+="\n"
-j+="\u26a0\ufe0f "+s+" LIMIT EXCEEDED:\nMax "+k+" Wagons / "+l+" Axles allowed."}if(a7.as==="Hauler"){o=a7.cx.h(0,a7.ax)
-a8.c=o==null?8:o}else{h=n?"Airbrake":"Vacuum"
+r=s==="AIRBRAKE"
+m=r?20:18.5
+l=r?200:160
+k=r?50:40
+j=o>m?"\u26a0\ufe0f EXCEEDS MAX "+B.j(m)+" t/a FOR "+s:""
+i=p/4
+if(p>l||i>k){if(j.length!==0)j+="\n"
+j+="\u26a0\ufe0f "+s+" LIMIT EXCEEDED:\nMax "+k+" Wagons / "+l+" Axles allowed."}if(a7.as==="Hauler"){n=a7.cx.h(0,a7.ax)
+a8.c=n==null?8:n}else{h=r?"Airbrake":"Vacuum"
 s=a7.ch.h(0,a7.ax)
 g=s==null?null:s.h(0,h)
-a8.c=g==null?o:g}if(a7.fr==="AIRBRAKE")if(p<=7){a8.a="AB27"
-s="AB27"}else if(p<=12.5){a8.a="AB712"
-s="AB712"}else if(p<=17){a8.a="AB1217"
-s="AB1217"}else if(p<=19){a8.a="AB1719"
+a8.c=g==null?n:g}if(a7.fr==="AIRBRAKE")if(o<=7){a8.a="AB27"
+s="AB27"}else if(o<=12.5){a8.a="AB712"
+s="AB712"}else if(o<=17){a8.a="AB1217"
+s="AB1217"}else if(o<=19){a8.a="AB1719"
 s="AB1719"}else{a8.a="AB1920"
-s="AB1920"}else if(p<=10){a8.a="VB10"
+s="AB1920"}else if(o<=10){a8.a="VB10"
 s="VB10"}else{a8.a="VB10P"
 s="VB10P"}a8.d=0
 f=!1
@@ -85195,7 +85197,7 @@ a1=A.C.k(a0)
 if(d.ag(a1))a8.d=d.h(0,a1)}}}a2=A.q.ht(i)
 a3=a8.d+a2
 s=j.length===0
-if(!s||f){a4=s&&r>a3
+if(!s||f){a4=s&&q>a3
 s=!s
 if(s)a5="\u26a0\ufe0f SYSTEM WARNING"
 else a5=a4?"\u274c OVERWEIGHT":"\u2705 CLEAR TO RUN"
@@ -85203,9 +85205,9 @@ if(s)a6=A.DG
 else a6=a4?A.azx:A.DH
 s=A.m.yS(a7.db,new B.ams(a7)).h(0,"display")
 s.toString
-n=a7.c
-n.toString
-B.aRF(!1,new B.amt(a8,a7,r,a3,a6,a5,s,a2),n,t.z)}},
+r=a7.c
+r.toString
+B.aRF(!1,new B.amt(a8,a7,q,a3,a6,a5,s,a2),r,t.z)}},
 J(a){var s=this
 return B.ayX(new B.amh(s,s.as==="Hauler"?s.CW:s.ay))}}
 B.alz.prototype={
@@ -85307,7 +85309,7 @@ a=n>1?"s":""
 A.m.O(f,B.b([A.hC,B.lQ(B.c4("No provision for more than "+(b-n)+" x "+h+" locos on this route. "+n+" locomotive"+a+" must be isolated.",a7,a7,a7,B.ev(a7,a7,A.qK,a7,a7,a7,a7,a7,a7,a7,a7,13,a7,a7,A.bE,a7,a7,!0,a7,a7,a7,a7,a7,a7,a7,a7),A.e1,a7),A.ag,a7,new B.e1(A.qQ,a7,d,e,a7,a7,A.c_),a7,a7,A.rx,1/0)],l))}f=B.aAk(new B.L_(f,a7),a7)
 e=B.aKk(a7,a7,a7,a7,a7,a7,a7,a7,a7,A.m5,a7,a7,a7,a7,new B.cv(B.j5(8),A.W),new B.aP(A.mj,1,A.a0,-1),a7,a7,a7,a7)
 d=B.aIC(a7,a7,A.i0,a7,a7,a7,2,a7,a7,A.M,a7,a7,a7,a7,new B.cv(B.j5(8),A.W),a7,a7,a7,a7,a7)
-return new B.rl(i,f,B.b([B.kZ(B.b([new B.LD(new B.amn(b0),a7,a7,a7,e,a7,a7,!1,a7,!0,a7,A.aKi,a7),new B.xY(!0,new B.amo(g,a8,b0,h,c,a9,r,s,o),a7,a7,a7,d,A.ag,a7,!1,a7,!0,a7,new B.Ri(A.aKm,A.PW,d,a7,a7),a7)],l),A.bp,A.kl,A.c6,0)],l),A.Pb,new B.cv(m,A.W),a7)},
+return new B.rl(i,f,B.b([B.kZ(B.b([new B.LD(new B.amn(b0),a7,a7,a7,e,a7,a7,!1,a7,!0,a7,A.aKj,a7),new B.xY(!0,new B.amo(g,a8,b0,h,c,a9,r,s,o),a7,a7,a7,d,A.ag,a7,!1,a7,!0,a7,new B.Ri(A.aKn,A.PW,d,a7,a7),a7)],l),A.bp,A.kl,A.c6,0)],l),A.Pb,new B.cv(m,A.W),a7)},
 $S:512}
 B.ami.prototype={
 $1(a){return J.d(J.ia(a,"GC"),this.a.c)},
@@ -85391,11 +85393,11 @@ p=j.dy
 o=B.W(p).i("a1<1,dr<n>>")
 p=B.Y(new B.a1(p,new B.am1(),o),o.i("ai.E"))
 o=t.b
-A.m.O(k,B.b([A.aKj,i,A.hC,A.aKn,h,A.hC,A.aKe,r,A.hC,A.aKd,B.a0Y(!0,p,new B.am2(j),q,t.S),A.IC,A.aKl,B.kb(B.fJ(new B.u2(A.avO,B.bV([j.fr],s),new B.am4(j),B.j7(n,n,n,new B.bu(new B.am5(),o),n,n,n,n,new B.bu(new B.am6(),o),n,n,n,n,n,n,n,n,n,new B.aE(new B.cv(B.j5(24),A.W),t.li),new B.aE(A.W,t.y2),n,n,n,n,n),!0,n,t.eP),n,1/0),n,n),A.dZ,B.Ot(j.d,A.t5,A.hF,new B.am7(j)),A.hC,B.Ot(j.e,B.aua(n,new B.h8(4,A.ef,A.lV),n,n,n,n,n,n,!0,n,n,n,n,n,j.w,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,m,!0,!0,!1,n,n,n,n,n,n,n,n,n,n,n,n,n,n),A.hF,new B.am8(j))],l))}k.push(A.dZ)
+A.m.O(k,B.b([A.aKk,i,A.hC,A.aKo,h,A.hC,A.aKe,r,A.hC,A.aKd,B.a0Y(!0,p,new B.am2(j),q,t.S),A.IC,A.aKm,B.kb(B.fJ(new B.u2(A.avO,B.bV([j.fr],s),new B.am4(j),B.j7(n,n,n,new B.bu(new B.am5(),o),n,n,n,n,new B.bu(new B.am6(),o),n,n,n,n,n,n,n,n,n,new B.aE(new B.cv(B.j5(24),A.W),t.li),new B.aE(A.W,t.y2),n,n,n,n,n),!0,n,t.eP),n,1/0),n,n),A.dZ,B.Ot(j.d,A.t5,A.hF,new B.am7(j)),A.hC,B.Ot(j.e,B.aua(n,new B.h8(4,A.ef,A.lV),n,n,n,n,n,n,!0,n,n,n,n,n,j.w,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,m,!0,!0,!1,n,n,n,n,n,n,n,n,n,n,n,n,n,n),A.hF,new B.am8(j))],l))}k.push(A.dZ)
 if(j.x>0&&j.w==null){i=B.atr(A.mc,1)
 h=B.j5(12)
 A.m.O(k,B.b([B.lQ(B.kZ(B.b([B.kc(B.b([B.c4("TOTAL LENGTH",n,n,n,B.ev(n,n,A.dF,n,n,n,n,n,n,n,n,11,n,n,A.bE,n,n,!0,n,0.8,n,n,n,n,n,n),n,n),A.ID,B.c4(A.q.Z(j.x,1)+" m",n,n,n,A.aGT,n,n)],l),A.bp,A.b3,A.c6),B.lQ(n,A.ag,A.mc,n,30,n,n,1),B.kc(B.b([B.c4("BUFFER PLAY",n,n,n,B.ev(n,n,A.dF,n,n,n,n,n,n,n,n,11,n,n,A.bE,n,n,!0,n,0.8,n,n,n,n,n,n),n,n),A.ID,B.c4("+"+A.q.Z(j.y,0)+" m",n,n,n,B.ev(n,n,A.mg,n,n,n,n,n,n,n,n,18,n,n,A.bE,n,n,!0,n,n,n,n,n,n,n,n),n,n)],l),A.bp,A.b3,A.c6)],l),A.bp,A.op,A.c6,0),A.ag,n,new B.e1(A.r3,n,i,h,n,n,A.c_),n,n,A.Pc,n)],l))}k.push(A.aER)
-k.push(B.kb(new B.xY(!1,j.gaht(),n,n,n,B.j7(n,n,n,new B.bu(new B.am9(),t.b),new B.aE(3,t.XR),n,n,n,new B.aE(A.M,t.De),n,n,n,n,new B.aE(A.aED,t.W7),n,n,n,n,new B.aE(new B.cv(B.j5(28),A.W),t.li),n,n,n,n,n,n),n,n,!1,n,!0,n,A.aKk,n),n,n))
+k.push(B.kb(new B.xY(!1,j.gaht(),n,n,n,B.j7(n,n,n,new B.bu(new B.am9(),t.b),new B.aE(3,t.XR),n,n,n,new B.aE(A.M,t.De),n,n,n,n,new B.aE(A.aED,t.W7),n,n,n,n,new B.aE(new B.cv(B.j5(28),A.W),t.li),n,n,n,n,n,n),n,n,!1,n,!0,n,A.aKl,n),n,n))
 l=B.kc(B.b([B.oy(B.aAk(B.kc(k,A.en,A.b3,A.c6),A.Pj),1),B.lQ(B.c4("v1.0.12 | Developed by Leon and Gemini",n,n,n,B.ev(n,n,A.dF,n,n,n,n,n,n,n,n,12,n,n,A.aI,n,n,!0,n,0.5,n,n,n,n,n,n),A.e1,n),A.ag,A.NB,n,n,n,A.P7,1/0)],l),A.bp,A.b3,A.c6)
 return new B.oJ(l,A.lS,n)},
 $S:516}
@@ -96585,9 +96587,9 @@ A.aF0=new B.jJ(3,"hide")
 A.aOf=new B.jJ(4,"remove")
 A.aF1=new B.jJ(5,"timeout")
 A.aF2=new B.uf(null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aKo=new B.eO("Please fill in all fields (Tons, Axles, and Wagons) before verifying.",null,null,null,null,null,null,null,null)
+A.aKi=new B.eO("Please ensure all criteria hav been selected and all fields filled in before verifying.",null,null,null,null,null,null,null,null)
 A.OR=new B.aZ(3e6)
-A.aF3=new B.qi(A.aKo,A.DG,null,null,null,null,null,null,null,null,null,null,null,A.OR,!1,null,null,null,A.aF,null)
+A.aF3=new B.qi(A.aKi,A.DG,null,null,null,null,null,null,null,null,null,null,null,A.OR,!1,null,null,null,A.aF,null)
 A.IF=new B.Bu(0,"permissive")
 A.aF4=new B.Bu(1,"normal")
 A.aF5=new B.Bu(2,"forced")
@@ -96964,13 +96966,13 @@ A.aKe=new B.eO("Locomotive Class:",null,A.cx,null,null,null,null,null,null)
 A.aI4=new B.l(!0,A.M,null,null,null,null,null,A.bE,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 A.aKh=new B.eO("TFR Load Calculator",null,A.aI4,null,null,null,null,null,null)
 A.J8=new B.l(!0,null,null,null,null,null,12,A.bE,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aKi=new B.eO("CANCEL",null,A.J8,null,null,null,null,null,null)
-A.aKj=new B.eO("Train Operation Mode:",null,A.cx,null,null,null,null,null,null)
+A.aKj=new B.eO("CANCEL",null,A.J8,null,null,null,null,null,null)
+A.aKk=new B.eO("Train Operation Mode:",null,A.cx,null,null,null,null,null,null)
 A.aGU=new B.l(!0,null,null,null,null,null,16,A.bE,null,1.2,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aKk=new B.eO("VERIFY LOAD",null,A.aGU,null,null,null,null,null,null)
-A.aKl=new B.eO("Brake Type:",null,A.cx,null,null,null,null,null,null)
-A.aKm=new B.eO("CONFIRM",null,A.J8,null,null,null,null,null,null)
-A.aKn=new B.eO("Route:",null,A.cx,null,null,null,null,null,null)
+A.aKl=new B.eO("VERIFY LOAD",null,A.aGU,null,null,null,null,null,null)
+A.aKm=new B.eO("Brake Type:",null,A.cx,null,null,null,null,null,null)
+A.aKn=new B.eO("CONFIRM",null,A.J8,null,null,null,null,null,null)
+A.aKo=new B.eO("Route:",null,A.cx,null,null,null,null,null,null)
 A.aOh=new B.agq(0,"system")
 A.aAp=new B.h(0.056,0.024)
 A.aAE=new B.h(0.108,0.3085)
