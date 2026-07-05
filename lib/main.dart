@@ -865,7 +865,7 @@ if (isWideScreen) ...[
                                     decoration: InputDecoration(
                                       labelText: 'BRAKE TYPE',
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20), // 🟢 Keeps your exact corner profile
+                                        borderRadius: BorderRadius.circular(8), // 🟢 Keeps your exact corner profile
                                       ),
                                     ),
                                     items: const [
