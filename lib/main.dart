@@ -878,7 +878,7 @@ if (isWideScreen) ...[
                                     ),
                                     items: brakeTypes.map((brake) => DropdownMenuItem<String>(
                                       value: brake['value'], 
-                                      child: Text(brake['display']!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                      child: Text(brake['display']!),
                                     )).toList(),
                                     onChanged: (val) => setState(() => selectedBrakeType = val!),
                                   ),
