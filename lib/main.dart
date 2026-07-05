@@ -861,16 +861,15 @@ if (isWideScreen) ...[
                                   ),
                                   const SizedBox(height: 24),
                                   DropdownButtonFormField<String>(
-                                    initialValue: selectedBrakeType, // e.g., 'AIRBRAKE'
+                                    initialValue: selectedBrakeType,
+                                    isExpanded: true,
                                     decoration: InputDecoration(
-                                      labelText: 'BRAKE TYPE',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(4), // 🟢 Keeps your exact corner profile
-                                      ),
+                                      labelText: 'Brake Type',
+                                      border: OutlineInputBorder(),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: 'AIRBRAKE', child: Text('AIRBRAKE', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
-                                      DropdownMenuItem(value: 'VACUUM', child: Text('VACUUM', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                                      DropdownMenuItem(value: 'AIRBRAKE', child: Text('AIRBRAKE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                                      DropdownMenuItem(value: 'VACUUM', child: Text('VACUUM', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
                                       // Future expansion options can be added right here cleanly:
                                       // DropdownMenuItem(value: 'DUAL', child: Text('DUAL', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
                                     ],
@@ -906,7 +905,7 @@ if (isWideScreen) ...[
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DropdownButtonFormField<String>(
-                                    value: selectedRoute,
+                                    initialValue: selectedRoute,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
                                       labelText: "Route",
@@ -918,7 +917,7 @@ if (isWideScreen) ...[
                                   ),
                                   const SizedBox(height: 24),
                                   DropdownButtonFormField<int>(
-                                    value: selectedLocoCount,
+                                    initialValue: selectedLocoCount,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
                                       labelText: "Number of Locos (Live locomotives only)",
