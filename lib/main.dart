@@ -14,6 +14,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:universal_html/html.dart' as html;
 
 void main() {
   runApp(const RailCalcApp());
@@ -29,12 +30,28 @@ class RailCalcApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true,
         colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),),
       home: Scaffold(
-        appBar: AppBar(title: const Text(
-            'TFR Load Calculator', 
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+        appBar: AppBar(
+          // 🟢 FIXED: Dual-element layout with title on the left and 3-row source right-aligned
+          title: Row(
+            children: [
+              const Text(
+                'TFR Load Calculator', 
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
+              ),
+              const Spacer(), // Pushes the technical reference block all the way to the right edge
+              Text(
+                "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
+                textAlign: TextAlign.end, // Aligns text cleanly to the right edge
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.85), // Soft white to keep it subtle
+                  fontSize: 10,                          // Keeps it small and unobtrusive
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,                           // Controls line spacing tightly
+                ),
+              ),
+            ],
           ),
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-          elevation: 2,
         ),
         body: const LoadCalculatorForm(),
       ),
@@ -145,7 +162,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     }
   }
 
-  Future<void> _exportAndProcessReceipt({
+Future<void> _exportAndProcessReceipt({
     required String locoCount,
     required String locoName,
     required String route,
@@ -163,7 +180,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     final timestamp = DateTime.now().toString().split('.')[0]; // e.g. 2026-07-04 09:45:12
     final appVersion = currentAppVersion;
 
-    // 1. Build the read-only, layout-structured document structure
+    // 1. Build the read-only, layout-structured document structure to compute the baseline hash
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -210,7 +227,6 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
                   style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
                 ),
                 pw.SizedBox(height: 8),
-                // The verification token will be stamped dynamically right below here
               ],
             ),
           );
@@ -225,7 +241,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     final hashDigest = sha256.convert(pdfBytes);
     final String verificationToken = hashDigest.toString();
 
-    // 4. Re-compile the document stream with the absolute token stamped safely on the template layout
+    // 4. Re-compile the final document stream with the absolute token stamped safely on the template layout
     final finalPdf = pw.Document();
     finalPdf.addPage(
       pw.Page(
@@ -290,28 +306,53 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       ),
     );
 
+    // 5. Generate final bytes containing the stamped security code
     final Uint8List finalBytes = await finalPdf.save();
     final String safeFileName = "TFR_Report_${timestamp.replaceAll(' ', '_').replaceAll(':', '-')}.pdf";
 
-    // 5. Execution Split: Check if we are executing within a Web context or Mobile device context
+    // 6. Execution Split: Handle Web Browser Sandbox vs Native Mobile Filesystem
     if (kIsWeb) {
-      // WEB PLATFORM: Direct prompt down to browser storage stream
-  final String base64Uri = 'data:application/pdf;base64,${base64Encode(finalBytes)}';
-  await launchUrl(Uri.parse(base64Uri));
+      try {
+        // WEB PLATFORM: Convert finalBytes to a Blob object and trigger the browser save dialog
+        final blob = html.Blob([finalBytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute("download", safeFileName)
+          ..style.display = 'none';
+        
+        html.document.body?.children.add(anchor);
+        anchor.click();
+        html.document.body?.children.remove(anchor);
+        html.Url.revokeObjectUrl(url);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("PDF Load Verification Receipt downloaded successfully."),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        debugPrint("Web download error: $e");
+      }
     } else {
       // MOBILE PLATFORM: Enforce absolute offline local storage capture and trigger share manager sheet
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/$safeFileName');
-      await file.writeAsBytes(finalBytes, flush: true);
+      try {
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/$safeFileName');
+        await file.writeAsBytes(finalBytes, flush: true);
 
-      // Fire OS share framework sheet instantly
-      await Share.shareXFiles(
-        [XFile(file.path, mimeType: 'application/pdf')],
-        text: "TFR Load Calculation Record - Consist Reference: $locoCount x $locoName",
-      );
+        // Fire OS native share sheet framework instantly
+        final xFile = XFile(file.path, mimeType: 'application/pdf');
+        await Share.shareXFiles(
+          [xFile],
+          text: "TFR Load Calculation Record - Consist Reference: $locoCount x $locoName (Code: ${verificationToken.substring(0, 8)})",
+        );
+      } catch (e) {
+        debugPrint("Mobile storage error: $e");
+      }
     }
   }
-
   // The version hardcoded into this specific build string
   final String currentAppVersion = "1.0.13";
   // Track if the user clicked "Later" so we don't spam them during this app session

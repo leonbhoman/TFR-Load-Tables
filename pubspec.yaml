@@ -17,6 +17,7 @@ dependencies:
   pdf: ^3.10.8
   share_plus: ^13.2.0
   path_provider: ^2.1.1
+  universal_html: ^2.3.0
 
 dev_dependencies:
   flutter_test:
