@@ -133,7 +133,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
         });
       }
     }
-    _updateTrainLength(); // <-- Add here
+    _updateTrainLength(); // 
     _isUpdatingAxlesOrWagons = false;
   }
 
@@ -190,32 +190,32 @@ Future<void> _exportAndProcessReceipt({
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Load Calculator Record", style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 4),
                 pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
-                pw.Text("Application Configuration: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+                pw.Text("Application Version: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
                 pw.Divider(thickness: 1, color: PdfColors.grey400),
                 pw.SizedBox(height: 12),
                 
-                pw.Text("OPERATIONAL CONSIST CONFIGURATION", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Train Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
                 pw.Text("Locomotives: $locoCount x $locoName"),
-                pw.Text("Assigned Route: $route (Section ruling Gradient: GC $gcValue)"),
-                pw.Text("Manifest Total Tons: ${inputTons}t"),
+                pw.Text("Route: $route (Section ruling Gradient: GC $gcValue)"),
+                pw.Text("Total Tons: ${inputTons}t"),
                 pw.SizedBox(height: 12),
 
-                pw.Text("CALCULATION MATRIX RESULTS", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Load Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
-                pw.Text("Base Capacity Target: ${baseCap}t"),
-                pw.Text("Wagon Weight Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
-                pw.Text("Max Authorised Tonnage Limit: ${totalLimit}t"),
+                pw.Text("Base Capacity: ${baseCap}t"),
+                pw.Text("Wagon Overload Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
+                pw.Text("Max Tonnage: ${totalLimit}t"),
                 pw.Text("Status Framework Margin: $weightMarginStr"),
                 pw.SizedBox(height: 12),
 
-                pw.Text("PHYSICAL CLEARANCE TRACK FOOTPRINT", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
-                pw.Text("Estimated Total Train Length: ${totalLength}m"),
-                pw.Text("Cumulative Buffer Play Allowance: +${bufferPlay}m"),
+                pw.Text("Estimated Train Length: ${totalLength}m"),
+                pw.Text("Estimated Buffer Play: +${bufferPlay}m"),
                 pw.Spacer(),
                 
                 pw.Divider(thickness: 1, color: PdfColors.grey400),
@@ -252,15 +252,15 @@ Future<void> _exportAndProcessReceipt({
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Load Calculator Record", style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 4),
                 pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
-                pw.Text("Application Version Reference: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                pw.Text("Application Version: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
                 pw.SizedBox(height: 10),
                 pw.Container(height: 1, color: PdfColors.grey300),
                 pw.SizedBox(height: 14),
                 
-                pw.Text("OPERATIONAL CONFIGURATION STRUCTURE", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("Train Details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
                 pw.Text("Locomotives Layout: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
                 pw.Text("Route Sector Track: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
@@ -269,9 +269,9 @@ Future<void> _exportAndProcessReceipt({
 
                 pw.Text("COMPUTED TRACK LOAD RESULTS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Baseline Structural Target: $baseCap t", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Wagon Structural Bonus: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Absolute Upper Safety Ceiling: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Base Capacity: $baseCap t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Wagon Overload Allowance: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Max Tonnage: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
                 pw.Text("Calculated Section Weight Margin: $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 14),
 
@@ -741,11 +741,11 @@ Future<void> _exportAndProcessReceipt({
                     "Consist: $selectedLocoCount x $displayLocoName ($blockKey)",
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
-                  Text("Setting: $selectedRoute (GC $targetGC)"),
+                  Text("Route: $selectedRoute (GC $targetGC)"),
                   const SizedBox(height: 8),
                   const Divider(),
                   const SizedBox(height: 8),
-                  Text("Base Capacity: ${baselineMaxTons}t"),
+                  Text("Train Capacity: ${baselineMaxTons}t"),
                   Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
                   Text(
                     "Total Limit: ${totalAllowedTons}t", 
@@ -755,11 +755,11 @@ Future<void> _exportAndProcessReceipt({
                   const Divider(),
                   const SizedBox(height: 8),
                   Text(
-                    "Physical Footprint Dynamics:",
+                    "Train Length Estimates:",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
                   ),
-                  Text("Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m"),
-                  Text("Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
+                  Text("Est. Train Length: ${totalTrainLength.toStringAsFixed(1)}m"),
+                  Text("Est. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -917,7 +917,7 @@ Future<void> _exportAndProcessReceipt({
                                     initialValue: selectedTrainType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      labelText: "Train Operation Mode",
+                                      labelText: "Train Type",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -999,7 +999,7 @@ Future<void> _exportAndProcessReceipt({
                                     initialValue: selectedLocoCount,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      labelText: "Number of Locos (Live locomotives only)",
+                                      labelText: "Number of Locos (Live locos only)",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -1055,7 +1055,7 @@ Future<void> _exportAndProcessReceipt({
                         // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
                         // ===================================================================
-                        const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Train Type:", style: TextStyle(fontWeight: FontWeight.bold)),
                         DropdownButton<String>(
                           value: selectedTrainType,
                           isExpanded: true,
@@ -1088,7 +1088,7 @@ Future<void> _exportAndProcessReceipt({
                           onChanged: (val) => setState(() => selectedLoco = val!),
                         ),
                         const SizedBox(height: 12),
-                        const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Number of Locos (Live locos only):", style: TextStyle(fontWeight: FontWeight.bold)),
                         DropdownButton<int>(
                           value: selectedLocoCount,
                           isExpanded: true,
@@ -1154,7 +1154,7 @@ Future<void> _exportAndProcessReceipt({
                             children: [
                               Column(
                                 children: [
-                                  Text("TOTAL LENGTH", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  Text("Total Length", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
                                   const SizedBox(height: 4),
                                   Text("${totalTrainLength.toStringAsFixed(1)} m", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
                                 ],
@@ -1162,7 +1162,7 @@ Future<void> _exportAndProcessReceipt({
                               Container(height: 30, width: 1, color: Colors.grey.shade300),
                               Column(
                                 children: [
-                                  Text("BUFFER PLAY", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  Text("Buffer Play", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
                                   const SizedBox(height: 4),
                                   Text("+${totalBufferPlay.toStringAsFixed(0)} m", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
                                 ],
