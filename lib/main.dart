@@ -841,7 +841,7 @@ showDialog(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-if (isWideScreen) ...[
+                      if (isWideScreen) ...[
                         // ===================================================================
                         // DESKTOP WIDE GRID VIEW (Unified Floating Label Architecture)
                         // ===================================================================
@@ -955,12 +955,8 @@ if (isWideScreen) ...[
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  // This empty container cleanly mirrors the entire physical vertical footprint 
-                                  // of the Brake Type field on the left, keeping the final row level.
                                   const SizedBox(height: 16),
-                                  const SizedBox(
-                                    height: 58, // Precise layout clearance matching standard InputDecorator heights
-                                  ),
+                                  const SizedBox(height: 58),
                                   const SizedBox(height: 24),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -973,7 +969,7 @@ if (isWideScreen) ...[
                                           decoration: InputDecoration(
                                             labelText: "Total Axles", 
                                             border: const OutlineInputBorder(),
-                                            errorText: axleValidationError, // <-- Dynamic state hook
+                                            errorText: axleValidationError, 
                                           ),
                                         ),
                                       ),
@@ -1000,7 +996,6 @@ if (isWideScreen) ...[
                           ],
                         ),
                       ] else ...[                        
-                        
                         // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
                         // ===================================================================
@@ -1051,28 +1046,30 @@ if (isWideScreen) ...[
                         ),
                         const SizedBox(height: 16),
                         const Text("Brake Type:", style: TextStyle(fontWeight: FontWeight.bold)),
-                        // const   (height: 6),
-                        Center(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: SegmentedButton<String>(
-                            showSelectedIcon: true,
-                            segments: const <ButtonSegment<String>>[
-                              ButtonSegment<String>(value: 'AIRBRAKE', label: Text('AIRBRAKE', style: TextStyle(fontWeight: FontWeight.bold))),
-                              ButtonSegment<String>(value: 'VACUUM', label: Text('VACUUM', style: TextStyle(fontWeight: FontWeight.bold))),
-                            ],
-                            selected: <String>{selectedBrakeType},
-                            onSelectionChanged: (Set<String> newSelection) => setState(() => selectedBrakeType = newSelection.first),
-                            style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.green.shade700 : Colors.grey.shade200),
-                              foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.selected) ? Colors.white : Colors.green.shade900),
-                              shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0))),
-                              side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
-                            ),
-                          )
-                          ),
+                        const SizedBox(height: 6),
+                        DropdownButton<String>(
+                          value: selectedBrakeType.isEmpty ? null : selectedBrakeType,
+                          hint: const Text("Select Brake Type"),
+                          isExpanded: true,
+                          items: brakeTypes.map((type) {
+                            return DropdownMenuItem<String>(
+                              value: type['value'], 
+                              child: Text(type['display']!),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              selectedBrakeType = val!;
+                            });
+                          },
                         ),
                         const SizedBox(height: 24),
-                        TextField(controller: tonsController, keyboardType: TextInputType.number, onSubmitted: (_) => calculate(), decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder(),)),
+                        TextField(
+                          controller: tonsController, 
+                          keyboardType: TextInputType.number, 
+                          onSubmitted: (_) => calculate(), 
+                          decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder()),
+                        ),
                         const SizedBox(height: 12),
                         TextField(
                           controller: axlesController, 
@@ -1080,11 +1077,10 @@ if (isWideScreen) ...[
                           onSubmitted: (_) => calculate(), 
                           decoration: InputDecoration(
                             labelText: "Total Axles", 
-                            border: OutlineInputBorder(),
-                            errorText: axleValidationError, // <-- Dynamic state hook
-                          )
+                            border: const OutlineInputBorder(),
+                            errorText: axleValidationError, 
                           ),
-
+                        ),
                       ],
                       const SizedBox(height: 24),
                       
@@ -1120,10 +1116,9 @@ if (isWideScreen) ...[
                         ),
                       ],
 
-                      //const SizedBox(height: 40), // Existing spacer below
                       const SizedBox(height: 40),
 
-                      // GROUP 5: Verify Load Button
+                      // Verify Load Button
                       Center(
                         child: ElevatedButton(
                           style: ButtonStyle(
