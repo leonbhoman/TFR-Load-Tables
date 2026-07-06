@@ -313,7 +313,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   }
 
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.12";
+  final String currentAppVersion = "1.0.13";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
