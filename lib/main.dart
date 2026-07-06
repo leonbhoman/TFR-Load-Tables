@@ -206,6 +206,7 @@ Future<void> _exportAndProcessReceipt({
 
                 pw.Text("Load Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
+                pw.Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}"), // 🧠 Added here
                 pw.Text("Base Capacity: ${baseCap}t"),
                 pw.Text("Wagon Overload Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
                 pw.Text("Max Tonnage: ${totalLimit}t"),
@@ -262,28 +263,29 @@ Future<void> _exportAndProcessReceipt({
                 
                 pw.Text("Train Details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Locomotives Layout: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Route Sector Track: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Declared Cargo Manifest: $inputTons t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Locomotives: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Route: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Tons on vehicle list: $inputTons t", style: pw.TextStyle(fontSize: 11)),
                 pw.SizedBox(height: 14),
 
-                pw.Text("COMPUTED TRACK LOAD RESULTS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("Calculated load details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
+                pw.Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}", style: pw.TextStyle(fontSize: 11)), // 🧠 Added here
                 pw.Text("Base Capacity: $baseCap t", style: pw.TextStyle(fontSize: 11)),
                 pw.Text("Wagon Overload Allowance: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
                 pw.Text("Max Tonnage: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Calculated Section Weight Margin: $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Calculated $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 14),
 
-                pw.Text("PHYSICAL INFRASTRUCTURE GRID METRICS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Total Target Consist Length: $totalLength meters", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Accumulated Buffer Coupling Play: +$bufferPlay meters", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Estimated Train Length: $totalLength meters", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Estimated Buffer Play: +$bufferPlay meters", style: pw.TextStyle(fontSize: 11)),
                 
                 pw.Spacer(),
                 pw.Container(height: 1, color: PdfColors.grey300),
                 pw.SizedBox(height: 8),
-                pw.Text("OFFICIAL COMPLIANCE SECURITY TRAIL", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.red800)),
+                pw.Text("Security Trail", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.red800)),
                 pw.SizedBox(height: 4),
                 pw.Text(
                   "This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",
@@ -745,6 +747,7 @@ Future<void> _exportAndProcessReceipt({
                   const SizedBox(height: 8),
                   const Divider(),
                   const SizedBox(height: 8),
+                  Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}"),
                   Text("Train Capacity: ${baselineMaxTons}t"),
                   Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
                   Text(
