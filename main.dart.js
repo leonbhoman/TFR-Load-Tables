@@ -86035,11 +86035,11 @@ s.x=this.c+r},
 $S:0}
 B.and.prototype={
 $1(a){var s=this,r=null
-return new B.l8(A.rw,B.aza(B.b([B.cg("TFR LOAD CALCULATOR - OFFICIAL RECORD",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,18,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("Generated on: "+s.a,B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.cg("Application Configuration: v"+s.b,B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.azz(A.DT,1),new B.cZ(r,12,r),B.cg("OPERATIONAL CONSIST CONFIGURATION",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Locomotives: "+s.c+" x "+s.d,r),B.cg("Assigned Route: "+s.e+" (Section ruling Gradient: GC "+s.f+")",r),B.cg("Manifest Total Tons: "+s.r+"t",r),new B.cZ(r,12,r),B.cg("CALCULATION MATRIX RESULTS",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Base Capacity Target: "+s.w+"t",r),B.cg("Wagon Weight Allowance: +"+s.x+"t ("+s.y+" wagons Total)",r),B.cg("Max Authorised Tonnage Limit: "+s.z+"t",r),B.cg("Status Framework Margin: "+s.Q,r),new B.cZ(r,12,r),B.cg("PHYSICAL CLEARANCE TRACK FOOTPRINT",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Estimated Total Train Length: "+s.as+"m",r),B.cg("Cumulative Buffer Play Allowance: +"+s.at+"m",r),B.aC5(),B.azz(A.DT,1),new B.cZ(r,6,r),B.cg("SECURITY VERIFICATION BANNER",B.d_(r,A.aAH,r,r,r,r,r,r,r,A.aG,r,r,10,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,8,r,r,r,!0,r,r,r,r)),new B.cZ(r,8,r)],t.n_),A.mr))},
+return new B.l8(A.rw,B.aza(B.b([B.cg("Load Calculator Record",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,18,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("Generated on: "+s.a,B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.cg("Application Version: v"+s.b,B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.azz(A.DT,1),new B.cZ(r,12,r),B.cg("Train Details",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Locomotives: "+s.c+" x "+s.d,r),B.cg("Route: "+s.e+" (Section ruling Gradient: GC "+s.f+")",r),B.cg("Total Tons: "+s.r+"t",r),new B.cZ(r,12,r),B.cg("Load Details",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Base Capacity: "+s.w+"t",r),B.cg("Wagon Overload Allowance: +"+s.x+"t ("+s.y+" wagons Total)",r),B.cg("Max Tonnage: "+s.z+"t",r),B.cg("Status Framework Margin: "+s.Q,r),new B.cZ(r,12,r),B.cg("Train Length Details",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,12,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Estimated Train Length: "+s.as+"m",r),B.cg("Estimated Buffer Play: +"+s.at+"m",r),B.aC5(),B.azz(A.DT,1),new B.cZ(r,6,r),B.cg("SECURITY VERIFICATION BANNER",B.d_(r,A.aAH,r,r,r,r,r,r,r,A.aG,r,r,10,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,8,r,r,r,!0,r,r,r,r)),new B.cZ(r,8,r)],t.n_),A.mr))},
 $S:205}
 B.ane.prototype={
 $1(a){var s=this,r=null
-return new B.l8(A.rw,B.aza(B.b([B.cg("TFR LOAD CALCULATOR - OFFICIAL RECORD",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,16,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("Generated on: "+s.a,B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.cg("Application Version Reference: v"+s.b,B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),new B.cZ(r,10,r),B.a1B(r,A.DU,r,1,r,r,r),new B.cZ(r,14,r),B.cg("OPERATIONAL CONFIGURATION STRUCTURE",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Locomotives Layout: "+s.c+" x "+s.d,B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Route Sector Track: "+s.e+" (GC "+s.f+")",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Declared Cargo Manifest: "+s.r+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),new B.cZ(r,14,r),B.cg("COMPUTED TRACK LOAD RESULTS",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Baseline Structural Target: "+s.w+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Wagon Structural Bonus: +"+s.x+" t ("+s.y+" items)",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Absolute Upper Safety Ceiling: "+s.z+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Calculated Section Weight Margin: "+s.Q,B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,14,r),B.cg("PHYSICAL INFRASTRUCTURE GRID METRICS",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Total Target Consist Length: "+s.as+" meters",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Accumulated Buffer Coupling Play: +"+s.at+" meters",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.aC5(),B.a1B(r,A.DU,r,1,r,r,r),new B.cZ(r,8,r),B.cg("OFFICIAL COMPLIANCE SECURITY TRAIL",B.d_(r,A.aAF,r,r,r,r,r,r,r,A.aG,r,r,9,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,8,r,r,r,!0,r,r,r,r)),new B.cZ(r,8,r),B.a1B(B.cg("SECURITY CODE: "+s.ax,B.d_(r,A.aAE,r,r,r,r,new B.kU(A.pq),r,r,A.aG,r,r,8,r,A.bk,r,!0,r,r,r,r)),A.aAG,r,r,r,A.Pc,1/0)],t.n_),A.mr))},
+return new B.l8(A.rw,B.aza(B.b([B.cg("Load Calculator Record",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,16,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("Generated on: "+s.a,B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),B.cg("Application Version: v"+s.b,B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,10,r,r,r,!0,r,r,r,r)),new B.cZ(r,10,r),B.a1B(r,A.DU,r,1,r,r,r),new B.cZ(r,14,r),B.cg("Train Details",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Locomotives Layout: "+s.c+" x "+s.d,B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Route Sector Track: "+s.e+" (GC "+s.f+")",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Declared Cargo Manifest: "+s.r+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),new B.cZ(r,14,r),B.cg("COMPUTED TRACK LOAD RESULTS",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Base Capacity: "+s.w+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Wagon Overload Allowance: +"+s.x+" t ("+s.y+" items)",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Max Tonnage: "+s.z+" t",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Calculated Section Weight Margin: "+s.Q,B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,14,r),B.cg("PHYSICAL INFRASTRUCTURE GRID METRICS",B.d_(r,A.eP,r,r,r,r,r,r,r,A.aG,r,r,11,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,6,r),B.cg("Total Target Consist Length: "+s.as+" meters",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.cg("Accumulated Buffer Coupling Play: +"+s.at+" meters",B.d_(r,r,r,r,r,r,r,r,r,A.aG,r,r,11,r,r,r,!0,r,r,r,r)),B.aC5(),B.a1B(r,A.DU,r,1,r,r,r),new B.cZ(r,8,r),B.cg("OFFICIAL COMPLIANCE SECURITY TRAIL",B.d_(r,A.aAF,r,r,r,r,r,r,r,A.aG,r,r,9,r,A.bk,r,!0,r,r,r,r)),new B.cZ(r,4,r),B.cg("This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",B.d_(r,A.oD,r,r,r,r,r,r,r,A.aG,r,r,8,r,r,r,!0,r,r,r,r)),new B.cZ(r,8,r),B.a1B(B.cg("SECURITY CODE: "+s.ax,B.d_(r,A.aAE,r,r,r,r,new B.kU(A.pq),r,r,A.aG,r,r,8,r,A.bk,r,!0,r,r,r,r)),A.aAG,r,r,r,A.Pc,1/0)],t.n_),A.mr))},
 $S:205}
 B.ao9.prototype={
 $1(a){},
@@ -86083,14 +86083,14 @@ i=B.lo(B.b([B.avA(A.PA,a6.f,a7,28),A.aEq,B.c6(a6.r,a7,a7,a7,A.aGP,a7,a7)],l),A.b
 h=a6.w
 g=a6.a
 f=B.c6("Consist: "+a8.dx+" x "+h+" ("+g.b+")",a7,a7,a7,A.aHj,a7,a7)
-e=B.c6("Setting: "+a8.ax+" (GC "+g.d+")",a7,a7,a7,a7,a7,a7)
-d=B.c6("Base Capacity: "+g.e+"t",a7,a7,a7,a7,a7,a7)
+e=B.c6("Route: "+a8.ax+" (GC "+g.d+")",a7,a7,a7,a7,a7,a7)
+d=B.c6("Train Capacity: "+g.e+"t",a7,a7,a7,a7,a7,a7)
 c=a6.x
 b=B.c6("Wagon Allowance: +"+c+"t ("+A.q.Y(a9,0)+" wagons)",a7,a7,a7,a7,a7,a7)
 a=B.c6("Total Limit: "+q+"t",a7,a7,a7,A.d5,a7,a7)
-a0=B.c6("Physical Footprint Dynamics:",a7,a7,a7,B.e4(a7,a7,A.dB,a7,a7,a7,a7,a7,a7,a7,a7,12,a7,a7,A.bA,a7,a7,!0,a7,a7,a7,a7,a7,a7,a7,a7),a7,a7)
-a1=B.c6("Est. Total Length: "+A.q.Y(a8.x,1)+"m",a7,a7,a7,a7,a7,a7)
-a2=B.c6("Incl. Buffer Play: +"+A.q.Y(a8.y,0)+"m",a7,a7,a7,a7,a7,a7)
+a0=B.c6("Train Length Estimates:",a7,a7,a7,B.e4(a7,a7,A.dB,a7,a7,a7,a7,a7,a7,a7,a7,12,a7,a7,A.bA,a7,a7,!0,a7,a7,a7,a7,a7,a7,a7,a7),a7,a7)
+a1=B.c6("Est. Train Length: "+A.q.Y(a8.x,1)+"m",a7,a7,a7,a7,a7,a7)
+a2=B.c6("Est. Buffer Play: +"+A.q.Y(a8.y,0)+"m",a7,a7,a7,a7,a7,a7)
 a3=s?A.mc:A.rb
 a4=B.ju(8)
 a5=B.a0q(s?A.mj:A.re,1)
@@ -86105,7 +86105,7 @@ b=m>1?"s":""
 A.m.N(f,B.b([A.f0,B.kF(B.c6("No provision for more than "+(d-m)+" x "+h+" locos on this route. "+m+" locomotive"+b+" must be isolated.",a7,a7,a7,B.e4(a7,a7,A.qK,a7,a7,a7,a7,a7,a7,a7,a7,13,a7,a7,A.bA,a7,a7,!0,a7,a7,a7,a7,a7,a7,a7,a7),A.dk,a7),A.ae,a7,new B.dZ(A.qQ,a7,e,s,a7,a7,A.bQ),a7,a7,A.mE,1/0)],l))}s=B.aBU(new B.LT(f,a7),a7)
 f=B.aM6(a7,a7,a7,a7,a7,a7,a7,a7,a7,A.m3,a7,a7,a7,a7,new B.cO(B.ju(8),A.a_),new B.b0(A.mj,1,A.a0,-1),a7,a7,a7,a7)
 e=B.aKp(a7,a7,A.m1,a7,a7,a7,2,a7,a7,A.M,a7,a7,a7,a7,new B.cO(B.ju(8),A.a_),a7,a7,a7,a7,a7)
-return new B.rK(i,s,B.b([B.lo(B.b([new B.MC(new B.ao2(b0),a7,a7,a7,f,a7,a7,!1,a7,!0,a7,A.aJY,a7),new B.yr(!0,new B.ao3(g,a8,b0,h,c,a9,q,p,o),a7,a7,a7,e,A.ae,a7,!1,a7,!0,a7,new B.SB(A.aK3,A.PI,e,a7,a7),a7)],l),A.bj,A.kk,A.bS,0)],l),A.OY,new B.cO(n,A.a_),a7)},
+return new B.rK(i,s,B.b([B.lo(B.b([new B.MC(new B.ao2(b0),a7,a7,a7,f,a7,a7,!1,a7,!0,a7,A.aJX,a7),new B.yr(!0,new B.ao3(g,a8,b0,h,c,a9,q,p,o),a7,a7,a7,e,A.ae,a7,!1,a7,!0,a7,new B.SB(A.aK2,A.PI,e,a7,a7),a7)],l),A.bj,A.kk,A.bS,0)],l),A.OY,new B.cO(n,A.a_),a7)},
 $S:512}
 B.anY.prototype={
 $1(a){return J.d(J.bg(a,"GC"),this.a.d)},
@@ -86155,7 +86155,7 @@ h=i.cy
 r=i.db
 q=B.Y(r).i("a5<1,dq<r>>")
 r=B.Z(new B.a5(r,new B.anz(),q),q.i("aq.E"))
-h=B.Kg(A.PO,h,!0,r,new B.anK(i),s)
+h=B.Kg(A.PN,h,!0,r,new B.anK(i),s)
 r=i.fr
 if(r.length===0)r=m
 q=i.fy
@@ -86171,7 +86171,7 @@ s=i.dx
 r=i.dy
 q=B.Y(r).i("a5<1,dq<p>>")
 r=B.Z(new B.a5(r,new B.anV(),q),q.i("aq.E"))
-A.m.N(j,B.b([B.lo(B.b([A.pd,h,A.aEs,B.p1(B.kD(B.b([g,A.dY,B.Kg(A.PN,s,!0,r,new B.anW(i),t.S),A.It,A.aEw,A.dY,B.lo(B.b([B.p1(B.Py(i.e,B.avG(m,A.cZ,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.hH,new B.anA(i)),1),A.aEr,B.p1(B.Py(i.f,A.PP,A.hH,new B.anB(i)),1)],k),A.ch,A.b1,A.bS,0)],k),A.ch,A.b1,A.bS),2),A.pd],k),A.ch,A.b1,A.bS,0)],k))}else{s=B.Y(g).i("a5<1,dq<r>>")
+A.m.N(j,B.b([B.lo(B.b([A.pd,h,A.aEs,B.p1(B.kD(B.b([g,A.dY,B.Kg(A.PO,s,!0,r,new B.anW(i),t.S),A.It,A.aEw,A.dY,B.lo(B.b([B.p1(B.Py(i.e,B.avG(m,A.cZ,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.hH,new B.anA(i)),1),A.aEr,B.p1(B.Py(i.f,A.PP,A.hH,new B.anB(i)),1)],k),A.ch,A.b1,A.bS,0)],k),A.ch,A.b1,A.bS),2),A.pd],k),A.ch,A.b1,A.bS,0)],k))}else{s=B.Y(g).i("a5<1,dq<r>>")
 g=B.Z(new B.a5(g,new B.anC(),s),s.i("aq.E"))
 s=t.N
 h=B.Kf(m,!0,g,new B.anD(i),h,s)
@@ -86195,11 +86195,11 @@ if(p.length===0)p=m
 o=i.fy
 n=B.Y(o).i("a5<1,dq<r>>")
 o=B.Z(new B.a5(o,new B.anL(),n),n.i("aq.E"))
-A.m.N(j,B.b([A.aJZ,h,A.f0,A.aK4,g,A.f0,A.aJW,r,A.f0,A.aJV,q,A.It,A.aK2,A.aEx,B.Kf(A.aK0,!0,o,new B.anM(i),p,s),A.dY,B.Py(i.d,A.t3,A.hH,new B.anN(i)),A.f0,B.Py(i.e,B.avG(m,A.cZ,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.hH,new B.anO(i))],k))}j.push(A.dY)
+A.m.N(j,B.b([A.aJY,h,A.f0,A.aK4,g,A.f0,A.aJV,r,A.f0,A.aK3,q,A.It,A.aK1,A.aEx,B.Kf(A.aK_,!0,o,new B.anM(i),p,s),A.dY,B.Py(i.d,A.t3,A.hH,new B.anN(i)),A.f0,B.Py(i.e,B.avG(m,A.cZ,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.hH,new B.anO(i))],k))}j.push(A.dY)
 if(i.x>0&&i.w==null){h=B.a0q(A.ma,1)
 g=B.ju(12)
-A.m.N(j,B.b([B.kF(B.lo(B.b([B.kD(B.b([B.c6("TOTAL LENGTH",m,m,m,B.e4(m,m,A.dD,m,m,m,m,m,m,m,m,11,m,m,A.bA,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.Iu,B.c6(A.q.Y(i.x,1)+" m",m,m,m,A.aGz,m,m)],k),A.bj,A.b1,A.bS),B.kF(m,A.ae,A.ma,m,30,m,m,1),B.kD(B.b([B.c6("BUFFER PLAY",m,m,m,B.e4(m,m,A.dD,m,m,m,m,m,m,m,m,11,m,m,A.bA,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.Iu,B.c6("+"+A.q.Y(i.y,0)+" m",m,m,m,B.e4(m,m,A.mg,m,m,m,m,m,m,m,m,18,m,m,A.bA,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bj,A.b1,A.bS)],k),A.bj,A.oo,A.bS,0),A.ae,m,new B.dZ(A.r3,m,h,g,m,m,A.bQ),m,m,A.OZ,m)],k))}j.push(A.aEv)
-j.push(B.md(new B.yr(!1,i.gahc(),m,m,m,B.oB(m,m,m,new B.bR(new B.anP(),t.b),new B.b3(3,t.XR),m,m,m,new B.b3(A.M,t.De),m,m,m,m,new B.b3(A.aEi,t.W7),m,m,m,m,new B.b3(new B.cO(B.ju(28),A.a_),t.dy),m,m,m,m,m,m),m,m,!1,m,!0,m,A.aK1,m),m,m))
+A.m.N(j,B.b([B.kF(B.lo(B.b([B.kD(B.b([B.c6("Total Length",m,m,m,B.e4(m,m,A.dD,m,m,m,m,m,m,m,m,11,m,m,A.bA,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.Iu,B.c6(A.q.Y(i.x,1)+" m",m,m,m,A.aGz,m,m)],k),A.bj,A.b1,A.bS),B.kF(m,A.ae,A.ma,m,30,m,m,1),B.kD(B.b([B.c6("Buffer Play",m,m,m,B.e4(m,m,A.dD,m,m,m,m,m,m,m,m,11,m,m,A.bA,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.Iu,B.c6("+"+A.q.Y(i.y,0)+" m",m,m,m,B.e4(m,m,A.mg,m,m,m,m,m,m,m,m,18,m,m,A.bA,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bj,A.b1,A.bS)],k),A.bj,A.oo,A.bS,0),A.ae,m,new B.dZ(A.r3,m,h,g,m,m,A.bQ),m,m,A.OZ,m)],k))}j.push(A.aEv)
+j.push(B.md(new B.yr(!1,i.gahc(),m,m,m,B.oB(m,m,m,new B.bR(new B.anP(),t.b),new B.b3(3,t.XR),m,m,m,new B.b3(A.M,t.De),m,m,m,m,new B.b3(A.aEi,t.W7),m,m,m,m,new B.b3(new B.cO(B.ju(28),A.a_),t.dy),m,m,m,m,m,m),m,m,!1,m,!0,m,A.aK0,m),m,m))
 k=B.kD(B.b([B.p1(B.aBU(B.kD(j,A.ek,A.b1,A.bS),A.P5),1),B.kF(B.c6("v1.0.13 | Developed by Leon and Gemini",m,m,m,B.e4(m,m,A.dD,m,m,m,m,m,m,m,m,12,m,m,A.aF,m,m,!0,m,0.5,m,m,m,m,m,m),A.dk,m),A.ae,A.No,m,m,m,A.OU,1/0)],k),A.bj,A.b1,A.bS)
 return new B.pb(k,A.lP,m)},
 $S:516}
@@ -92542,12 +92542,12 @@ A.PK=new B.zd(null,null,null,null,null,null,null,null,null,A.rV,A.qs,!1,null,!1,
 A.fH=new B.aC(12,12,12,12)
 A.qe=new B.b0(A.P,1,A.a0,-1)
 A.cZ=new B.i8(4,A.fe,A.qe)
-A.PL=new B.i2(null,null,null,"Train Operation Mode",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
+A.PL=new B.i2(null,null,null,"Train Type",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
 A.aNI=new B.i2(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,!0,null,null,null,null)
 A.PM=new B.i2(null,null,null,"Brake Type",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
-A.PN=new B.i2(null,null,null,"Number of Locos (Live locomotives only)",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
-A.PO=new B.i2(null,null,null,"Locomotive Class",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
+A.PN=new B.i2(null,null,null,"Locomotive Class",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
 A.t3=new B.i2(null,null,null,"Total Tons",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
+A.PO=new B.i2(null,null,null,"Number of Locos (Live locos only)",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
 A.PP=new B.i2(null,null,null,"Total Wagons",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
 A.PQ=new B.i2(null,null,null,"Route",null,null,null,null,null,null,null,null,null,null,null,null,!0,!0,!1,null,null,null,null,null,null,null,A.fH,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,A.cZ,!0,null,null,null,null)
 A.PS=new B.eg(0.25,0.5,A.aT)
@@ -97434,10 +97434,10 @@ A.aEG=new B.k9(3,"hide")
 A.aNS=new B.k9(4,"remove")
 A.aEH=new B.k9(5,"timeout")
 A.aEI=new B.uF(null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aK_=new B.eY("PDF Load Verification Receipt downloaded successfully.",null,null,null,null,null,null,null,null)
+A.aJZ=new B.eY("PDF Load Verification Receipt downloaded successfully.",null,null,null,null,null,null,null,null)
 A.OF=new B.b4(4e6)
-A.aEJ=new B.nu(A.aK_,A.or,null,null,null,null,null,null,null,null,null,null,null,A.OF,!1,null,null,null,A.aE,null)
-A.aJX=new B.eY("Please ensure all criteria hav been selected and all fields filled in before verifying.",null,null,null,null,null,null,null,null)
+A.aEJ=new B.nu(A.aJZ,A.or,null,null,null,null,null,null,null,null,null,null,null,A.OF,!1,null,null,null,A.aE,null)
+A.aJW=new B.eY("Please ensure all criteria hav been selected and all fields filled in before verifying.",null,null,null,null,null,null,null,null)
 A.Nu=new B.C(1,1,0.8784313725490196,0.6980392156862745,A.D)
 A.NN=new B.C(1,1,0.8,0.5019607843137255,A.D)
 A.MS=new B.C(1,1,0.7176470588235294,0.30196078431372547,A.D)
@@ -97448,7 +97448,7 @@ A.Nz=new B.C(1,0.9372549019607843,0.4235294117647059,0,A.D)
 A.az9=new B.bO([50,A.qQ,100,A.Nu,200,A.NN,300,A.MS,400,A.qZ,500,A.Nq,600,A.NB,700,A.Nc,800,A.Nz,900,A.qK],t.pl)
 A.azg=new B.pH(A.az9,1,1,0.596078431372549,0,A.D)
 A.OD=new B.b4(3e6)
-A.aEK=new B.nu(A.aJX,A.azg,null,null,null,null,null,null,null,null,null,null,null,A.OD,!1,null,null,null,A.aE,null)
+A.aEK=new B.nu(A.aJW,A.azg,null,null,null,null,null,null,null,null,null,null,null,A.OD,!1,null,null,null,A.aE,null)
 A.Iw=new B.C_(0,"permissive")
 A.aEL=new B.C_(1,"normal")
 A.aEM=new B.C_(2,"forced")
@@ -97823,16 +97823,16 @@ A.aFV=new B.n(!0,A.P,null,".AppleSystemUIFont",null,null,null,null,null,null,nul
 A.aJT=new B.dT(A.aHJ,A.aGE,A.aHK,A.aIa,A.aGj,A.aGr,A.aGY,A.aI5,A.aHa,A.aIw,A.aFO,A.aG5,A.aIt,A.aIO,A.aFV)
 A.aH6=new B.n(!0,A.M,null,null,null,null,24,A.bA,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 A.aJU=new B.eY("TFR Load Calculator",null,A.aH6,null,null,null,null,null,null)
-A.aJV=new B.eY("Number of Locos (Live locomotives only):",null,A.d5,null,null,null,null,null,null)
-A.aJW=new B.eY("Locomotive Class:",null,A.d5,null,null,null,null,null,null)
+A.aJV=new B.eY("Locomotive Class:",null,A.d5,null,null,null,null,null,null)
 A.IZ=new B.n(!0,null,null,null,null,null,12,A.bA,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aJY=new B.eY("CANCEL",null,A.IZ,null,null,null,null,null,null)
-A.aJZ=new B.eY("Train Operation Mode:",null,A.d5,null,null,null,null,null,null)
-A.aK0=new B.eY("Select Brake Type",null,null,null,null,null,null,null,null)
+A.aJX=new B.eY("CANCEL",null,A.IZ,null,null,null,null,null,null)
+A.aJY=new B.eY("Train Type:",null,A.d5,null,null,null,null,null,null)
+A.aK_=new B.eY("Select Brake Type",null,null,null,null,null,null,null,null)
 A.aGA=new B.n(!0,null,null,null,null,null,16,A.bA,null,1.2,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-A.aK1=new B.eY("VERIFY LOAD",null,A.aGA,null,null,null,null,null,null)
-A.aK2=new B.eY("Brake Type:",null,A.d5,null,null,null,null,null,null)
-A.aK3=new B.eY("CONFIRM",null,A.IZ,null,null,null,null,null,null)
+A.aK0=new B.eY("VERIFY LOAD",null,A.aGA,null,null,null,null,null,null)
+A.aK1=new B.eY("Brake Type:",null,A.d5,null,null,null,null,null,null)
+A.aK2=new B.eY("CONFIRM",null,A.IZ,null,null,null,null,null,null)
+A.aK3=new B.eY("Number of Locos (Live locos only):",null,A.d5,null,null,null,null,null,null)
 A.aK4=new B.eY("Route:",null,A.d5,null,null,null,null,null,null)
 A.aNU=new B.ai3(0,"system")
 A.aA6=new B.j(0.056,0.024)
