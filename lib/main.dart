@@ -462,7 +462,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
           "A new database configuration version ($newVersion) is available. "
           "Please download the latest version to ensure calculation parameters match field guidelines."
         ),
-actions: [
+        actions: [
           TextButton(
             onPressed: () {
               setState(() {
@@ -523,9 +523,9 @@ actions: [
     // 🟢 NEW VALIDATION: Check if primary user input fields are left blank
     if (tonsController.text.trim().isEmpty || 
         axlesController.text.trim().isEmpty || 
-        wagonsController.text.trim().isEmpty) //||
-        //(selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM')) 
-        {
+        wagonsController.text.trim().isEmpty ||
+        (selectedBrakeType != 'AIRBRAKE' && selectedBrakeType != 'VACUUM'))
+    {
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please ensure all criteria hav been selected and all fields filled in before verifying."),
@@ -552,10 +552,18 @@ actions: [
     int maxAllowedAxles = (selectedBrakeType == 'AIRBRAKE') ? 200 : 160;
     int maxAllowedWagons = (selectedBrakeType == 'AIRBRAKE') ? 50 : 40;
     String brakeName = selectedBrakeType; // ? "AIRBRAKE" : "VACUUM";
+    bool isLimitExceeded = false; // 🟢 NEW FLAG: Track hard physical constraint violations
 
     // Check Axle Mass Threshold
     if (axleMass > maxAllowedAxleMass) {
       warning = "⚠️ EXCEEDS MAX $maxAllowedAxleMass t/a FOR $brakeName";
+      isLimitExceeded = true; // 🟢 Hard limit broken
+    }
+
+    // Check Axle Mass Threshold
+    if (axleMass > maxAllowedAxleMass) {
+      warning = "⚠️ EXCEEDS MAX $maxAllowedAxleMass t/a FOR $brakeName";
+      isLimitExceeded = true; // 🟢 Hard limit broken
     }
 
     // Check Consist Length / Axle Count Threshold
@@ -563,6 +571,7 @@ actions: [
     if (axles > maxAllowedAxles || estimatedWagons > maxAllowedWagons) {
       if (warning.isNotEmpty) warning += "\n";
       warning += "⚠️ $brakeName LIMIT EXCEEDED:\nMax $maxAllowedWagons Wagons / $maxAllowedAxles Axles allowed.";
+      isLimitExceeded = true; // 🟢 Hard limit broken
     }
     // 1. Safety Boundary Check
     // if (axleMass > 20) {
@@ -636,118 +645,130 @@ actions: [
     int allowanceTons = safetyWagonsCheck.floor(); 
     int totalAllowedTons = baselineMaxTons + allowanceTons;
 
-    // 6. Trigger Centered Pop-up Modal Window
+// 6. Trigger Centered Pop-up Modal Window
     if (warning.isNotEmpty || foundRowMatch) {
-      bool overWeight = warning.isEmpty && (tons > totalAllowedTons);
-      String titleText = warning.isNotEmpty ? "⚠️ SYSTEM WARNING" : (overWeight ? "❌ OVERWEIGHT" : "✅ CLEAR TO RUN");
-      Color headerColor = warning.isNotEmpty ? Colors.orange : (overWeight ? Colors.red : Colors.green);
+      bool overWeight = tons > totalAllowedTons;
+      
+      // 🟢 FAILURE STATE DETECTION: If a physical limit is broken OR it is overweight, turn it RED
+      bool isFailureState = isLimitExceeded || overWeight; 
+      
+      String titleText = isFailureState ? "❌ LIMIT EXCEEDED" : "✅ CLEAR TO RUN";
+      Color headerColor = isFailureState ? Colors.red : Colors.green;
       
       String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
       
-      // String dialogBody = warning.isNotEmpty 
-      //     ? warning 
-      //     : "Consist: $selectedLocoCount x $displayLocoName ($blockKey)\n"
-      //       "Setting: $selectedRoute (GC $targetGC)\n"
-      //       "Base Capacity: ${baselineMaxTons}t\n"
-      //       "Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)\n"
-      //       "Total Limit: ${totalAllowedTons}t\n"
-      //       "---------------------------\n"
-      //       "Physical Footprint Dynamics:\n"
-      //       "Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m\n"
-      //       "Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m\n"
-      //       "---------------------------\n"
-      //       "${overWeight ? "Over max limit by" : "Remaining margin"}: ${(totalAllowedTons - tons).abs().toInt()}t";
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevents accidentally tapping outside to close
+        builder: (BuildContext context) {
+          
+          final double estimatedWagons = (double.tryParse(wagonsController.text) ?? 0.0);
+          final String marginLabel = overWeight ? "Over max limit by" : "Remaining margin";
+          final String marginVal = "${(totalAllowedTons - tons).abs().toInt()}t";
+          final String combinedMarginStr = "$marginLabel: $marginVal";
 
-showDialog(
-      context: context,
-      barrierDismissible: false, // Prevents accidentally tapping outside to close
-      builder: (BuildContext context) {
-        
-        // 1. EXTRACT EXTRACTION TEMPLATES CLEANLY FOR THE UI & THE SPECIFIC ISOLATION COUNT
-        final double estimatedWagons = (double.tryParse(wagonsController.text) ?? 0.0);
-        final bool overWeight = tons > totalAllowedTons;
-        final String marginLabel = overWeight ? "Over max limit by" : "Remaining margin";
-        final String marginVal = "${(totalAllowedTons - tons).abs().toInt()}t";
-        final String combinedMarginStr = "$marginLabel: $marginVal";
-
-        // 🟢 CALCULATE EXACT EXCESS COUNT FOR THIS ROUTE ROW DYNAMICALLY
-        int excessLocosCount = 0;
-        if (locoData.containsKey(selectedLoco) && locoData[selectedLoco]!.containsKey(blockKey)) {
-          List<dynamic> blockDataList = locoData[selectedLoco]![blockKey];
-          var rowMatch = blockDataList.firstWhere((row) => row['GC'] == targetGC, orElse: () => null);
-          if (rowMatch != null) {
-            int maxAvailableCount = rowMatch.keys
-                .where((key) => int.tryParse(key) != null)
-                .map((key) => int.parse(key))
-                .fold(0, (max, element) => element > max ? element : max);
-            
-            if (selectedLocoCount > maxAvailableCount) {
-              excessLocosCount = selectedLocoCount - maxAvailableCount;
+          // Calculate isolated engine adjustments if required
+          int excessLocosCount = 0;
+          if (locoData.containsKey(selectedLoco) && locoData[selectedLoco]!.containsKey(blockKey)) {
+            List<dynamic> blockDataList = locoData[selectedLoco]![blockKey];
+            var rowMatch = blockDataList.firstWhere((row) => row['GC'] == targetGC, orElse: () => null);
+            if (rowMatch != null) {
+              int maxAvailableCount = rowMatch.keys
+                  .where((key) => int.tryParse(key) != null)
+                  .map((key) => int.parse(key))
+                  .fold(0, (max, element) => element > max ? element : max);
+              
+              if (selectedLocoCount > maxAvailableCount) {
+                excessLocosCount = selectedLocoCount - maxAvailableCount;
+              }
             }
           }
-        }
 
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Row(
-            children: [
-                    Icon(Icons.analytics, color: headerColor, size: 28),
-                    const SizedBox(width: 10),
-                    Text(titleText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),            ],
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
               children: [
-                Text(
-                  "Consist: $selectedLocoCount x $displayLocoName ($blockKey)",
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-                Text("Setting: $selectedRoute (GC $targetGC)"),
-                const SizedBox(height: 8),
-                const Divider(),
-                const SizedBox(height: 8),
-                Text("Base Capacity: ${baselineMaxTons}t"),
-                Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
-                Text(
-                  "Total Limit: ${totalAllowedTons}t", 
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Divider(),
-                const SizedBox(height: 8),
-                Text(
-                  "Physical Footprint Dynamics:",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
-                ),
-                Text("Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m"),
-                Text("Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: overWeight ? Colors.red.shade50 : Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: overWeight ? Colors.red.shade300 : Colors.green.shade300),
+                Icon(Icons.analytics, color: headerColor, size: 28),
+                const SizedBox(width: 10),
+                Text(titleText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Text(
+                    "Consist: $selectedLocoCount x $displayLocoName ($blockKey)",
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
-                  child: Text(
-                    combinedMarginStr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: overWeight ? Colors.red.shade900 : Colors.green.shade900,
-                    ),
+                  Text("Setting: $selectedRoute (GC $targetGC)"),
+                  const SizedBox(height: 8),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  Text("Base Capacity: ${baselineMaxTons}t"),
+                  Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
+                  Text(
+                    "Total Limit: ${totalAllowedTons}t", 
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-
-                // 🟢 RESTORED ORIGINAL WARNING BOX WITH DYNAMIC COUNT REPLACEMENT:
-                if (showIsolationWarning) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Physical Footprint Dynamics:",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+                  ),
+                  Text("Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m"),
+                  Text("Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
+                  const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
+                      color: overWeight ? Colors.red.shade50 : Colors.green.shade50,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.orange.shade400, width: 1.5),
+                      border: Border.all(color: overWeight ? Colors.red.shade300 : Colors.green.shade300),
+                    ),
+                    child: Text(
+                      combinedMarginStr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: overWeight ? Colors.red.shade900 : Colors.green.shade900,
+                      ),
+                    ),
+                  ),
+
+                  // 🛑 RED DANGER BOX: Displays layout violation text if physical thresholds are breached
+                  if (warning.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.red.shade400, width: 1.5),
+                      ),
+                      width: double.infinity,
+                      child: Text(
+                        warning,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.red.shade900,
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  // 🍊 ORANGE ISOLATION BOX: Reminds drivers to switch off trailing traction assets
+                  if (showIsolationWarning) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.orange.shade400, width: 1.5),
                     ),
                     width: double.infinity,
                     child: Text(
@@ -757,71 +778,65 @@ showDialog(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
                         color: Colors.orange.shade900,
+                        ),
                       ),
                     ),
+                  ],
+                ],
+              ),
+            ),
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red.shade700,
+                      side: BorderSide(color: Colors.red.shade300),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("CANCEL", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.picture_as_pdf, size: 16),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade700,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      elevation: 2,
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      
+                      await _exportAndProcessReceipt(
+                        locoCount: selectedLocoCount.toString(),
+                        locoName: displayLocoName,
+                        route: selectedRoute,
+                        gcValue: targetGC.toString(),
+                        baseCap: baselineMaxTons.toString(),
+                        wagonAllowance: allowanceTons.toString(),
+                        estWagons: estimatedWagons.toStringAsFixed(0),
+                        totalLimit: totalAllowedTons.toString(),
+                        inputTons: tons.toString(),
+                        weightMarginStr: combinedMarginStr,
+                        totalLength: totalTrainLength.toStringAsFixed(1),
+                        bufferPlay: totalBufferPlay.toStringAsFixed(0),
+                      );
+                    },
+                    label: const Text("CONFIRM", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                   ),
                 ],
-              ],
-            ),
-          ),
-          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          // ... actions remain exactly the same ...
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // 🔴 DUAL BUTTON 1: CANCEL / DISCARD ESCAPE HATCH
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red.shade700,
-                    side: BorderSide(color: Colors.red.shade300),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Cleanly close popup, data is kept untouched
-                  },
-                  child: const Text("CANCEL", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                ),
-                
-                // 🟢 DUAL BUTTON 2: SECURE EXPORT PIPELINE
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.picture_as_pdf, size: 16),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade700,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    elevation: 2,
-                  ),
-                  onPressed: () async {
-                    // Dismiss dialog screen frame immediately
-                    Navigator.of(context).pop();
-                    
-                    // Trigger the full binary security export structure pipeline
-                    await _exportAndProcessReceipt(
-                      locoCount: selectedLocoCount.toString(),
-                      locoName: displayLocoName,
-                      route: selectedRoute,
-                      gcValue: targetGC.toString(),
-                      baseCap: baselineMaxTons.toString(),
-                      wagonAllowance: allowanceTons.toString(),
-                      estWagons: estimatedWagons.toStringAsFixed(0),
-                      totalLimit: totalAllowedTons.toString(),
-                      inputTons: tons.toString(),
-                      weightMarginStr: combinedMarginStr,
-                      totalLength: totalTrainLength.toStringAsFixed(1),
-                      bufferPlay: totalBufferPlay.toStringAsFixed(0),
-                    );
-                  },
-                  label: const Text("CONFIRM", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+              ),
+            ],
+          );
+        },
+      );
     }
-    }
+  }
 
 @override
   Widget build(BuildContext context) {
@@ -891,7 +906,7 @@ showDialog(
                                   ),
                                   const SizedBox(height: 24),
                                   DropdownButtonFormField<String>(
-                                    initialValue: selectedBrakeType,
+                                    initialValue: selectedBrakeType.isEmpty ? null : selectedBrakeType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
                                       labelText: "Brake Type",
