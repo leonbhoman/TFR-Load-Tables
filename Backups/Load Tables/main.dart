@@ -14,7 +14,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:universal_html/html.dart' as html;
 
 void main() {
   runApp(const RailCalcApp());
@@ -30,28 +29,12 @@ class RailCalcApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true,
         colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),),
       home: Scaffold(
-        appBar: AppBar(
-          // 🟢 FIXED: Dual-element layout with title on the left and 3-row source right-aligned
-          title: Row(
-            children: [
-              const Text(
-                'TFR Load Calculator', 
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
-              ),
-              const Spacer(), // Pushes the technical reference block all the way to the right edge
-              Text(
-                "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
-                textAlign: TextAlign.end, // Aligns text cleanly to the right edge
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.85), // Soft white to keep it subtle
-                  fontSize: 10,                          // Keeps it small and unobtrusive
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,                           // Controls line spacing tightly
-                ),
-              ),
-            ],
+        appBar: AppBar(title: const Text(
+            'TFR Load Calculator', 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
           ),
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+          elevation: 2,
         ),
         body: const LoadCalculatorForm(),
       ),
@@ -74,7 +57,6 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   String? axleValidationError;
   double totalTrainLength = 0.0;
   double totalBufferPlay = 0.0;
-  double totalBrakingPercentage = 0.0;
 
   void _onAxlesChanged() {
     if (_isUpdatingAxlesOrWagons) return;
@@ -134,25 +116,21 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
         });
       }
     }
-    _updateTrainLength(); // 
+    _updateTrainLength(); // <-- Add here
     _isUpdatingAxlesOrWagons = false;
   }
 
   void _updateTrainLength() {
     final wagonsText = wagonsController.text;
-    final tonsText = tonsController.text; // <-- Retrieve total wagon mass
     if (wagonsText.isEmpty) {
       setState(() {
         totalTrainLength = 0.0;
         totalBufferPlay = 0.0;
-        totalBrakingPercentage = 0.0;
       });
       return;
     }
 
     final wagons = double.tryParse(wagonsText) ?? 0.0;
-    final tons = double.tryParse(tonsText) ?? 0.0;
-    
     if (wagons > 0) {
       // 1. Base length using standard 16 meters per wagon
       double baseLength = wagons * 16.0;
@@ -160,20 +138,14 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       // 2. Buffer play: Add 1 meter for every complete block of 10 wagons
       double bufferPlay = (wagons / 10).floorToDouble() * 1.0;
 
-      // 3. Braking Percentage (BP) Calculation
-      double totalBlockForceKn = wagons * 160.0; // 160 kN per wagon
-      double totalWagonWeightKn = tons * 9.81;  // Mass in tonnes to weight in kN
-      double bp = totalWagonWeightKn > 0 ? (totalBlockForceKn / totalWagonWeightKn) * 100 : 0.0;
-
       setState(() {
         totalBufferPlay = bufferPlay;
         totalTrainLength = baseLength + bufferPlay;
-        totalBrakingPercentage = bp;
       });
     }
   }
 
-Future<void> _exportAndProcessReceipt({
+  Future<void> _exportAndProcessReceipt({
     required String locoCount,
     required String locoName,
     required String route,
@@ -185,14 +157,13 @@ Future<void> _exportAndProcessReceipt({
     required String inputTons,
     required String weightMarginStr,
     required String totalLength,
-    required String brakingPercentage, // <-- Added parameter
     required String bufferPlay,
   }) async {
     final pdf = pw.Document();
     final timestamp = DateTime.now().toString().split('.')[0]; // e.g. 2026-07-04 09:45:12
     final appVersion = currentAppVersion;
 
-    // 1. Build the read-only, layout-structured document structure to compute the baseline hash
+    // 1. Build the read-only, layout-structured document structure
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -202,34 +173,32 @@ Future<void> _exportAndProcessReceipt({
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text("Load Calculator Record", style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 4),
                 pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
-                pw.Text("Application Version: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+                pw.Text("Application Configuration: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
                 pw.Divider(thickness: 1, color: PdfColors.grey400),
                 pw.SizedBox(height: 12),
                 
-                pw.Text("Train Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("OPERATIONAL CONSIST CONFIGURATION", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
                 pw.Text("Locomotives: $locoCount x $locoName"),
-                pw.Text("Route: $route (Section ruling Gradient: GC $gcValue)"),
-                pw.Text("Total Tons: ${inputTons}t"),
+                pw.Text("Assigned Route: $route (Section ruling Gradient: GC $gcValue)"),
+                pw.Text("Manifest Total Tons: ${inputTons}t"),
                 pw.SizedBox(height: 12),
 
-                pw.Text("Load Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("CALCULATION MATRIX RESULTS", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
-                pw.Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}"), // 🧠 Added here
-                pw.Text("Base Capacity: ${baseCap}t"),
-                pw.Text("Wagon Overload Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
-                pw.Text("Max Tonnage: ${totalLimit}t"),
+                pw.Text("Base Capacity Target: ${baseCap}t"),
+                pw.Text("Wagon Weight Allowance: +${wagonAllowance}t ($estWagons wagons Total)"),
+                pw.Text("Max Authorised Tonnage Limit: ${totalLimit}t"),
                 pw.Text("Status Framework Margin: $weightMarginStr"),
                 pw.SizedBox(height: 12),
 
-                pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                pw.Text("PHYSICAL CLEARANCE TRACK FOOTPRINT", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
-                pw.Text("Estimated Train Length: ${totalLength}m"),
-                pw.Text("Braking Percentage (BP): ${brakingPercentage}%"), // <-- Inserted BP row
-                pw.Text("Estimated Buffer Play: +${bufferPlay}m"),
+                pw.Text("Estimated Total Train Length: ${totalLength}m"),
+                pw.Text("Cumulative Buffer Play Allowance: +${bufferPlay}m"),
                 pw.Spacer(),
                 
                 pw.Divider(thickness: 1, color: PdfColors.grey400),
@@ -241,6 +210,7 @@ Future<void> _exportAndProcessReceipt({
                   style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
                 ),
                 pw.SizedBox(height: 8),
+                // The verification token will be stamped dynamically right below here
               ],
             ),
           );
@@ -255,7 +225,7 @@ Future<void> _exportAndProcessReceipt({
     final hashDigest = sha256.convert(pdfBytes);
     final String verificationToken = hashDigest.toString();
 
-    // 4. Re-compile the final document stream with the absolute token stamped safely on the template layout
+    // 4. Re-compile the document stream with the absolute token stamped safely on the template layout
     final finalPdf = pw.Document();
     finalPdf.addPage(
       pw.Page(
@@ -266,40 +236,38 @@ Future<void> _exportAndProcessReceipt({
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text("Load Calculator Record", style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                pw.Text("TFR LOAD CALCULATOR - OFFICIAL RECORD", style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 4),
                 pw.Text("Generated on: $timestamp", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
-                pw.Text("Application Version: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                pw.Text("Application Version Reference: v$appVersion", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
                 pw.SizedBox(height: 10),
                 pw.Container(height: 1, color: PdfColors.grey300),
                 pw.SizedBox(height: 14),
                 
-                pw.Text("Train Details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("OPERATIONAL CONFIGURATION STRUCTURE", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Locomotives: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Route: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Tons on vehicle list: $inputTons t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Locomotives Layout: $locoCount x $locoName", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Route Sector Track: $route (GC $gcValue)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Declared Cargo Manifest: $inputTons t", style: pw.TextStyle(fontSize: 11)),
                 pw.SizedBox(height: 14),
 
-                pw.Text("Calculated load details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("COMPUTED TRACK LOAD RESULTS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}", style: pw.TextStyle(fontSize: 11)), // 🧠 Added here
-                pw.Text("Base Capacity: $baseCap t", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Wagon Overload Allowance: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Max Tonnage: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Calculated $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                pw.Text("Baseline Structural Target: $baseCap t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Wagon Structural Bonus: +$wagonAllowance t ($estWagons items)", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Absolute Upper Safety Ceiling: $totalLimit t", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Calculated Section Weight Margin: $weightMarginStr", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 14),
 
-                pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text("PHYSICAL INFRASTRUCTURE GRID METRICS", style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
                 pw.SizedBox(height: 6),
-                pw.Text("Estimated Train Length: $totalLength meters", style: pw.TextStyle(fontSize: 11)),
-                pw.Text("Braking Percentage (BP): $brakingPercentage %", style: pw.TextStyle(fontSize: 11)), // <-- Inserted BP row
-                pw.Text("Estimated Buffer Play: +$bufferPlay meters", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Total Target Consist Length: $totalLength meters", style: pw.TextStyle(fontSize: 11)),
+                pw.Text("Accumulated Buffer Coupling Play: +$bufferPlay meters", style: pw.TextStyle(fontSize: 11)),
                 
                 pw.Spacer(),
                 pw.Container(height: 1, color: PdfColors.grey300),
                 pw.SizedBox(height: 8),
-                pw.Text("Security Trail", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.red800)),
+                pw.Text("OFFICIAL COMPLIANCE SECURITY TRAIL", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.red800)),
                 pw.SizedBox(height: 4),
                 pw.Text(
                   "This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",
@@ -322,53 +290,28 @@ Future<void> _exportAndProcessReceipt({
       ),
     );
 
-    // 5. Generate final bytes containing the stamped security code
     final Uint8List finalBytes = await finalPdf.save();
     final String safeFileName = "TFR_Report_${timestamp.replaceAll(' ', '_').replaceAll(':', '-')}.pdf";
 
-    // 6. Execution Split: Handle Web Browser Sandbox vs Native Mobile Filesystem
+    // 5. Execution Split: Check if we are executing within a Web context or Mobile device context
     if (kIsWeb) {
-      try {
-        // WEB PLATFORM: Convert finalBytes to a Blob object and trigger the browser save dialog
-        final blob = html.Blob([finalBytes], 'application/pdf');
-        final url = html.Url.createObjectUrlFromBlob(blob);
-        
-        final anchor = html.AnchorElement(href: url)
-          ..setAttribute("download", safeFileName)
-          ..style.display = 'none';
-        
-        html.document.body?.children.add(anchor);
-        anchor.click();
-        html.document.body?.children.remove(anchor);
-        html.Url.revokeObjectUrl(url);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("PDF Load Verification Receipt downloaded successfully."),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } catch (e) {
-        debugPrint("Web download error: $e");
-      }
+      // WEB PLATFORM: Direct prompt down to browser storage stream
+  final String base64Uri = 'data:application/pdf;base64,${base64Encode(finalBytes)}';
+  await launchUrl(Uri.parse(base64Uri));
     } else {
       // MOBILE PLATFORM: Enforce absolute offline local storage capture and trigger share manager sheet
-      try {
-        final directory = await getApplicationDocumentsDirectory();
-        final file = File('${directory.path}/$safeFileName');
-        await file.writeAsBytes(finalBytes, flush: true);
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$safeFileName');
+      await file.writeAsBytes(finalBytes, flush: true);
 
-        // Fire OS native share sheet framework instantly
-        final xFile = XFile(file.path, mimeType: 'application/pdf');
-        await Share.shareXFiles(
-          [xFile],
-          text: "TFR Load Calculation Record - Consist Reference: $locoCount x $locoName (Code: ${verificationToken.substring(0, 8)})",
-        );
-      } catch (e) {
-        debugPrint("Mobile storage error: $e");
-      }
+      // Fire OS share framework sheet instantly
+      await Share.shareXFiles(
+        [XFile(file.path, mimeType: 'application/pdf')],
+        text: "TFR Load Calculation Record - Consist Reference: $locoCount x $locoName",
+      );
     }
   }
+
   // The version hardcoded into this specific build string
   final String currentAppVersion = "1.0.13";
   // Track if the user clicked "Later" so we don't spam them during this app session
@@ -463,7 +406,6 @@ Future<void> _exportAndProcessReceipt({
     // Bind your existing bidirectional functions to the controllers
     axlesController.addListener(_onAxlesChanged);
     wagonsController.addListener(_onWagonsChanged);
-    tonsController.addListener(_updateTrainLength); // <-- Recalculate BP on mass change
 
     loadJsonData().then((_) { 
       if (!kIsWeb) {
@@ -477,7 +419,6 @@ Future<void> _exportAndProcessReceipt({
     // Standard cleanup to stop listeners when widget destroys
     axlesController.removeListener(_onAxlesChanged);
     wagonsController.removeListener(_onWagonsChanged);
-    tonsController.removeListener(_updateTrainLength); // <-- Clean up listener
     tonsController.dispose();
     axlesController.dispose();
     wagonsController.dispose();
@@ -759,12 +700,11 @@ Future<void> _exportAndProcessReceipt({
                     "Consist: $selectedLocoCount x $displayLocoName ($blockKey)",
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
-                  Text("Route: $selectedRoute (GC $targetGC)"),
+                  Text("Setting: $selectedRoute (GC $targetGC)"),
                   const SizedBox(height: 8),
                   const Divider(),
                   const SizedBox(height: 8),
-                  Text("Brake Type: ${selectedBrakeType[0] + selectedBrakeType.substring(1).toLowerCase()}"),
-                  Text("Train Capacity: ${baselineMaxTons}t"),
+                  Text("Base Capacity: ${baselineMaxTons}t"),
                   Text("Wagon Allowance: +${allowanceTons}t (${estimatedWagons.toStringAsFixed(0)} wagons)"),
                   Text(
                     "Total Limit: ${totalAllowedTons}t", 
@@ -774,12 +714,11 @@ Future<void> _exportAndProcessReceipt({
                   const Divider(),
                   const SizedBox(height: 8),
                   Text(
-                    "Train Length Estimates:",
+                    "Physical Footprint Dynamics:",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
                   ),
-                  Text("Est. Train Length: ${totalTrainLength.toStringAsFixed(1)}m"),
-                  Text("Braking Percentage (BP): ${totalBrakingPercentage.toStringAsFixed(2)}%"), // <-- Inserted BP line
-                  Text("Est. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
+                  Text("Est. Total Length: ${totalTrainLength.toStringAsFixed(1)}m"),
+                  Text("Incl. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -885,7 +824,6 @@ Future<void> _exportAndProcessReceipt({
                         inputTons: tons.toString(),
                         weightMarginStr: combinedMarginStr,
                         totalLength: totalTrainLength.toStringAsFixed(1),
-                        brakingPercentage: totalBrakingPercentage.toStringAsFixed(2), // <-- Passed value
                         bufferPlay: totalBufferPlay.toStringAsFixed(0),
                       );
                     },
@@ -938,7 +876,7 @@ Future<void> _exportAndProcessReceipt({
                                     initialValue: selectedTrainType,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      labelText: "Train Type",
+                                      labelText: "Train Operation Mode",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -1020,7 +958,7 @@ Future<void> _exportAndProcessReceipt({
                                     initialValue: selectedLocoCount,
                                     isExpanded: true,
                                     decoration: const InputDecoration(
-                                      labelText: "Number of Locos (Live locos only)",
+                                      labelText: "Number of Locos (Live locomotives only)",
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
@@ -1076,7 +1014,7 @@ Future<void> _exportAndProcessReceipt({
                         // ===================================================================
                         // MOBILE PORTRAIT VIEW (Compact Single Stack)
                         // ===================================================================
-                        const Text("Train Type:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Train Operation Mode:", style: TextStyle(fontWeight: FontWeight.bold)),
                         DropdownButton<String>(
                           value: selectedTrainType,
                           isExpanded: true,
@@ -1109,7 +1047,7 @@ Future<void> _exportAndProcessReceipt({
                           onChanged: (val) => setState(() => selectedLoco = val!),
                         ),
                         const SizedBox(height: 12),
-                        const Text("Number of Locos (Live locos only):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Number of Locos (Live locomotives only):", style: TextStyle(fontWeight: FontWeight.bold)),
                         DropdownButton<int>(
                           value: selectedLocoCount,
                           isExpanded: true,
@@ -1162,44 +1100,36 @@ Future<void> _exportAndProcessReceipt({
                       const SizedBox(height: 24),
                       
                       // Live Physical Clearance Framework 
-if (totalTrainLength > 0 && axleValidationError == null) ...[
-  Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.grey.shade50,
-      border: Border.all(color: Colors.grey.shade300),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          children: [
-            Text("Total Length", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
-            const SizedBox(height: 4),
-            Text("${totalTrainLength.toStringAsFixed(1)} m", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
-          ],
-        ),
-        Container(height: 30, width: 1, color: Colors.grey.shade300),
-        Column(
-          children: [
-            Text("Braking % (BP)", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
-            const SizedBox(height: 4),
-            Text("${totalBrakingPercentage.toStringAsFixed(2)} %", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
-          ],
-        ),
-        Container(height: 30, width: 1, color: Colors.grey.shade300),
-        Column(
-          children: [
-            Text("Buffer Play", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
-            const SizedBox(height: 4),
-            Text("+${totalBufferPlay.toStringAsFixed(0)} m", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
-          ],
-        ),
-      ],
-    ),
-  ),
-],
+                      if (totalTrainLength > 0 && axleValidationError == null) ...[
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Text("TOTAL LENGTH", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  const SizedBox(height: 4),
+                                  Text("${totalTrainLength.toStringAsFixed(1)} m", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
+                                ],
+                              ),
+                              Container(height: 30, width: 1, color: Colors.grey.shade300),
+                              Column(
+                                children: [
+                                  Text("BUFFER PLAY", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
+                                  const SizedBox(height: 4),
+                                  Text("+${totalBufferPlay.toStringAsFixed(0)} m", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
 
                       const SizedBox(height: 40),
 
