@@ -86317,14 +86317,14 @@ a63(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2){var s=0,r=B.V(t.H),q=this,p,o,n,m,l,
 var $async$rI=B.W(function(b4,b5){if(b4===1)return B.S(b5,r)
 for(;;)switch(s){case 0:d=B.aA1()
 c=new B.i_(Date.now(),0,!1).k(0).split(".")[0]
-d.Sz(B.aBq(new B.anx(q,c,"1.3.13",a6,a7,a8,a4,a5,a0,b1,a3,b0,b2,a9,a1,a2),A.E4))
+d.Sz(B.aBq(new B.anx(q,c,"1.3.14",a6,a7,a8,a4,a5,a0,b1,a3,b0,b2,a9,a1,a2),A.E4))
 b=B
 a=A.qI
 s=2
 return B.X(d.hE(0),$async$rI)
 case 2:j=b.aED(a.eh(b5).a)
 i=B.aA1()
-i.Sz(B.aBq(new B.any(q,c,"1.3.13",a6,a7,a8,a4,a5,a0,b1,a3,b0,b2,a9,a1,a2,j),A.E4))
+i.Sz(B.aBq(new B.any(q,c,"1.3.14",a6,a7,a8,a4,a5,a0,b1,a3,b0,b2,a9,a1,a2,j),A.E4))
 s=3
 return B.X(i.hE(0),$async$rI)
 case 3:p=b5
@@ -86669,7 +86669,7 @@ q=B.bU("Braking % (BP)",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m
 p=i.fx==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(i.z,2)+" %"
 A.m.N(j,B.b([B.jD(B.lt(B.b([s,r,B.jC(B.b([q,A.pg,B.bU(p,m,m,m,B.dG(m,m,A.rd,m,m,m,m,m,m,m,m,i.fx==="AIRBRAKE"?13:18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI),B.jD(m,A.ad,A.i9,m,30,m,m,1),B.jC(B.b([B.bU("Buffer Play",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU("+"+A.q.Y(i.y,0)+" m",m,m,m,B.dG(m,m,A.mh,m,m,m,m,m,m,m,m,18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI)],k),A.bg,A.op,A.bI,0),A.ad,m,new B.e_(A.r8,m,h,g,m,m,A.bS),m,m,A.P2,m)],k))}j.push(A.aED)
 j.push(B.mj(new B.yx(!1,i.gahZ(),m,m,m,B.oE(m,m,m,new B.bR(new B.ao8(),t.b),new B.b3(3,t.XR),m,m,m,new B.b3(A.M,t.De),m,m,m,m,new B.b3(A.aEq,t.W7),m,m,m,m,new B.b3(new B.cQ(B.jx(28),A.a_),t.dy),m,m,m,m,m,m),m,m,!1,m,!0,m,A.aK9,m),m,m))
-k=B.jC(B.b([B.p3(B.aCl(B.jC(j,A.ek,A.aZ,A.bI),A.P9),1),B.jD(B.bU("v1.3.13 | Developed by Leon and Gemini",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,12,m,m,A.aI,m,m,!0,m,0.5,m,m,m,m,m,m),A.dp,m),A.ad,A.Nt,m,m,m,A.OY,1/0)],k),A.bg,A.aZ,A.bI)
+k=B.jC(B.b([B.p3(B.aCl(B.jC(j,A.ek,A.aZ,A.bI),A.P9),1),B.jD(B.bU("v1.3.14 | Developed by Leon and Gemini",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,12,m,m,A.aI,m,m,!0,m,0.5,m,m,m,m,m,m),A.dp,m),A.ad,A.Nt,m,m,m,A.OY,1/0)],k),A.bg,A.aZ,A.bI)
 return new B.pd(k,A.lR,m)},
 $S:520}
 B.anR.prototype={
