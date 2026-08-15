@@ -631,13 +631,7 @@ Future<void> _exportAndProcessReceipt({
       isLimitExceeded = true; // 🟢 Hard limit broken
     }
 
-    // Check Axle Mass Threshold
-    if (axleMass > maxAllowedAxleMass) {
-      warning = "⚠️ EXCEEDS MAX $maxAllowedAxleMass t/a FOR $brakeName";
-      isLimitExceeded = true; // 🟢 Hard limit broken
-    }
-
-    // Check Consist Length / Axle Count Threshold
+        // Check Consist Length / Axle Count Threshold
     double estimatedWagons = axles / 4;
     if (axles > maxAllowedAxles || estimatedWagons > maxAllowedWagons) {
       if (warning.isNotEmpty) warning += "\n";
@@ -1050,9 +1044,9 @@ Future<void> _exportAndProcessReceipt({
                                     }).toList(),
                                     onChanged: (val) => setState(() => selectedLocoCount = val!),
                                   ),
-                                  const SizedBox(height: 16),
-                                  const SizedBox(height: 58),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: 98),
+                                  // const SizedBox(height: 58),
+                                  // const SizedBox(height: 24),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -1166,16 +1160,37 @@ Future<void> _exportAndProcessReceipt({
                           decoration: const InputDecoration(labelText: "Total Tons", border: OutlineInputBorder()),
                         ),
                         const SizedBox(height: 12),
-                        TextField(
-                          controller: axlesController, 
-                          keyboardType: TextInputType.number, 
-                          onSubmitted: (_) => calculate(), 
-                          decoration: InputDecoration(
-                            labelText: "Total Axles", 
-                            border: const OutlineInputBorder(),
-                            errorText: axleValidationError, 
-                          ),
-                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: axlesController, 
+                                keyboardType: TextInputType.number, 
+                                onSubmitted: (_) => calculate(), 
+                                decoration: InputDecoration(
+                                  labelText: "Total Axles", 
+                                  border: const OutlineInputBorder(),
+                                  errorText: axleValidationError, 
+                                ),
+                              ),
+                            ),
+                       
+                       
+                       const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                controller: wagonsController, 
+                                keyboardType: TextInputType.number, 
+                                onSubmitted: (_) => calculate(), 
+                                decoration: const InputDecoration(
+                                  labelText: "Total Wagons", 
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                      ]
+                      ),
                       ],
                       const SizedBox(height: 24),
                       
