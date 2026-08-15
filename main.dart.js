@@ -86496,7 +86496,7 @@ r.z=s.d},
 $S:0}
 B.anx.prototype={
 $1(a){var s=this,r=null,q=B.c3("Load Calculator Record",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,18,r,A.bm,r,!0,r,r,r,r)),p=B.c3("Generated on: "+s.b,B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c3("Application Version: v"+s.c,B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.azZ(A.E0,1),m=B.c3("Train Details",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bm,r,!0,r,r,r,r)),l=B.c3("Locomotives: "+s.d+" x "+s.e,r),k=B.c3("Route: "+s.f+" (Section ruling Gradient: GC "+s.r+")",r),j=B.c3("Total Tons: "+s.w+"t",r),i=B.c3("Load Details",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bm,r,!0,r,r,r,r)),h=s.a.fx
-return new B.ld(A.rC,B.azB(B.b([q,new B.d0(r,4,r),p,o,n,new B.d0(r,12,r),m,new B.d0(r,6,r),l,k,j,new B.d0(r,12,r),i,new B.d0(r,6,r),B.c3("Brake Type: "+(h[0]+A.r.cs(h,1).toLowerCase()),r),B.c3("Base Capacity: "+s.x+"t",r),B.c3("Wagon Overload Allowance: +"+s.y+"t ("+s.z+" wagons Total)",r),B.c3("Max Tonnage: "+s.Q+"t",r),B.c3("Status Framework Margin: "+s.as,r),new B.d0(r,12,r),B.c3("Train Length Details",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bm,r,!0,r,r,r,r)),new B.d0(r,6,r),B.c3("Estimated Train Length: "+s.at+"m",r),B.c3("Braking Percentage (BP): "+s.ax+"%",r),B.c3("Estimated Buffer Play: +"+s.ay+"m",r),B.aCx(),B.azZ(A.E0,1),new B.d0(r,6,r),B.c3("SECURITY VERIFICATION BANNER",B.cI(r,A.aAT,r,r,r,r,r,r,r,A.aD,r,r,10,r,A.bm,r,!0,r,r,r,r)),new B.d0(r,4,r),B.c3("To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,8,r,r,r,!0,r,r,r,r)),new B.d0(r,8,r)],t.n_),A.ms))},
+return new B.ld(A.rC,B.azB(B.b([q,new B.d0(r,4,r),p,o,n,new B.d0(r,12,r),m,new B.d0(r,6,r),l,k,j,new B.d0(r,12,r),i,new B.d0(r,6,r),B.c3("Brake Type: "+(h[0]+A.r.cs(h,1).toLowerCase()),r),B.c3("Base Capacity: "+s.x+"t",r),B.c3("Wagon Overload Allowance: +"+s.y+"t ("+s.z+" wagons Total)",r),B.c3("Max Tonnage: "+s.Q+"t",r),B.c3("Status Framework Margin: "+s.as,r),new B.d0(r,12,r),B.c3("Train Length Details",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bm,r,!0,r,r,r,r)),new B.d0(r,6,r),B.c3("Estimated Train Length: "+s.at+"m",r),B.c3("Braking Percentage (BP): "+s.ax,r),B.c3("Estimated Buffer Play: +"+s.ay+"m",r),B.aCx(),B.azZ(A.E0,1),new B.d0(r,6,r),B.c3("SECURITY VERIFICATION BANNER",B.cI(r,A.aAT,r,r,r,r,r,r,r,A.aD,r,r,10,r,A.bm,r,!0,r,r,r,r)),new B.d0(r,4,r),B.c3("To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,8,r,r,r,!0,r,r,r,r)),new B.d0(r,8,r)],t.n_),A.ms))},
 $S:206}
 B.any.prototype={
 $1(a){var s=this,r=null,q=B.c3("Load Calculator Record",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,16,r,A.bm,r,!0,r,r,r,r)),p=B.c3("Generated on: "+s.b,B.cI(r,A.oE,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c3("Application Version: v"+s.c,B.cI(r,A.oE,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.a1H(r,A.E1,r,1,r,r,r),m=B.c3("Train Details",B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bm,r,!0,r,r,r,r)),l=B.c3("Locomotives: "+s.d+" x "+s.e,B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),k=B.c3("Route: "+s.f+" (GC "+s.r+")",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),j=B.c3("Tons on vehicle list: "+s.w+" t",B.cI(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),i=B.c3("Calculated load details",B.cI(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bm,r,!0,r,r,r,r)),h=s.a.fx
@@ -86553,7 +86553,7 @@ a=B.bU("Wagon Allowance: +"+b+"t ("+A.q.Y(b1,0)+" wagons)",a9,a9,a9,a9,a9,a9)
 a0=B.bU("Total Limit: "+q+"t",a9,a9,a9,A.d8,a9,a9)
 a1=B.bU("Train Length Estimates:",a9,a9,a9,B.dG(a9,a9,A.dC,a9,a9,a9,a9,a9,a9,a9,a9,12,a9,a9,A.bh,a9,a9,!0,a9,a9,a9,a9,a9,a9,a9,a9),a9,a9)
 a2=B.bU("Est. Train Length: "+A.q.Y(b0.x,1)+"m",a9,a9,a9,a9,a9,a9)
-a3=B.bU("Braking Percentage (BP): "+A.q.Y(b0.z,2)+"%",a9,a9,a9,a9,a9,a9)
+a3=B.bU(b0.fx==="AIRBRAKE"?"Braking Percentage (BP): N/A for Airbrake":"Braking Percentage (BP): "+A.q.Y(b0.z,2)+"%",a9,a9,a9,a9,a9,a9)
 a4=B.bU("Est. Buffer Play: +"+A.q.Y(b0.y,0)+"m",a9,a9,a9,a9,a9,a9)
 a5=s?A.md:A.rh
 a6=B.jx(8)
@@ -86590,7 +86590,7 @@ B.aom.prototype={
 $0(){B.k1(this.a,!1).dW()},
 $S:0}
 B.aon.prototype={
-$0(){var s=0,r=B.V(t.H),q=this,p,o,n,m,l,k,j,i,h,g
+$0(){var s=0,r=B.V(t.H),q=this,p,o,n,m,l,k,j,i,h,g,f
 var $async$$0=B.W(function(a,b){if(a===1)return B.S(b,r)
 for(;;)switch(s){case 0:B.k1(q.c,!1).dW()
 p=q.b
@@ -86604,8 +86604,9 @@ j=A.q.Y(q.f,0)
 i=A.C.k(q.r)
 h=A.q.k(q.w)
 g=A.q.Y(p.x,1)
+f=p.fx==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(p.z,2)+"%"
 s=2
-return B.X(p.rI(m,A.q.Y(p.z,2),A.q.Y(p.y,0),j,l,h,o,q.d,n,g,i,k,q.x),$async$$0)
+return B.X(p.rI(m,f,A.q.Y(p.y,0),j,l,h,o,q.d,n,g,i,k,q.x),$async$$0)
 case 2:return B.T(null,r)}})
 return B.U($async$$0,r)},
 $S:27}
@@ -86662,7 +86663,11 @@ o=B.Y(new B.a4(o,new B.ao4(),n),n.i("ap.E"))
 A.m.N(j,B.b([A.aK6,h,A.f1,A.aKd,g,A.f1,A.aK3,r,A.f1,A.aKc,q,A.Iy,A.aKa,A.aEF,B.Kh(A.aK8,!0,o,new B.ao5(i),p,s),A.dW,B.PB(i.d,A.t9,A.hH,new B.ao6(i)),A.f1,B.PB(i.e,B.aw0(m,A.d_,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.hH,new B.ao7(i))],k))}j.push(A.dW)
 if(i.x>0&&i.w==null){h=B.a0u(A.i9,1)
 g=B.jx(12)
-A.m.N(j,B.b([B.jD(B.lt(B.b([B.jC(B.b([B.bU("Total Length",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU(A.q.Y(i.x,1)+" m",m,m,m,A.aGI,m,m)],k),A.bg,A.aZ,A.bI),B.jD(m,A.ad,A.i9,m,30,m,m,1),B.jC(B.b([B.bU("Braking % (BP)",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU(A.q.Y(i.z,2)+" %",m,m,m,B.dG(m,m,A.rd,m,m,m,m,m,m,m,m,18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI),B.jD(m,A.ad,A.i9,m,30,m,m,1),B.jC(B.b([B.bU("Buffer Play",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU("+"+A.q.Y(i.y,0)+" m",m,m,m,B.dG(m,m,A.mh,m,m,m,m,m,m,m,m,18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI)],k),A.bg,A.op,A.bI,0),A.ad,m,new B.e_(A.r8,m,h,g,m,m,A.bS),m,m,A.P2,m)],k))}j.push(A.aED)
+s=B.jC(B.b([B.bU("Total Length",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU(A.q.Y(i.x,1)+" m",m,m,m,A.aGI,m,m)],k),A.bg,A.aZ,A.bI)
+r=B.jD(m,A.ad,A.i9,m,30,m,m,1)
+q=B.bU("Braking % (BP)",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m)
+p=i.fx==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(i.z,2)+" %"
+A.m.N(j,B.b([B.jD(B.lt(B.b([s,r,B.jC(B.b([q,A.pg,B.bU(p,m,m,m,B.dG(m,m,A.rd,m,m,m,m,m,m,m,m,i.fx==="AIRBRAKE"?13:18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI),B.jD(m,A.ad,A.i9,m,30,m,m,1),B.jC(B.b([B.bU("Buffer Play",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,11,m,m,A.bh,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.pg,B.bU("+"+A.q.Y(i.y,0)+" m",m,m,m,B.dG(m,m,A.mh,m,m,m,m,m,m,m,m,18,m,m,A.bh,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.bg,A.aZ,A.bI)],k),A.bg,A.op,A.bI,0),A.ad,m,new B.e_(A.r8,m,h,g,m,m,A.bS),m,m,A.P2,m)],k))}j.push(A.aED)
 j.push(B.mj(new B.yx(!1,i.gahZ(),m,m,m,B.oE(m,m,m,new B.bR(new B.ao8(),t.b),new B.b3(3,t.XR),m,m,m,new B.b3(A.M,t.De),m,m,m,m,new B.b3(A.aEq,t.W7),m,m,m,m,new B.b3(new B.cQ(B.jx(28),A.a_),t.dy),m,m,m,m,m,m),m,m,!1,m,!0,m,A.aK9,m),m,m))
 k=B.jC(B.b([B.p3(B.aCl(B.jC(j,A.ek,A.aZ,A.bI),A.P9),1),B.jD(B.bU("v1.3.13 | Developed by Leon and Gemini",m,m,m,B.dG(m,m,A.di,m,m,m,m,m,m,m,m,12,m,m,A.aI,m,m,!0,m,0.5,m,m,m,m,m,m),A.dp,m),A.ad,A.Nt,m,m,m,A.OY,1/0)],k),A.bg,A.aZ,A.bI)
 return new B.pd(k,A.lR,m)},
