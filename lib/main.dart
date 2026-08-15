@@ -489,7 +489,7 @@ Future<void> _exportAndProcessReceipt({
       final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
 
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
+      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 8));
       
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -499,11 +499,23 @@ Future<void> _exportAndProcessReceipt({
         if (latestVersion != currentAppVersion && mounted) {
           showUpdateDialog(latestVersion, downloadUrl);
         }
+      }else {
+      // Diagnostic alert for non-200 responses
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Version check HTTP status: ${response.statusCode}")),
+        );
       }
-    } catch (e) {
-      debugPrint("Update check failed: $e");
+    }
+  } catch (e) {
+    // Diagnostic alert for socket/permission errors
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Version check error: $e")),
+      );
     }
   }
+}
 
   void showUpdateDialog(String newVersion, String downloadUrl) {
     showDialog(
