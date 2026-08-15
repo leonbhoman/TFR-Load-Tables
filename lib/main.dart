@@ -484,53 +484,27 @@ Future<void> _exportAndProcessReceipt({
     super.dispose();
   }
   Future<void> checkForUpdates() async {
-    if (_hasDeferredUpdate) return; // Silent exit if they already clicked Later
-          // FIXED: Pointing to the exact repository name casing
-      final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
+    if (_hasDeferredUpdate) return; 
+    final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
 
     try {
       final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 8));
       
       if (response.statusCode == 200) {
-        // final data = json.decode(response.body);
         final dynamic decoded = json.decode(response.body);
-        // Verify the decoded payload is a JSON Map
       if (decoded is Map<String, dynamic>) {
         final String? latestVersion = decoded['version']?.toString();
-        final String? downloadUrl = decoded['url']?.toString();
-        if (latestVersion != null && downloadUrl != null) {
+        final String downloadUrl = decoded['url']?.toString() ?? "https://github.com/leonbhoman/TFR-Load-Tables/releases/latest";        if (latestVersion != null && downloadUrl != null) {
+if (latestVersion != null) {
           if (latestVersion != currentAppVersion && mounted) {
             showUpdateDialog(latestVersion, downloadUrl);
           }
-        } else {
-          // Key mismatch or null values inside the map
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Missing keys in version.json: ${response.body}")),
-            );
-          }
         }
-      } else {
-        // Body was valid JSON but not a Map (e.g. List or raw string)
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Invalid JSON format: ${response.body}")),
-          );
         }
-      }
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Version check HTTP status: ${response.statusCode}")),
-        );
       }
     }
   } catch (e) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Version check error: $e")),
-      );
-    }
+    debugPrint("Update check error: $e");
   }
 }
 
