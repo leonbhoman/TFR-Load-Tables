@@ -43,7 +43,7 @@ class RailCalcApp extends StatelessWidget {
                 "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
                 textAlign: TextAlign.end, // Aligns text cleanly to the right edge
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.85), // Soft white to keep it subtle
+                  color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
                   fontSize: 10,                          // Keeps it small and unobtrusive
                   fontWeight: FontWeight.w500,
                   height: 1.2,                           // Controls line spacing tightly
@@ -228,7 +228,7 @@ Future<void> _exportAndProcessReceipt({
                 pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
                 pw.Text("Estimated Train Length: ${totalLength}m"),
-                pw.Text("Braking Percentage (BP): ${brakingPercentage}%"), // <-- Inserted BP row
+                pw.Text("Braking Percentage (BP): $brakingPercentage%"), // <-- Inserted BP row
                 pw.Text("Estimated Buffer Play: +${bufferPlay}m"),
                 pw.Spacer(),
                 
@@ -370,7 +370,7 @@ Future<void> _exportAndProcessReceipt({
     }
   }
   // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.0.13";
+  final String currentAppVersion = "1.3.13";
   // Track if the user clicked "Later" so we don't spam them during this app session
   bool _hasDeferredUpdate = false;
   
