@@ -228,7 +228,7 @@ Future<void> _exportAndProcessReceipt({
                 pw.Text("Train Length Details", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
                 pw.Text("Estimated Train Length: ${totalLength}m"),
-                pw.Text("Braking Percentage (BP): $brakingPercentage%"), // <-- Inserted BP row
+                pw.Text("Braking Percentage (BP): $brakingPercentage"), // <-- Inserted BP row
                 pw.Text("Estimated Buffer Play: +${bufferPlay}m"),
                 pw.Spacer(),
                 
@@ -778,7 +778,11 @@ Future<void> _exportAndProcessReceipt({
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
                   ),
                   Text("Est. Train Length: ${totalTrainLength.toStringAsFixed(1)}m"),
-                  Text("Braking Percentage (BP): ${totalBrakingPercentage.toStringAsFixed(2)}%"), // <-- Inserted BP line
+                  Text(
+                    selectedBrakeType == 'AIRBRAKE'
+                        ? "Braking Percentage (BP): N/A for Airbrake"
+                        : "Braking Percentage (BP): ${totalBrakingPercentage.toStringAsFixed(2)}%",
+                  ),    
                   Text("Est. Buffer Play: +${totalBufferPlay.toStringAsFixed(0)}m"),
                   const SizedBox(height: 10),
                   Container(
@@ -885,7 +889,9 @@ Future<void> _exportAndProcessReceipt({
                         inputTons: tons.toString(),
                         weightMarginStr: combinedMarginStr,
                         totalLength: totalTrainLength.toStringAsFixed(1),
-                        brakingPercentage: totalBrakingPercentage.toStringAsFixed(2), // <-- Passed value
+                        brakingPercentage: selectedBrakeType == 'AIRBRAKE' 
+                              ? "N/A for Airbrake" 
+                              : "${totalBrakingPercentage.toStringAsFixed(2)}%", // Pass fully formatted string                        
                         bufferPlay: totalBufferPlay.toStringAsFixed(0),
                       );
                     },
@@ -1185,7 +1191,15 @@ if (totalTrainLength > 0 && axleValidationError == null) ...[
           children: [
             Text("Braking % (BP)", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.8)),
             const SizedBox(height: 4),
-            Text("${totalBrakingPercentage.toStringAsFixed(2)} %", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
+            Text(selectedBrakeType == 'AIRBRAKE' 
+                  ? "N/A for Airbrake" 
+                  : "${totalBrakingPercentage.toStringAsFixed(2)} %", 
+                style: TextStyle(
+                  fontSize: selectedBrakeType == 'AIRBRAKE' ? 13 : 18, // Slightly smaller font so the full phrase fits cleanly
+                  fontWeight: FontWeight.bold, 
+                  color: Colors.orange.shade800,
+                      ),
+                ),
           ],
         ),
         Container(height: 30, width: 1, color: Colors.grey.shade300),
