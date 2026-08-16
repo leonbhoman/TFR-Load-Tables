@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TFR Load Verification Engine</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
+    .card { background: white; max-width: 450px; width: 100%; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .status-box { padding: 16px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 20px; }
+    .valid { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
+    .invalid { background: #ffebee; color: #c62828; border: 2px solid #ef9a9a; }
+    .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .label { color: #666; font-size: 14px; }
+    .value { font-weight: 600; font-size: 14px; color: #333; }
+    .hash { font-family: monospace; font-size: 10px; word-break: break-all; background: #f0f0f0; padding: 8px; border-radius: 4px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 style="margin-top:0; text-align:center;">TFR Security Verification</h2>
+    <div id="status" class="status-box">Verifying Hash Signature...</div>
+    
+    <div class="row"><span class="label">Locomotives</span><span id="loco" class="value">-</span></div>
+    <div class="row"><span class="label">Route</span><span id="route" class="value">-</span></div>
+    <div class="row"><span class="label">Total Tonnage</span><span id="tons" class="value">-</span></div>
+    
+    <div style="margin-top: 16px;">
+      <span class="label">Embedded Verification Hash:</span>
+      <div id="hash" class="hash">-</div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const loco = params.get('loco') || 'Unknown';
+    const count = params.get('count') || '0';
+    const tons = params.get('tons') || '0';
+    const route = params.get('route') || 'Unknown';
+    const hash = params.get('hash') || '';
+
+    document.getElementById('loco').textContent = `${count} x ${loco}`;
+    document.getElementById('route').textContent = route;
+    document.getElementById('tons').textContent = `${tons} t`;
+    document.getElementById('hash').textContent = hash;
+
+    const statusEl = document.getElementById('status');
+    if (hash && hash.length === 64) {
+      statusEl.className = 'status-box valid';
+      statusEl.textContent = '✅ AUTHENTIC RECORD';
+    } else {
+      statusEl.className = 'status-box invalid';
+      statusEl.textContent = '❌ INVALID OR TAMPERED RECEIPT';
+    }
+  </script>
+</body>
+</html>

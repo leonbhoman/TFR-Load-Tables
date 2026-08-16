@@ -1,25 +1,39 @@
-//==================================
-//All the imports grouped together.
-//==================================
+// =============================================================================
+// FILE: main.dart
+// SYSTEM: TFR Load Calculator Application
+// PURPOSE: Handles UI rendering, input validation, railway load lookup logic,
+//          train length/braking metrics calculation, live version checking,
+//          and cryptographic PDF generation.
+// =============================================================================
+
+// =============================================================================
+// SECTION 1: SYSTEM IMPORTS
+// =============================================================================
 
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart'; // <-- Add this to access kIsWeb
-import 'package:url_launcher/url_launcher.dart'; // <-- Add this import at the very top of main.dart
+import 'package:flutter/foundation.dart'; // Provides kIsWeb platform flag
+import 'package:url_launcher/url_launcher.dart'; // Handles external browser downloads
 import 'dart:io' show File;
-import 'package:crypto/crypto.dart';
+import 'package:crypto/crypto.dart'; // Cryptographic SHA-256 engine
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:pdf/widgets.dart' as pw; // PDF layout generator
+import 'package:share_plus/share_plus.dart'; // Native OS sharing sheet
+import 'package:path_provider/path_provider.dart'; // Native local file paths
+import 'package:universal_html/html.dart' as html; // Web DOM/Blob handling
+import 'package:qr_flutter/qr_flutter.dart'; // Handles screen rendering of QR codes
+
+// =============================================================================
+// SECTION 2: MAIN APPLICATION ENTRY POINT
+// =============================================================================
 
 void main() {
   runApp(const RailCalcApp());
 }
 
+/// Root Application Widget configuring theme assets and scaffold layout.
 class RailCalcApp extends StatelessWidget {
   const RailCalcApp({super.key});
 
@@ -28,10 +42,11 @@ class RailCalcApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true,
-        colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),),
+        colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),// TFR Green
+        ),
       home: Scaffold(
         appBar: AppBar(
-          // 🟢 FIXED: Dual-element layout with title on the left and 3-row source right-aligned
+          // Header layout: Title on left, technical document reference on right
           title: Row(
             children: [
               const Text(
@@ -59,6 +74,10 @@ class RailCalcApp extends StatelessWidget {
   }
 }
 
+// =============================================================================
+// SECTION 3: FORM WIDGET STATE MANAGEMENT
+// =============================================================================
+
 class LoadCalculatorForm extends StatefulWidget {
   const LoadCalculatorForm({super.key});
 
@@ -70,11 +89,21 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final tonsController = TextEditingController();
   final axlesController = TextEditingController();
   final TextEditingController wagonsController = TextEditingController();
+  
+  // Internal Loop Safeguard Flag for Bidirectional Coupling
   bool _isUpdatingAxlesOrWagons = false;
+  
+  // Validation & Live Calculated Metric States
   String? axleValidationError;
   double totalTrainLength = 0.0;
   double totalBufferPlay = 0.0;
   double totalBrakingPercentage = 0.0;
+  
+  // ===========================================================================
+  // SECTION 4: BIDIRECTIONAL CALCULATORS & LISTENERS
+  // ===========================================================================
+
+  /// Listens to changes in Axle input, validates multiple of 4, updates Wagons.
 
   void _onAxlesChanged() {
     if (_isUpdatingAxlesOrWagons) return;
@@ -90,15 +119,15 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       final axles = int.tryParse(axlesText);
       if (axles != null) {
         if (axles % 4 == 0) {
-          // Valid multiple of 4
+          // Valid railway 4-axle wagon configuration
           setState(() {
             axleValidationError = null;
           });
           double wagons = axles / 4;
           wagonsController.text = wagons.toInt().toString();
         } else {
-          // Invalid: trigger native validation error state & clear wagons
-          setState(() {
+        // Trigger field error state
+           setState(() {
             axleValidationError = "Must be a multiple of 4";
             wagonsController.text = "";
           });
@@ -114,7 +143,9 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     _isUpdatingAxlesOrWagons = false;
   }
 
-  void _onWagonsChanged() {
+  /// Listens to changes in Wagon input, converts to 4 axles per wagon.
+  
+    void _onWagonsChanged() {
     if (_isUpdatingAxlesOrWagons) return;
     _isUpdatingAxlesOrWagons = true;
 
@@ -138,6 +169,8 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
     _isUpdatingAxlesOrWagons = false;
   }
 
+  /// Recalculates total train length, buffer play, and braking percentage (BP).
+  
   void _updateTrainLength() {
     final wagonsText = wagonsController.text;
     final tonsText = tonsController.text; // <-- Retrieve total wagon mass
@@ -160,7 +193,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       // 2. Buffer play: Add 1 meter for every complete block of 10 wagons
       double bufferPlay = (wagons / 10).floorToDouble() * 1.0;
 
-      // 3. Braking Percentage (BP) Calculation
+      // 3. Braking Percentage (BP) for Vacuum Trains (160 kN block force per wagon)
       double totalBlockForceKn = wagons * 160.0; // 160 kN per wagon
       double totalWagonWeightKn = tons * 9.81;  // Mass in tonnes to weight in kN
       double bp = totalWagonWeightKn > 0 ? (totalBlockForceKn / totalWagonWeightKn) * 100 : 0.0;
@@ -172,6 +205,13 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
       });
     }
   }
+
+  // ===========================================================================
+  // SECTION 5: CRYPTOGRAPHIC PDF GENERATION & EXPORT
+  // ===========================================================================
+
+  /// Compiles a compliance receipt, runs SHA-256 hash calculation over binary bytes,
+  /// stamps the checksum code onto the PDF, and triggers download/sharing.
 
 Future<void> _exportAndProcessReceipt({
     required String locoCount,
@@ -192,7 +232,7 @@ Future<void> _exportAndProcessReceipt({
     final timestamp = DateTime.now().toString().split('.')[0]; // e.g. 2026-07-04 09:45:12
     final appVersion = currentAppVersion;
 
-    // 1. Build the read-only, layout-structured document structure to compute the baseline hash
+    // 1. Build initial layout structure to calculate raw checksum bytes
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -248,14 +288,24 @@ Future<void> _exportAndProcessReceipt({
       ),
     );
 
-    // 2. Compute the primary raw layout bytes
+    // 2. Extract baseline binary bytes
     final Uint8List pdfBytes = await pdf.save();
 
-    // 3. Run the binary array through the SHA-256 Cryptographic meat-grinder
+    // 3. Generate Cryptographic SHA-256 Hash Digest
     final hashDigest = sha256.convert(pdfBytes);
     final String verificationToken = hashDigest.toString();
 
-    // 4. Re-compile the final document stream with the absolute token stamped safely on the template layout
+    // 🟢 CONSTRUCT VERIFICATION URL HERE
+    final verifyUri = Uri.https('leonbhoman.github.io', '/TFR-Load-Tables/verify.html', {
+      'loco': locoName,
+      'count': locoCount,
+      'tons': inputTons,
+      'route': route,
+      'hash': verificationToken,
+    });
+    final String verifyUrl = verifyUri.toString();
+
+    // 4. Re-compile final PDF with stamped SHA-256 token
     final finalPdf = pw.Document();
     finalPdf.addPage(
       pw.Page(
@@ -315,6 +365,12 @@ Future<void> _exportAndProcessReceipt({
                     style: pw.TextStyle(fontSize: 8, font: pw.Font.courier(), fontWeight: pw.FontWeight.bold, color: PdfColors.grey900),
                   ),
                 ),
+                pw.BarcodeWidget(
+                  barcode: pw.Barcode.qrCode(),
+                  data: verifyUrl,
+                  width: 80,
+                  height: 80,
+                )
               ],
             ),
           );
@@ -322,11 +378,11 @@ Future<void> _exportAndProcessReceipt({
       ),
     );
 
-    // 5. Generate final bytes containing the stamped security code
+    // 5. Generate final PDF byte payload
     final Uint8List finalBytes = await finalPdf.save();
     final String safeFileName = "TFR_Report_${timestamp.replaceAll(' ', '_').replaceAll(':', '-')}.pdf";
 
-    // 6. Execution Split: Handle Web Browser Sandbox vs Native Mobile Filesystem
+    // 6. Platform Execution Split: Web Browser Download vs Native Android Share
     if (kIsWeb) {
       try {
         // WEB PLATFORM: Convert finalBytes to a Blob object and trigger the browser save dialog
@@ -369,12 +425,15 @@ Future<void> _exportAndProcessReceipt({
       }
     }
   }
-  // The version hardcoded into this specific build string
-  final String currentAppVersion = "1.3.15";
-  // Track if the user clicked "Later" so we don't spam them during this app session
-  bool _hasDeferredUpdate = false;
+
+  // ===========================================================================
+  // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
+  // =========================================================================== 
+
+  final String currentAppVersion = "1.4.15"; // Static compile version string
+  bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
-  // Train Operational Types
+  // Operational Configurations & Static Route Data
   String selectedTrainType = 'Mainline';
   final List<String> trainTypes = ['Mainline', 'Hauler', 'LightAirbrake'];
 
@@ -393,7 +452,7 @@ Future<void> _exportAndProcessReceipt({
     'Ermelo to Richards Bay'
   ];
 
-  // Embedded Mainline Route Lookup Matrix
+  // Route Gradient Catalog Mapping: Route -> {Brake Type -> GC Value}
   final Map<String, Map<String, int>> routeCatalog = {
     'Durban to Reef': {'Airbrake': 5, 'Vacuum': 4},
     'Reef to Durban': {'Airbrake': 7, 'Vacuum': 6},
@@ -427,9 +486,7 @@ Future<void> _exportAndProcessReceipt({
     {'display': '7E', 'value': '7E_10E_Class'},       
     {'display': '10E', 'value': '7E_10E_Class'},      
     {'display': '8E', 'value': '8E_Class'},
-    // {'display': '14E', 'value': '14E_Class'},
     {'display': '18E', 'value': '18E_Class'},
-    // {'display': '19E', 'value': '19E_Class'},
     {'display': '33D', 'value': '33D_Class'},
     {'display': '34D', 'value': '34D_Class'},          
     {'display': '35D', 'value': '35D_Class'},
@@ -452,7 +509,7 @@ Future<void> _exportAndProcessReceipt({
   final List<Map<String, String>> brakeTypes = [
     {'display': 'Airbrake', 'value': 'AIRBRAKE'},
     {'display': 'Vacuum', 'value': 'VACUUM'},
-    // Future corporate expansions go here natively:
+    // Future corporate expansions go here natively. For example:
     // {'display': 'DUAL CONTROL', 'value': 'DUAL'},
   ];
 
@@ -460,7 +517,7 @@ Future<void> _exportAndProcessReceipt({
   void initState() {
     super.initState();
     
-    // Bind your existing bidirectional functions to the controllers
+    // Bind input listeners
     axlesController.addListener(_onAxlesChanged);
     wagonsController.addListener(_onWagonsChanged);
     tonsController.addListener(_updateTrainLength); // <-- Recalculate BP on mass change
@@ -474,7 +531,7 @@ Future<void> _exportAndProcessReceipt({
 
   @override
   void dispose() {
-    // Standard cleanup to stop listeners when widget destroys
+    // Unbind listeners on widget dispose
     axlesController.removeListener(_onAxlesChanged);
     wagonsController.removeListener(_onWagonsChanged);
     tonsController.removeListener(_updateTrainLength); // <-- Clean up listener
@@ -483,6 +540,9 @@ Future<void> _exportAndProcessReceipt({
     wagonsController.dispose();
     super.dispose();
   }
+
+  /// Queries GitHub Pages host for remote version updates using cache-busting timestamp parameters.
+
   Future<void> checkForUpdates() async {
     if (_hasDeferredUpdate) return; 
     final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
@@ -508,10 +568,12 @@ if (latestVersion != null) {
   }
 }
 
+  /// Displays the modal update alert dialog.
+
   void showUpdateDialog(String newVersion, String downloadUrl) {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false, // Prevents accidentally tapping outside to close
       builder: (dialogContext) => AlertDialog(
         title: const Row(
           children: [
@@ -565,6 +627,12 @@ if (latestVersion != null) {
       ),
     );
   }
+
+  // ===========================================================================
+  // SECTION 7: LOAD DATASET INGESTION & CALCULATION ENGINE
+  // ===========================================================================
+
+  /// Ingests static JSON lookup tables from asset bundle.
   
   Future<void> loadJsonData() async {
     try {
@@ -578,6 +646,7 @@ if (latestVersion != null) {
     }
   }
   
+  /// Core logic evaluating consist parameters against structural and database limits.
   void calculate() {
     // Safety guard: halt submission sequence if validation fails
     if (axleValidationError != null) return;
@@ -616,25 +685,21 @@ if (latestVersion != null) {
     String brakeName = selectedBrakeType; // ? "AIRBRAKE" : "VACUUM";
     bool isLimitExceeded = false; // 🟢 NEW FLAG: Track hard physical constraint violations
 
-    // Check Axle Mass Threshold
+    // Evaluate Axle Mass Violations
     if (axleMass > maxAllowedAxleMass) {
       warning = "⚠️ EXCEEDS MAX $maxAllowedAxleMass t/a FOR $brakeName";
       isLimitExceeded = true; // 🟢 Hard limit broken
     }
 
-        // Check Consist Length / Axle Count Threshold
+    // Evaluate Train Length / Wagon Count Violations
     double estimatedWagons = axles / 4;
     if (axles > maxAllowedAxles || estimatedWagons > maxAllowedWagons) {
       if (warning.isNotEmpty) warning += "\n";
       warning += "⚠️ $brakeName LIMIT EXCEEDED:\nMax $maxAllowedWagons Wagons / $maxAllowedAxles Axles allowed.";
       isLimitExceeded = true; // 🟢 Hard limit broken
     }
-    // 1. Safety Boundary Check
-    // if (axleMass > 20) {
-    //  warning = "⚠️ EXCEEDS MAX 20 t/a";
-    // *****************************************************************************************************************************}
-
-    // 2. Routed Matrix Lookup (Hauler vs Mainline Branches)
+    
+    // Determine Gradient Class (GC)
     if (selectedTrainType == 'Hauler') {
       targetGC = haulerCatalog[selectedRoute] ?? 8;
     } else {
@@ -642,7 +707,7 @@ if (latestVersion != null) {
       targetGC = routeCatalog[selectedRoute]?[brakeKey] ?? 5;
     }
 
-    // 3. Determine Block Token based on Brake Type and Calculated Axle Mass (AAM)
+    // Assign Load Block Token based on Axle Mass
     if (selectedBrakeType == 'AIRBRAKE') {
       if (axleMass <= 7) { blockKey = "AB27"; }
       else if (axleMass <= 12.5) { blockKey = "AB712"; }
@@ -657,8 +722,8 @@ if (latestVersion != null) {
     int baselineMaxTons = 0;
     bool foundRowMatch = false;
 
-    // 4. Extract Load Ceiling from Dataset with Auto-Isolation Guard
-    if (locoData.containsKey(selectedLoco)) {
+    // Database Lookup Engine
+        if (locoData.containsKey(selectedLoco)) {
       var classData = locoData[selectedLoco];
       if (classData != null && classData.containsKey(blockKey)) {
         List<dynamic> blockDataList = classData[blockKey];
@@ -696,12 +761,12 @@ if (latestVersion != null) {
       }
     }
 
-    // 5. Apply Wagon Allowance
+    // Apply +1 Ton Wagon Overload Allowance per Wagon
     double safetyWagonsCheck = axles / 4;
     int allowanceTons = safetyWagonsCheck.floor(); 
     int totalAllowedTons = baselineMaxTons + allowanceTons;
 
-// 6. Trigger Centered Pop-up Modal Window
+    // Trigger Results Modal Dialog Window
     if (warning.isNotEmpty || foundRowMatch) {
       bool overWeight = tons > totalAllowedTons;
       
@@ -722,6 +787,13 @@ if (latestVersion != null) {
           final String marginLabel = overWeight ? "Over max limit by" : "Remaining margin";
           final String marginVal = "${(totalAllowedTons - tons).abs().toInt()}t";
           final String combinedMarginStr = "$marginLabel: $marginVal";
+          final previewUri = Uri.https('leonbhoman.github.io', '/TFR-Load-Tables/verify.html', {
+            'loco': displayLocoName,
+            'count': selectedLocoCount.toString(),
+            'tons': tons.toString(),
+            'route': selectedRoute,
+            'hash': sha256.convert(utf8.encode("$selectedLocoCount|$displayLocoName|$selectedRoute|$tons")).toString(),
+          });
 
           // Calculate isolated engine adjustments if required
           int excessLocosCount = 0;
@@ -844,6 +916,24 @@ if (latestVersion != null) {
                       ),
                     ),
                   ],
+                  // 🟢 2. PASTE QR CODE PREVIEW HERE (At the end of ListBody children)
+                  const SizedBox(height: 16),
+                  Center(
+                    child: Column(
+                      children: [
+                        QrImageView(
+                          data: previewUri.toString(),
+                          version: QrVersions.auto,
+                          size: 140.0,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Scan to verify load authenticity",
+                          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -902,6 +992,10 @@ if (latestVersion != null) {
       );
     }
   }
+
+// ===========================================================================
+// SECTION 8: RESPONSIVE UI LAYOUT BUILDER
+// ===========================================================================
 
 @override
   Widget build(BuildContext context) {
@@ -1233,37 +1327,37 @@ if (totalTrainLength > 0 && axleValidationError == null) ...[
   ),
 ],
 
-                      const SizedBox(height: 40),
+            const SizedBox(height: 40),
 
-                      // Verify Load Button
-                      Center(
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
-                            backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
-                            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                            shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0))),
-                            elevation: WidgetStateProperty.all<double>(3),
-                          ),
-                          onPressed: calculate, 
-                          child: const Text("VERIFY LOAD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2)),
-                        ),
-                      ),
-                    ],
+              // Verify Load Button
+              Center(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
+                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0))),
+                    elevation: WidgetStateProperty.all<double>(3),
                   ),
+                  onPressed: calculate, 
+                  child: const Text("VERIFY LOAD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2)),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
 
-              // Co-authored Footer Bar
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                color: Colors.grey.shade100,
-                child: Text(
-                  "v$currentAppVersion | Developed by Leon and Gemini",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade600, letterSpacing: 0.5),
-                ),
+            // Co-authored Footer Bar
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              color: Colors.grey.shade100,
+              child: Text(
+                "v$currentAppVersion | Developed by Leon and Gemini",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade600, letterSpacing: 0.5),
+              ),
               ),
             ],
           ),
