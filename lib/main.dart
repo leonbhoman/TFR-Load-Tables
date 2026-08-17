@@ -45,39 +45,7 @@ class RailCalcApp extends StatelessWidget {
         colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),// TFR Green
         ),
         home: const LoadCalculatorForm(),
-      // home: Scaffold(
-      //   appBar: AppBar(
-      //     // Header layout: Title on left, technical document reference on right
-      //     title: Row(
-      //       children: [
-      //         const Text(
-      //           'TFR Load Calculator', 
-      //           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
-      //         ),
-      //         const Spacer(), // Pushes the technical reference block all the way to the right edge
-      //         Text(
-      //           "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
-      //           textAlign: TextAlign.end, // Aligns text cleanly to the right edge
-      //           style: TextStyle(
-      //             color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
-      //             fontSize: 10,                          // Keeps it small and unobtrusive
-      //             fontWeight: FontWeight.w500,
-      //             height: 1.2,                           // Controls line spacing tightly
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.refresh, color: Colors.white),
-      //       tooltip: "Reset Form",
-      //       onPressed: () => _resetFields(),
-      //     ),
-      //   ],
-      //     backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-      //   ),
-      //   body: const LoadCalculatorForm(),
-      // ),
+      
     );
   }
 }
@@ -1045,8 +1013,39 @@ if (latestVersion != null) {
   Widget build(BuildContext context) {
     List<String> activeRouteOptions = (selectedTrainType == 'Hauler') ? haulerRoutes : mainlineRoutes;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
+    return Scaffold(
+        appBar: AppBar(
+          // Header layout: Title on left, technical document reference on right
+          title: Row(
+            children: [
+              const Text(
+                'TFR Load Calculator', 
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
+              ),
+              const Spacer(), // Pushes the technical reference block all the way to the right edge
+              Text(
+                "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
+                textAlign: TextAlign.end, // Aligns text cleanly to the right edge
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
+                  fontSize: 10,                          // Keeps it small and unobtrusive
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,                           // Controls line spacing tightly
+                ),
+              ),
+            ],
+          ),
+          actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            tooltip: "Reset Form",
+            onPressed: () => _resetFields(),
+          ),
+        ],
+          backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        ),
+        body: LayoutBuilder(
+        builder: (context, constraints) {
         bool isWideScreen = constraints.maxWidth > 600;
 
         return Form( // Invisible wrapper enabling clean web keyboard submission
@@ -1400,6 +1399,7 @@ if (totalTrainLength > 0 && axleValidationError == null) ...[
           ),
         );
       },
+    )
     );
   }
 }
