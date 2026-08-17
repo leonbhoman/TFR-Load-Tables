@@ -61,7 +61,7 @@ InputDecoration customInputDecoration(String labelText, {String? errorText}) {
     labelStyle: TextStyle(color: Colors.grey.shade800, fontWeight: FontWeight.normal),
     errorText: errorText,
     border: const OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.black54, width: 1.5),
+      // borderSide: BorderSide(color: Colors.black54, width: 1.5),
     ),
     focusedBorder: const OutlineInputBorder(
       borderSide: BorderSide(color: Color.fromRGBO(76, 175, 80, 1), width: 2.0),
@@ -435,7 +435,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.5.1"; // Static compile version string
+  final String currentAppVersion = "1.5.2"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
