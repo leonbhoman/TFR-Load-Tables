@@ -58,7 +58,7 @@ class RailCalcApp extends StatelessWidget {
 InputDecoration customInputDecoration(String labelText, {String? errorText}) {
   return InputDecoration(
     labelText: labelText,
-    labelStyle: TextStyle(color: Colors.grey.shade800, fontWeight: FontWeight.w600),
+    labelStyle: TextStyle(color: Colors.grey.shade800, fontWeight: FontWeight.normal),
     errorText: errorText,
     border: const OutlineInputBorder(
       borderSide: BorderSide(color: Colors.black54, width: 1.5),
