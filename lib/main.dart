@@ -44,32 +44,40 @@ class RailCalcApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true,
         colorSchemeSeed: const Color.fromRGBO(76, 175, 80, 1),// TFR Green
         ),
-      home: Scaffold(
-        appBar: AppBar(
-          // Header layout: Title on left, technical document reference on right
-          title: Row(
-            children: [
-              const Text(
-                'TFR Load Calculator', 
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
-              ),
-              const Spacer(), // Pushes the technical reference block all the way to the right edge
-              Text(
-                "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
-                textAlign: TextAlign.end, // Aligns text cleanly to the right edge
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
-                  fontSize: 10,                          // Keeps it small and unobtrusive
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,                           // Controls line spacing tightly
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-        ),
-        body: const LoadCalculatorForm(),
-      ),
+        home: const LoadCalculatorForm(),
+      // home: Scaffold(
+      //   appBar: AppBar(
+      //     // Header layout: Title on left, technical document reference on right
+      //     title: Row(
+      //       children: [
+      //         const Text(
+      //           'TFR Load Calculator', 
+      //           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
+      //         ),
+      //         const Spacer(), // Pushes the technical reference block all the way to the right edge
+      //         Text(
+      //           "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
+      //           textAlign: TextAlign.end, // Aligns text cleanly to the right edge
+      //           style: TextStyle(
+      //             color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
+      //             fontSize: 10,                          // Keeps it small and unobtrusive
+      //             fontWeight: FontWeight.w500,
+      //             height: 1.2,                           // Controls line spacing tightly
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.refresh, color: Colors.white),
+      //       tooltip: "Reset Form",
+      //       onPressed: () => _resetFields(),
+      //     ),
+      //   ],
+      //     backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+      //   ),
+      //   body: const LoadCalculatorForm(),
+      // ),
     );
   }
 }
@@ -77,6 +85,24 @@ class RailCalcApp extends StatelessWidget {
 // =============================================================================
 // SECTION 3: FORM WIDGET STATE MANAGEMENT
 // =============================================================================
+
+// Helper for high-contrast field borders under direct sunlight
+InputDecoration customInputDecoration(String labelText, {String? errorText}) {
+  return InputDecoration(
+    labelText: labelText,
+    labelStyle: TextStyle(color: Colors.grey.shade800, fontWeight: FontWeight.w600),
+    errorText: errorText,
+    border: const OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.black54, width: 1.5),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromRGBO(76, 175, 80, 1), width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey.shade600, width: 1.5),
+    ),
+  );
+}
 
 class LoadCalculatorForm extends StatefulWidget {
   const LoadCalculatorForm({super.key});
@@ -204,6 +230,17 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
         totalBrakingPercentage = bp;
       });
     }
+  }
+  void _resetFields() { // Reset fields method
+    setState(() {
+      tonsController.clear();
+      axlesController.clear();
+      wagonsController.clear();
+      axleValidationError = null;
+      totalTrainLength = 0.0;
+      totalBufferPlay = 0.0;
+      totalBrakingPercentage = 0.0;
+    });
   }
 
   // ===========================================================================
@@ -430,7 +467,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.4.15"; // Static compile version string
+  final String currentAppVersion = "1.5.1"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -920,11 +957,18 @@ if (latestVersion != null) {
                   const SizedBox(height: 16),
                   Center(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        QrImageView(
-                          data: previewUri.toString(),
-                          version: QrVersions.auto,
-                          size: 140.0,
+                        UnconstrainedBox(
+                          child: SizedBox(
+                            width: 140,
+                            height: 140,
+                            child: QrImageView(
+                              data: previewUri.toString(),
+                              version: QrVersions.auto,
+                              size: 140.0,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -1083,10 +1127,7 @@ if (latestVersion != null) {
                                     controller: tonsController, 
                                     keyboardType: TextInputType.number, 
                                     onSubmitted: (_) => calculate(),
-                                    decoration: const InputDecoration(
-                                      labelText: "Total Tons", 
-                                      border: OutlineInputBorder(),
-                                    ),
+                                    decoration: customInputDecoration("Total Tons"),
                                   ),
                                 ],
                               ),
@@ -1140,11 +1181,7 @@ if (latestVersion != null) {
                                           controller: axlesController, 
                                           keyboardType: TextInputType.number, 
                                           onSubmitted: (_) => calculate(),
-                                          decoration: InputDecoration(
-                                            labelText: "Total Axles", 
-                                            border: const OutlineInputBorder(),
-                                            errorText: axleValidationError, 
-                                          ),
+                                          decoration: customInputDecoration("Total Axles", errorText: axleValidationError),
                                         ),
                                       ),
                                       const SizedBox(width: 16),
