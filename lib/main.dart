@@ -435,7 +435,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.5.2"; // Static compile version string
+  final String currentAppVersion = "1.6.1"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -492,6 +492,8 @@ Future<void> _exportAndProcessReceipt({
     {'display': '10E', 'value': '7E_10E_Class'},      
     {'display': '8E', 'value': '8E_Class'},
     {'display': '18E', 'value': '18E_Class'},
+    {'display': '20E', 'value': '20E_Class'},
+    {'display': '22E', 'value': '22E_Class'},
     {'display': '33D', 'value': '33D_Class'},
     {'display': '34D', 'value': '34D_Class'},          
     {'display': '35D', 'value': '35D_Class'},
