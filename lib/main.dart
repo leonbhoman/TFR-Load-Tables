@@ -435,7 +435,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.6.1"; // Static compile version string
+  final String currentAppVersion = "1.7.0"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -504,7 +504,10 @@ Future<void> _exportAndProcessReceipt({
     {'display': '38D', 'value': '38D_Class'},
     {'display': '39-000D', 'value': '39-000D_Class'},
     {'display': '39-200D', 'value': '39-200D_Class'},
-    {'display': '43D', 'value': '43D_Class'}, 
+    {'display': '43D', 'value': '43D_Class'},
+    {'display': '44D', 'value': '44D_Class'},
+    {'display': '45D', 'value': '45D_Class'}, 
+    {'display': 'TAL 2000', 'value': 'TAL2000_Class'},
   ];
   
   // Consist Sizing
@@ -1028,7 +1031,7 @@ if (latestVersion != null) {
               ),
               const Spacer(), // Pushes the technical reference block all the way to the right edge
               Text(
-                "Based on S.GFB/TES/TE/OI 0272\nRevision 11\nIssued 2011/08/17",
+                "Based on S.GFB/TES/TE/OI 0272\nRevision 18\nIssued 2018/01/26",
                 textAlign: TextAlign.end, // Aligns text cleanly to the right edge
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.85), // Soft white to keep it subtle
