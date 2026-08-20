@@ -25726,27 +25726,28 @@ aG2(a,b){var s=null
 return B.awF(s,A.d5,s,s,s,s,s,s,!0,new B.h1(4,A.dB,new B.aW(A.cM,1.5,A.a0,-1)),s,s,s,s,b,s,s,s,s,s,s,A.aEe,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,B.ds(s,s,A.dn,s,s,s,s,s,s,s,s,s,s,s,A.X,s,s,!0,s,s,s,s,s,s,s,s),a,!0,!0,!1,s,s,s,s,s,s,s,s,s,s,s,s,s,s)},
 NL:function NL(a){this.a=a},
 zJ:function zJ(a){this.a=a},
-EK:function EK(a,b,c,d,e,f,g,h,i,j,k,l){var _=this
+EK:function EK(a,b,c,d,e,f,g,h,i,j,k,l,m){var _=this
 _.d=a
 _.e=b
 _.f=c
 _.r=!1
 _.w=null
 _.z=_.y=_.x=0
-_.at="Mainline"
-_.ax=d
-_.ay="Durban to Reef"
+_.as=d
+_.ay="Mainline"
 _.ch=e
-_.CW=f
-_.cx=g
-_.cy=h
-_.db="18E_Class"
+_.CW="Durban to Reef"
+_.cx=f
+_.cy=g
+_.db=h
 _.dx=i
-_.dy=4
+_.dy="18E_Class"
 _.fr=j
-_.fx=""
+_.fx=4
 _.fy=k
-_.go=l
+_.go=""
+_.id=l
+_.k1=m
 _.c=_.a=null},
 ao5:function ao5(a){this.a=a},
 ao6:function ao6(a){this.a=a},
@@ -27926,7 +27927,7 @@ $S:2}
 B.auc.prototype={
 $1(a){var s=B.d1().b
 s=s==null?null:s.canvasKitBaseUrl
-return(s==null?"https://www.gstatic.com/flutter-canvaskit/5f77625673248ee5846fbcaf5d3e1a3878386fd7/":s)+a},
+return(s==null?"https://www.gstatic.com/flutter-canvaskit/5d531788691ec3404cac0cee66ead4007b177363/":s)+a},
 $S:97}
 B.Jg.prototype={
 W3(){var s=this.DC(),r=$.bj.bg().ImageFilter.MakeColorFilter(s,null)
@@ -86728,7 +86729,7 @@ B.NL.prototype={
 J(a){return new B.zS(A.aB5,B.v9(null,null,A.il,!0),!1,null)}}
 B.zJ.prototype={
 ao(){var s="Durban to Richards Bay",r="Richards Bay to Durban",q="Richards Bay to Golela",p="Golela to Richards Bay",o="Richards Bay to Ermelo",n="Ermelo to Richards Bay",m="Richards Bay Complex",l="6E1_16E_17E_Class",k=$.at(),j=t.s,i=t.N,h=t.S,g=t.m0
-return new B.EK(new B.v2(A.le,k),new B.v2(A.le,k),new B.v2(A.le,k),B.b(["Mainline","Hauler","LightAirbrake"],j),B.b(["Durban to Reef","Reef to Durban",s,r,q,p,o,n],j),B.a1(["Durban to Reef",B.a1(["Airbrake",5,"Vacuum",4],i,h),"Reef to Durban",B.a1(["Airbrake",7,"Vacuum",6],i,h),s,B.a1(["Airbrake",5,"Vacuum",5],i,h),r,B.a1(["Airbrake",8,"Vacuum",8],i,h),q,B.a1(["Airbrake",6,"Vacuum",6],i,h),p,B.a1(["Airbrake",9,"Vacuum",9],i,h),o,B.a1(["Airbrake",8,"Vacuum",8],i,h),n,B.a1(["Airbrake",9,"Vacuum",9],i,h)],i,t._P),B.b(["Durban Complex",m,"Reef Complex"],j),B.a1(["Durban Complex",8,m,15,"Reef Complex",12],i,h),B.b([B.a1(["display","5E1","value","5E1_Class"],i,i),B.a1(["display","6E","value","6E_Class"],i,i),B.a1(["display","6E1","value",l],i,i),B.a1(["display","16E","value",l],i,i),B.a1(["display","17E","value",l],i,i),B.a1(["display","7E","value","7E_10E_Class"],i,i),B.a1(["display","10E","value","7E_10E_Class"],i,i),B.a1(["display","8E","value","8E_Class"],i,i),B.a1(["display","18E","value","18E_Class"],i,i),B.a1(["display","20E","value","20E_Class"],i,i),B.a1(["display","22E","value","22E_Class"],i,i),B.a1(["display","33D","value","33D_Class"],i,i),B.a1(["display","34D","value","34D_Class"],i,i),B.a1(["display","34 D Nexus","value","37D_Class"],i,i),B.a1(["display","35D","value","35D_Class"],i,i),B.a1(["display","35-800D","value","35-800D_Class"],i,i),B.a1(["display","36D","value","36D_Class"],i,i),B.a1(["display","37D","value","37D_Class"],i,i),B.a1(["display","38D","value","38D_Class"],i,i),B.a1(["display","39-000D","value","39-000D_Class"],i,i),B.a1(["display","39-200D","value","39-200D_Class"],i,i),B.a1(["display","43D","value","43D_Class"],i,i),B.a1(["display","44D","value","44D_Class"],i,i),B.a1(["display","45D","value","45D_Class"],i,i),B.a1(["display","TAL 2000","value","TAL2000_Class"],i,i)],g),B.b([1,2,3,4,5,6],t.t),B.t(i,t.z),B.b([B.a1(["display","Airbrake","value","AIRBRAKE"],i,i),B.a1(["display","Vacuum","value","VACUUM"],i,i)],g))}}
+return new B.EK(new B.v2(A.le,k),new B.v2(A.le,k),new B.v2(A.le,k),B.b(["33D_Class","34D_Class","35D_Class","35-800D_Class","36D_Class","37D_Class","38D_Class"],j),B.b(["Mainline","Hauler","LightAirbrake"],j),B.b(["Durban to Reef","Reef to Durban",s,r,q,p,o,n],j),B.a1(["Durban to Reef",B.a1(["Airbrake",5,"Vacuum",4],i,h),"Reef to Durban",B.a1(["Airbrake",7,"Vacuum",6],i,h),s,B.a1(["Airbrake",5,"Vacuum",5],i,h),r,B.a1(["Airbrake",8,"Vacuum",8],i,h),q,B.a1(["Airbrake",6,"Vacuum",6],i,h),p,B.a1(["Airbrake",9,"Vacuum",9],i,h),o,B.a1(["Airbrake",8,"Vacuum",8],i,h),n,B.a1(["Airbrake",9,"Vacuum",9],i,h)],i,t._P),B.b(["Durban Complex",m,"Reef Complex"],j),B.a1(["Durban Complex",8,m,15,"Reef Complex",12],i,h),B.b([B.a1(["display","5E1","value","5E1_Class"],i,i),B.a1(["display","6E","value","6E_Class"],i,i),B.a1(["display","6E1","value",l],i,i),B.a1(["display","16E","value",l],i,i),B.a1(["display","17E","value",l],i,i),B.a1(["display","7E","value","7E_10E_Class"],i,i),B.a1(["display","10E","value","7E_10E_Class"],i,i),B.a1(["display","8E","value","8E_Class"],i,i),B.a1(["display","18E","value","18E_Class"],i,i),B.a1(["display","20E","value","20E_Class"],i,i),B.a1(["display","22E","value","22E_Class"],i,i),B.a1(["display","33D","value","33D_Class"],i,i),B.a1(["display","34D","value","34D_Class"],i,i),B.a1(["display","34 D Nexus","value","37D_Class"],i,i),B.a1(["display","35D","value","35D_Class"],i,i),B.a1(["display","35-800D","value","35-800D_Class"],i,i),B.a1(["display","36D","value","36D_Class"],i,i),B.a1(["display","37D","value","37D_Class"],i,i),B.a1(["display","38D","value","38D_Class"],i,i),B.a1(["display","39-000D","value","39-000D_Class"],i,i),B.a1(["display","39-200D","value","39-200D_Class"],i,i),B.a1(["display","43D","value","43D_Class"],i,i),B.a1(["display","44D","value","44D_Class"],i,i),B.a1(["display","45D","value","45D_Class"],i,i),B.a1(["display","TAL 2000","value","TAL2000_Class"],i,i)],g),B.b([1,2,3,4,5,6],t.t),B.t(i,t.z),B.b([B.a1(["display","Airbrake","value","AIRBRAKE"],i,i),B.a1(["display","Vacuum","value","VACUUM"],i,i)],g))}}
 B.EK.prototype={
 acb(){var s,r,q=this
 if(q.r)return
@@ -86765,7 +86766,7 @@ a6s(a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3){var s=0,r=B.V(t.H),q=this,p,o,n,m,l,
 var $async$rT=B.W(function(b5,b6){if(b5===1)return B.S(b6,r)
 for(;;)switch(s){case 0:c=B.aAJ()
 b=new B.i5(Date.now(),0,!1).k(0).split(".")[0]
-c.SZ(B.aC4(new B.ao3(q,b,"1.7.0",a7,a8,a9,a5,a6,a1,b2,a4,b1,b3,b0,a2,a3),A.Eg))
+c.SZ(B.aC4(new B.ao3(q,b,"1.7.1",a7,a8,a9,a5,a6,a1,b2,a4,b1,b3,b0,a2,a3),A.Eg))
 a=B
 a0=A.m9
 s=2
@@ -86773,7 +86774,7 @@ return B.X(c.hI(0),$async$rT)
 case 2:j=a.ayf(a0.dg(b6).a)
 i=B.aEO("https","leonbhoman.github.io","/TFR-Load-Tables/verify.html",B.a1(["loco",a8,"count",a7,"tons",a6,"route",a9,"hash",j],t.N,t.z)).gnP()
 h=B.aAJ()
-h.SZ(B.aC4(new B.ao4(q,b,"1.7.0",a7,a8,a9,a5,a6,a1,b2,a4,b1,b3,b0,a2,a3,j,i),A.Eg))
+h.SZ(B.aC4(new B.ao4(q,b,"1.7.1",a7,a8,a9,a5,a6,a1,b2,a4,b1,b3,b0,a2,a3,j,i),A.Eg))
 s=3
 return B.X(h.hI(0),$async$rT)
 case 3:p=b6
@@ -86847,7 +86848,7 @@ o1(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0=
 if(b0.w!=null)return
 s=b0.d.a.a
 r=!0
-if(A.r.jI(s).length!==0)if(A.r.jI(b0.e.a.a).length!==0)if(A.r.jI(b0.f.a.a).length!==0){r=b0.fx
+if(A.r.jI(s).length!==0)if(A.r.jI(b0.e.a.a).length!==0)if(A.r.jI(b0.f.a.a).length!==0){r=b0.go
 r=r!=="AIRBRAKE"&&r!=="VACUUM"}if(r){b0.c.aj(t.Pu).f.Ka(A.aIw)
 return}q=B.j9(s)
 if(q==null)q=0
@@ -86857,7 +86858,7 @@ o=p>0?q/p:0
 b1.a=b1.b=""
 b1.c=!1
 n=b1.d=5
-s=b0.fx
+s=b0.go
 r=s==="AIRBRAKE"
 m=r?20:18.5
 l=r?200:160
@@ -86869,11 +86870,11 @@ h=i}else h=""
 g=p/4
 if(p>l||g>k){if(h.length!==0)h=b1.a=h+"\n"
 b1.a=h+("\u26a0\ufe0f "+s+" LIMIT EXCEEDED:\nMax "+k+" Wagons / "+l+" Axles allowed.")
-j=!0}if(b0.at==="Hauler"){n=b0.cy.h(0,b0.ay)
+j=!0}if(b0.ay==="Hauler"){n=b0.dx.h(0,b0.CW)
 b1.d=n==null?8:n}else{f=r?"Airbrake":"Vacuum"
-s=b0.CW.h(0,b0.ay)
+s=b0.cy.h(0,b0.CW)
 e=s==null?null:s.h(0,f)
-b1.d=e==null?n:e}if(b0.fx==="AIRBRAKE")if(o<=7){b1.b="AB27"
+b1.d=e==null?n:e}if(b0.go==="AIRBRAKE")if(o<=7){b1.b="AB27"
 s="AB27"}else if(o<=12.5){b1.b="AB712"
 s="AB712"}else if(o<=17){b1.b="AB1217"
 s="AB1217"}else if(o<=19){b1.b="AB1719"
@@ -86882,13 +86883,13 @@ s="AB1920"}else if(o<=10){b1.b="VB10"
 s="VB10"}else{b1.b="VB10P"
 s="VB10P"}b1.e=0
 d=!1
-if(J.kI(b0.fy,b0.db)){c=J.bk(b0.fy,b0.db)
+if(J.kI(b0.id,b0.dy)){c=J.bk(b0.id,b0.dy)
 if(c!=null&&J.kI(c,s)){s=J.ba(J.bk(c,s))
 for(;;){if(!s.q()){b=null
 break}a=s.gL(s)
 if(J.d(J.bk(a,"GC"),b1.d)){b=B.aBE(a,t.N,t.z)
 break}}d=b!=null
-if(d){a0=b0.dy
+if(d){a0=b0.fx
 s=B.m(b).i("b2<1>")
 a1=new B.em(new B.aV(new B.b2(b,s),new B.aoY(),s.i("aV<l.E>")),new B.aoZ(),s.i("em<l.E,n>")).li(0,0,new B.ap_(),t.S)
 if(a0>a1&&a1>0){b1.c=!0
@@ -86900,12 +86901,12 @@ if(b1.a.length!==0||d){a6=q>a5
 a7=j||a6
 a8=a7?"\u274c LIMIT EXCEEDED":"\u2705 CLEAR TO RUN"
 a9=a7?A.aD0:A.oD
-s=J.bk(A.m.z1(b0.dx,new B.ap0(b0)),"display")
+s=J.bk(A.m.z1(b0.fr,new B.ap0(b0)),"display")
 s.toString
 r=b0.c
 r.toString
 B.aV3(!1,new B.ap1(b1,b0,a6,a5,q,s,a9,a8,a4),r,t.z)}},
-J(a){var s=this,r=null,q=s.at==="Hauler"?s.cx:s.ch,p=t.E,o=B.jd(B.b([A.aNH,A.ps,B.bQ("Based on S.GFB/TES/TE/OI 0272\nRevision 18\nIssued 2018/01/26",r,r,r,B.ds(r,r,A.M.Je(0.85),r,r,r,r,r,r,r,r,10,r,r,A.aI,r,1.2,!0,r,r,r,r,r,r,r,r),A.hL,r)],p),A.b5,A.aQ,A.bD,0)
+J(a){var s=this,r=null,q=s.ay==="Hauler"?s.db:s.cx,p=t.E,o=B.jd(B.b([A.aNH,A.ps,B.bQ("Based on S.GFB/TES/TE/OI 0272\nRevision 18\nIssued 2018/01/26",r,r,r,B.ds(r,r,A.M.Je(0.85),r,r,r,r,r,r,r,r,10,r,r,A.aI,r,1.2,!0,r,r,r,r,r,r,r,r),A.hL,r)],p),A.b5,A.aQ,A.bD,0)
 p=B.b([B.awy(r,r,A.Q6,r,r,new B.aoP(s),r,r,"Reset Form")],p)
 return new B.BC(new B.x9(o,p,A.il,new B.VI(r,r,1/0,56),r),B.awN(new B.aoQ(s,q)),r)}}
 B.ao5.prototype={
@@ -86951,18 +86952,18 @@ s.w=null
 s.z=s.y=s.x=0},
 $S:0}
 B.ao3.prototype={
-$1(a){var s=this,r=null,q=B.c5("Load Calculator Record",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,18,r,A.bn,r,!0,r,r,r,r)),p=B.c5("Generated on: "+s.b,B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c5("Application Version: v"+s.c,B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.aAG(A.Ec,1),m=B.c5("Train Details",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bn,r,!0,r,r,r,r)),l=B.c5("Locomotives: "+s.d+" x "+s.e,r),k=B.c5("Route: "+s.f+" (Section ruling Gradient: GC "+s.r+")",r),j=B.c5("Total Tons: "+s.w+"t",r),i=B.c5("Load Details",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bn,r,!0,r,r,r,r)),h=s.a.fx
+$1(a){var s=this,r=null,q=B.c5("Load Calculator Record",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,18,r,A.bn,r,!0,r,r,r,r)),p=B.c5("Generated on: "+s.b,B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c5("Application Version: v"+s.c,B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.aAG(A.Ec,1),m=B.c5("Train Details",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bn,r,!0,r,r,r,r)),l=B.c5("Locomotives: "+s.d+" x "+s.e,r),k=B.c5("Route: "+s.f+" (Section ruling Gradient: GC "+s.r+")",r),j=B.c5("Total Tons: "+s.w+"t",r),i=B.c5("Load Details",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bn,r,!0,r,r,r,r)),h=s.a.go
 return new B.lh(A.rN,B.aAi(B.b([q,new B.cU(r,4,r),p,o,n,new B.cU(r,12,r),m,new B.cU(r,6,r),l,k,j,new B.cU(r,12,r),i,new B.cU(r,6,r),B.c5("Brake Type: "+(h[0]+A.r.cn(h,1).toLowerCase()),r),B.c5("Base Capacity: "+s.x+"t",r),B.c5("Wagon Overload Allowance: +"+s.y+"t ("+s.z+" wagons Total)",r),B.c5("Max Tonnage: "+s.Q+"t",r),B.c5("Status Framework Margin: "+s.as,r),new B.cU(r,12,r),B.c5("Train Length Details",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,12,r,A.bn,r,!0,r,r,r,r)),new B.cU(r,6,r),B.c5("Estimated Train Length: "+s.at+"m",r),B.c5("Braking Percentage (BP): "+s.ax,r),B.c5("Estimated Buffer Play: +"+s.ay+"m",r),B.aDe(),B.aAG(A.Ec,1),new B.cU(r,6,r),B.c5("SECURITY VERIFICATION BANNER",B.cL(r,A.aEr,r,r,r,r,r,r,r,A.aD,r,r,10,r,A.bn,r,!0,r,r,r,r)),new B.cU(r,4,r),B.c5("To verify document integrity, pass this document payload into the SHA-256 confirmation utility. Any modifications to structural values invalidates the verification code below.",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,8,r,r,r,!0,r,r,r,r)),new B.cU(r,8,r)],t.n_),A.mD))},
 $S:203}
 B.ao4.prototype={
-$1(a){var s=this,r=null,q=B.c5("Load Calculator Record",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,16,r,A.bn,r,!0,r,r,r,r)),p=B.c5("Generated on: "+s.b,B.cL(r,A.oQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c5("Application Version: v"+s.c,B.cL(r,A.oQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.a2e(r,A.Ed,r,1,r,r,r),m=B.c5("Train Details",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),l=B.c5("Locomotives: "+s.d+" x "+s.e,B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),k=B.c5("Route: "+s.f+" (GC "+s.r+")",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),j=B.c5("Tons on vehicle list: "+s.w+" t",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),i=B.c5("Calculated load details",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),h=s.a.fx
+$1(a){var s=this,r=null,q=B.c5("Load Calculator Record",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,16,r,A.bn,r,!0,r,r,r,r)),p=B.c5("Generated on: "+s.b,B.cL(r,A.oQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),o=B.c5("Application Version: v"+s.c,B.cL(r,A.oQ,r,r,r,r,r,r,r,A.aD,r,r,10,r,r,r,!0,r,r,r,r)),n=B.a2e(r,A.Ed,r,1,r,r,r),m=B.c5("Train Details",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),l=B.c5("Locomotives: "+s.d+" x "+s.e,B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),k=B.c5("Route: "+s.f+" (GC "+s.r+")",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),j=B.c5("Tons on vehicle list: "+s.w+" t",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),i=B.c5("Calculated load details",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),h=s.a.go
 return new B.lh(A.rN,B.aAi(B.b([q,new B.cU(r,4,r),p,o,new B.cU(r,10,r),n,new B.cU(r,14,r),m,new B.cU(r,6,r),l,k,j,new B.cU(r,14,r),i,new B.cU(r,6,r),B.c5("Brake Type: "+(h[0]+A.r.cn(h,1).toLowerCase()),B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Base Capacity: "+s.x+" t",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Wagon Overload Allowance: +"+s.y+" t ("+s.z+" items)",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Max Tonnage: "+s.Q+" t",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Calculated "+s.as,B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),new B.cU(r,14,r),B.c5("Train Length Details",B.cL(r,A.eQ,r,r,r,r,r,r,r,A.aD,r,r,11,r,A.bn,r,!0,r,r,r,r)),new B.cU(r,6,r),B.c5("Estimated Train Length: "+s.at+" meters",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Braking Percentage (BP): "+s.ax+" %",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.c5("Estimated Buffer Play: +"+s.ay+" meters",B.cL(r,r,r,r,r,r,r,r,r,A.aD,r,r,11,r,r,r,!0,r,r,r,r)),B.aDe(),B.a2e(r,A.Ed,r,1,r,r,r),new B.cU(r,8,r),B.c5("Security Trail",B.cL(r,A.aEp,r,r,r,r,r,r,r,A.aD,r,r,9,r,A.bn,r,!0,r,r,r,r)),new B.cU(r,4,r),B.c5("This document footprint is mathematically locked down. Modification of any cell value completely invalidates the underlying binary checksum key.",B.cL(r,A.oQ,r,r,r,r,r,r,r,A.aD,r,r,8,r,r,r,!0,r,r,r,r)),new B.cU(r,8,r),B.a2e(B.c5("SECURITY CODE: "+s.ch,B.cL(r,A.aEo,r,r,r,r,new B.fT(A.hN),r,r,A.aD,r,r,8,r,A.bn,r,!0,r,r,r,r)),A.aEq,r,r,r,A.PB,1/0),new B.IU(s.CW,new B.a0O(r,A.Kw),80,80)],t.n_),A.mD))},
 $S:203}
 B.ap2.prototype={
 $1(a){},
 $S:8}
 B.ap3.prototype={
-$0(){this.a.fy=this.b},
+$0(){this.a.id=this.b},
 $S:0}
 B.aoY.prototype={
 $1(a){return B.qk(a,null)!=null},
@@ -86974,7 +86975,7 @@ B.ap_.prototype={
 $2(a,b){return b>a?b:a},
 $S:204}
 B.ap0.prototype={
-$1(a){return J.bk(a,"value")===this.a.db},
+$1(a){return J.bk(a,"value")===this.a.dy},
 $S:515}
 B.ap1.prototype={
 $1(b3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9=this,b0=null,b1=a9.b,b2=B.j9(b1.f.a.a)
@@ -86985,28 +86986,28 @@ q=a9.d
 p=a9.e
 o=r+": "+(""+A.q.dH(Math.abs(q-p))+"t")
 n=a9.f
-m=b1.dy
+m=b1.fx
 l=A.z.k(m)
 k=A.q.k(p)
-j=b1.ay
+j=b1.CW
 i=B.aEO("https","leonbhoman.github.io","/TFR-Load-Tables/verify.html",B.a1(["loco",n,"count",l,"tons",k,"route",j,"hash",B.ayf(A.m9.dg(A.ct.dg(""+m+"|"+n+"|"+j+"|"+B.k(p))).a)],t.N,t.z))
-if(J.kI(b1.fy,b1.db)){m=J.bk(b1.fy,b1.db)
+if(J.kI(b1.id,b1.dy)){m=J.bk(b1.id,b1.dy)
 m.toString
 m=J.kI(m,a9.a.b)}else m=!1
 h=0
-if(m){m=J.bk(b1.fy,b1.db)
+if(m){m=J.bk(b1.id,b1.dy)
 m.toString
 l=a9.a
 g=J.aJu(J.bk(m,l.b),new B.aoR(l),new B.aoS())
 if(g!=null){f=J.avJ(J.Ik(g),new B.aoT()).HY(0,new B.aoU()).Vg(0,0,new B.aoV())
-m=b1.dy
+m=b1.fx
 h=m>f?m-f:0}}m=B.jC(16)
 l=t.E
 k=B.jd(B.b([B.awx(A.PY,a9.r,b0,28),A.aIb,B.bQ(a9.w,b0,b0,b0,A.aKC,b0,b0)],l),A.b5,A.aQ,A.bD,0)
 j=a9.a
-e=B.bQ("Consist: "+b1.dy+" x "+n+" ("+j.b+")",b0,b0,b0,A.aL6,b0,b0)
-d=B.bQ("Route: "+b1.ay+" (GC "+j.d+")",b0,b0,b0,b0,b0,b0)
-c=b1.fx
+e=B.bQ("Consist: "+b1.fx+" x "+n+" ("+j.b+")",b0,b0,b0,A.aL6,b0,b0)
+d=B.bQ("Route: "+b1.CW+" (GC "+j.d+")",b0,b0,b0,b0,b0,b0)
+c=b1.go
 c=B.bQ("Brake Type: "+(c[0]+A.r.cn(c,1).toLowerCase()),b0,b0,b0,b0,b0,b0)
 b=B.bQ("Train Capacity: "+j.e+"t",b0,b0,b0,b0,b0,b0)
 a=a9.x
@@ -87014,7 +87015,7 @@ a0=B.bQ("Wagon Allowance: +"+a+"t ("+A.q.Y(b2,0)+" wagons)",b0,b0,b0,b0,b0,b0)
 a1=B.bQ("Total Limit: "+q+"t",b0,b0,b0,A.dd,b0,b0)
 a2=B.bQ("Train Length Estimates:",b0,b0,b0,B.ds(b0,b0,A.dH,b0,b0,b0,b0,b0,b0,b0,b0,12,b0,b0,A.bi,b0,b0,!0,b0,b0,b0,b0,b0,b0,b0,b0),b0,b0)
 a3=B.bQ("Est. Train Length: "+A.q.Y(b1.x,1)+"m",b0,b0,b0,b0,b0,b0)
-a4=B.bQ(b1.fx==="AIRBRAKE"?"Braking Percentage (BP): N/A for Airbrake":"Braking Percentage (BP): "+A.q.Y(b1.z,2)+"%",b0,b0,b0,b0,b0,b0)
+a4=B.bQ(b1.go==="AIRBRAKE"?"Braking Percentage (BP): N/A for Airbrake":"Braking Percentage (BP): "+A.q.Y(b1.z,2)+"%",b0,b0,b0,b0,b0,b0)
 a5=B.bQ("Est. Buffer Play: +"+A.q.Y(b1.y,0)+"m",b0,b0,b0,b0,b0,b0)
 a6=s?A.mp:A.rs
 a7=B.jC(8)
@@ -87025,7 +87026,7 @@ if(s.length!==0){d=B.jC(8)
 c=B.a13(A.ru,1.5)
 A.m.N(e,B.b([A.f1,B.i2(B.bQ(s,b0,b0,b0,B.ds(b0,b0,A.ms,b0,b0,b0,b0,b0,b0,b0,b0,13,b0,b0,A.bi,b0,b0,!0,b0,b0,b0,b0,b0,b0,b0,b0),A.du,b0),A.aa,b0,new B.e0(A.mp,b0,c,d,b0,b0,A.bS),b0,b0,A.fJ,1/0)],l))}if(j.c){s=B.jC(8)
 d=B.a13(A.re,1.5)
-c=b1.dy
+c=b1.fx
 b=h>1?"s":""
 A.m.N(e,B.b([A.f1,B.i2(B.bQ("No provision for more than "+(c-h)+" x "+n+" locos on this route. "+h+" locomotive"+b+" must be isolated.",b0,b0,b0,B.ds(b0,b0,A.r0,b0,b0,b0,b0,b0,b0,b0,b0,13,b0,b0,A.bi,b0,b0,!0,b0,b0,b0,b0,b0,b0,b0,b0),A.du,b0),A.aa,b0,new B.e0(A.r5,b0,d,s,b0,b0,A.bS),b0,b0,A.fJ,1/0)],l))}e.push(A.IN)
 e.push(B.kP(B.iQ(B.b([new B.Qk(B.h5(new B.AS(i.gnP(),-1,140,b0),140,140),b0),A.lc,B.bQ("Scan to verify load authenticity",b0,b0,b0,B.ds(b0,b0,A.cM,b0,b0,b0,b0,b0,b0,b0,b0,10,b0,b0,b0,b0,b0,!0,b0,b0,b0,b0,b0,b0,b0,b0),b0,b0)],l),A.b5,A.aQ,A.d3),b0,b0))
@@ -87057,8 +87058,8 @@ $0(){var s=0,r=B.V(t.H),q=this,p,o,n,m,l,k,j,i,h,g,f
 var $async$$0=B.W(function(a,b){if(a===1)return B.S(b,r)
 for(;;)switch(s){case 0:B.k5(q.c,!1).e1()
 p=q.b
-o=A.z.k(p.dy)
-n=p.ay
+o=A.z.k(p.fx)
+n=p.CW
 m=q.a
 l=A.z.k(m.d)
 m=A.z.k(m.e)
@@ -87067,7 +87068,7 @@ j=A.q.Y(q.f,0)
 i=A.z.k(q.r)
 h=A.q.k(q.w)
 g=A.q.Y(p.x,1)
-f=p.fx==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(p.z,2)+"%"
+f=p.go==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(p.z,2)+"%"
 s=2
 return B.X(p.rT(m,f,A.q.Y(p.y,0),j,l,h,o,q.d,n,g,i,k,q.x),$async$$0)
 case 2:return B.T(null,r)}})
@@ -87077,53 +87078,53 @@ B.aoP.prototype={
 $0(){return this.a.aen()},
 $S:0}
 B.aoQ.prototype={
-$2(a,b){var s,r,q,p,o,n,m=null,l="Total Axles",k=t.E,j=B.b([],k),i=this.a,h=i.at,g=i.ax
+$2(a,b){var s,r,q,p,o,n,m=null,l="Total Axles",k=t.E,j=B.b([],k),i=this.a,h=i.ay,g=i.ch
 if(b.b>600){s=B.Y(g).i("a5<1,dt<r>>")
 g=B.a_(new B.a5(g,new B.aoo(),s),s.i("ap.E"))
 s=t.N
 g=B.KE(A.Qb,h,!0,g,new B.aop(i),s)
-h=i.db
-r=i.dx
+h=i.dy
+r=i.fr
 q=B.Y(r).i("a5<1,dt<r>>")
 r=B.a_(new B.a5(r,new B.aoq(),q),q.i("ap.E"))
 h=B.KE(A.Qd,h,!0,r,new B.aoB(i),s)
-r=i.fx
+r=i.go
 if(r.length===0)r=m
-q=i.go
+q=i.k1
 p=B.Y(q).i("a5<1,dt<r>>")
 q=B.a_(new B.a5(q,new B.aoI(),p),p.i("ap.E"))
 h=B.kW(B.iQ(B.b([g,A.f2,h,A.f2,B.KE(A.Qc,r,!0,q,new B.aoJ(i),s),A.f2,B.CJ(i.d,B.aG2("Total Tons",m),A.f6,new B.aoK(i))],k),A.cc,A.aQ,A.bD),2)
-g=i.ay
+g=i.CW
 r=this.b
 q=B.Y(r).i("a5<1,dt<r>>")
 r=B.a_(new B.a5(r,new B.aoL(),q),q.i("ap.E"))
 g=B.KE(A.Qg,g,!0,r,new B.aoM(i),s)
-s=i.dy
-r=i.fr
+s=i.fx
+r=i.fy
 q=B.Y(r).i("a5<1,dt<n>>")
 r=B.a_(new B.a5(r,new B.aoN(),q),q.i("ap.E"))
 A.m.N(j,B.b([B.jd(B.b([A.ps,h,A.aIe,B.kW(B.iQ(B.b([g,A.f2,B.KE(A.Qf,s,!0,r,new B.aoO(i),t.S),A.aIj,B.jd(B.b([B.kW(B.CJ(i.e,B.aG2(l,i.w),A.f6,new B.aor(i)),1),A.aId,B.kW(B.CJ(i.f,A.tk,A.f6,new B.aos(i)),1)],k),A.cc,A.aQ,A.bD,0)],k),A.cc,A.aQ,A.bD),2),A.ps],k),A.cc,A.aQ,A.bD,0)],k))}else{s=B.Y(g).i("a5<1,dt<r>>")
 g=B.a_(new B.a5(g,new B.aot(),s),s.i("ap.E"))
 s=t.N
 h=B.KD(m,!0,g,new B.aou(i),h,s)
-g=i.ay
+g=i.CW
 r=this.b
 q=B.Y(r).i("a5<1,dt<r>>")
 r=B.a_(new B.a5(r,new B.aov(),q),q.i("ap.E"))
 g=B.KD(m,!0,r,new B.aow(i),g,s)
-r=i.db
-q=i.dx
+r=i.dy
+q=i.fr
 p=B.Y(q).i("a5<1,dt<r>>")
 q=B.a_(new B.a5(q,new B.aox(),p),p.i("ap.E"))
 r=B.KD(m,!0,q,new B.aoy(i),r,s)
-q=i.dy
-p=i.fr
+q=i.fx
+p=i.fy
 o=B.Y(p).i("a5<1,dt<n>>")
 p=B.a_(new B.a5(p,new B.aoz(),o),o.i("ap.E"))
 q=B.KD(m,!0,p,new B.aoA(i),q,t.S)
-p=i.fx
+p=i.go
 if(p.length===0)p=m
-o=i.go
+o=i.k1
 n=B.Y(o).i("a5<1,dt<r>>")
 o=B.a_(new B.a5(o,new B.aoC(),n),n.i("ap.E"))
 A.m.N(j,B.b([A.aNL,h,A.f1,A.aNS,g,A.f1,A.aNI,r,A.f1,A.aNR,q,A.IN,A.aNP,A.aIi,B.KD(A.aNN,!0,o,new B.aoD(i),p,s),A.f2,B.CJ(i.d,A.Qe,A.f6,new B.aoE(i)),A.f1,B.jd(B.b([B.kW(B.CJ(i.e,B.awF(m,A.d5,m,m,m,m,m,m,!0,m,m,m,m,m,i.w,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,l,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),A.f6,new B.aoF(i)),1),A.aIc,B.kW(B.CJ(i.f,A.tk,A.f6,new B.aoG(i)),1)],k),A.cc,A.aQ,A.bD,0)],k))}j.push(A.f2)
@@ -87132,10 +87133,10 @@ g=B.jC(12)
 s=B.iQ(B.b([B.bQ("Total Length",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,11,m,m,A.bi,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.lc,B.bQ(A.q.Y(i.x,1)+" m",m,m,m,A.aKm,m,m)],k),A.b5,A.aQ,A.bD)
 r=B.i2(m,A.aa,A.ie,m,30,m,m,1)
 q=B.bQ("Braking % (BP)",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,11,m,m,A.bi,m,m,!0,m,0.8,m,m,m,m,m,m),m,m)
-p=i.fx==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(i.z,2)+" %"
-A.m.N(j,B.b([B.i2(B.jd(B.b([s,r,B.iQ(B.b([q,A.lc,B.bQ(p,m,m,m,B.ds(m,m,A.ro,m,m,m,m,m,m,m,m,i.fx==="AIRBRAKE"?13:18,m,m,A.bi,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.b5,A.aQ,A.bD),B.i2(m,A.aa,A.ie,m,30,m,m,1),B.iQ(B.b([B.bQ("Buffer Play",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,11,m,m,A.bi,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.lc,B.bQ("+"+A.q.Y(i.y,0)+" m",m,m,m,B.ds(m,m,A.mt,m,m,m,m,m,m,m,m,18,m,m,A.bi,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.b5,A.aQ,A.bD)],k),A.b5,A.oA,A.bD,0),A.aa,m,new B.e0(A.rj,m,h,g,m,m,A.bS),m,m,A.Pn,m)],k))}j.push(A.aIh)
+p=i.go==="AIRBRAKE"?"N/A for Airbrake":A.q.Y(i.z,2)+" %"
+A.m.N(j,B.b([B.i2(B.jd(B.b([s,r,B.iQ(B.b([q,A.lc,B.bQ(p,m,m,m,B.ds(m,m,A.ro,m,m,m,m,m,m,m,m,i.go==="AIRBRAKE"?13:18,m,m,A.bi,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.b5,A.aQ,A.bD),B.i2(m,A.aa,A.ie,m,30,m,m,1),B.iQ(B.b([B.bQ("Buffer Play",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,11,m,m,A.bi,m,m,!0,m,0.8,m,m,m,m,m,m),m,m),A.lc,B.bQ("+"+A.q.Y(i.y,0)+" m",m,m,m,B.ds(m,m,A.mt,m,m,m,m,m,m,m,m,18,m,m,A.bi,m,m,!0,m,m,m,m,m,m,m,m),m,m)],k),A.b5,A.aQ,A.bD)],k),A.b5,A.oA,A.bD,0),A.aa,m,new B.e0(A.rj,m,h,g,m,m,A.bS),m,m,A.Pn,m)],k))}j.push(A.aIh)
 j.push(B.kP(new B.yE(!1,i.gaiB(),m,m,m,B.oI(m,m,m,new B.bR(new B.aoH(),t.b),new B.b3(3,t.XR),m,m,m,new B.b3(A.M,t.De),m,m,m,m,new B.b3(A.aI3,t.W7),m,m,m,m,new B.b3(new B.cT(B.jC(28),A.a_),t.dy),m,m,m,m,m,m),m,m,!1,m,!0,m,A.aNO,m),m,m))
-k=B.iQ(B.b([B.kW(B.aD2(B.iQ(j,A.ek,A.aQ,A.bD),A.Pu),1),B.i2(B.bQ("v1.7.0 | Developed by Leon and Gemini",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,12,m,m,A.aI,m,m,!0,m,0.5,m,m,m,m,m,m),A.du,m),A.aa,A.NO,m,m,m,A.Pi,1/0)],k),A.b5,A.aQ,A.bD)
+k=B.iQ(B.b([B.kW(B.aD2(B.iQ(j,A.ek,A.aQ,A.bD),A.Pu),1),B.i2(B.bQ("v1.7.1 | Developed by Leon and Gemini",m,m,m,B.ds(m,m,A.cM,m,m,m,m,m,m,m,m,12,m,m,A.aI,m,m,!0,m,0.5,m,m,m,m,m,m),A.du,m),A.aa,A.NO,m,m,m,A.Pi,1/0)],k),A.b5,A.aQ,A.bD)
 return new B.pf(k,A.m0,m)},
 $S:520}
 B.aoo.prototype={
@@ -87149,8 +87150,8 @@ $S:31}
 B.aon.prototype={
 $0(){var s=this.a,r=this.b
 r.toString
-s.at=r
-s.ay=A.m.gP(r==="Hauler"?s.cx:s.ch)},
+s.ay=r
+s.CW=A.m.gP(r==="Hauler"?s.db:s.cx)},
 $S:0}
 B.aoq.prototype={
 $1(a){var s=null,r=J.aK(a),q=r.h(a,"value")
@@ -87165,7 +87166,7 @@ $S:31}
 B.aom.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.db=s},
+return this.a.dy=s},
 $S:0}
 B.aoI.prototype={
 $1(a){var s=null,r=J.aK(a),q=r.h(a,"value")
@@ -87180,7 +87181,7 @@ $S:31}
 B.aol.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.fx=s},
+return this.a.go=s},
 $S:0}
 B.aoK.prototype={
 $1(a){return this.a.o1()},
@@ -87196,7 +87197,7 @@ $S:31}
 B.aok.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.ay=s},
+return this.a.CW=s},
 $S:0}
 B.aoN.prototype={
 $1(a){var s=null,r=a>1?"s":""
@@ -87209,7 +87210,7 @@ $S:209}
 B.aoj.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.dy=s},
+return this.a.fx=s},
 $S:0}
 B.aor.prototype={
 $1(a){return this.a.o1()},
@@ -87228,8 +87229,8 @@ $S:31}
 B.aoi.prototype={
 $0(){var s=this.a,r=this.b
 r.toString
-s.at=r
-s.ay=A.m.gP(r==="Hauler"?s.cx:s.ch)},
+s.ay=r
+s.CW=A.m.gP(r==="Hauler"?s.db:s.cx)},
 $S:0}
 B.aov.prototype={
 $1(a){var s=null
@@ -87242,7 +87243,7 @@ $S:31}
 B.aoh.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.ay=s},
+return this.a.CW=s},
 $S:0}
 B.aox.prototype={
 $1(a){var s=null,r=J.aK(a),q=r.h(a,"value")
@@ -87257,7 +87258,7 @@ $S:31}
 B.aog.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.db=s},
+return this.a.dy=s},
 $S:0}
 B.aoz.prototype={
 $1(a){var s=null,r=a>1?"s":""
@@ -87270,7 +87271,7 @@ $S:209}
 B.aof.prototype={
 $0(){var s=this.b
 s.toString
-return this.a.dy=s},
+return this.a.fx=s},
 $S:0}
 B.aoC.prototype={
 $1(a){var s=null,r=J.aK(a),q=r.h(a,"value")
@@ -87285,7 +87286,7 @@ $S:31}
 B.aoe.prototype={
 $0(){var s=this.b
 s.toString
-this.a.fx=s},
+this.a.go=s},
 $S:0}
 B.aoE.prototype={
 $1(a){return this.a.o1()},
