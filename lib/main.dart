@@ -92,6 +92,20 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   double totalTrainLength = 0.0;
   double totalBufferPlay = 0.0;
   double totalBrakingPercentage = 0.0;
+
+  // Vacuum Brake Isolation Control
+  bool isVacuumDisabled = false;
+  
+  // Locomotive classes supporting dual-brake/vacuum isolation
+  final List<String> dualBrakeLocoClasses = [
+    '33D_Class',
+    '34D_Class',
+    '35D_Class',
+    '35-800D_Class',
+    '36D_Class',
+    '37D_Class',
+    '38D_Class',
+  ];
   
   // ===========================================================================
   // SECTION 4: BIDIRECTIONAL CALCULATORS & LISTENERS
@@ -435,7 +449,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.7.0"; // Static compile version string
+  final String currentAppVersion = "1.7.1"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
