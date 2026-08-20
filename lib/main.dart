@@ -80,32 +80,51 @@ class LoadCalculatorForm extends StatefulWidget {
 }
 
 class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
+  // ===========================================================================
+  // STEP 1: CONTROLLERS & STATE VARIABLES
+  // ===========================================================================
   final tonsController = TextEditingController();
   final axlesController = TextEditingController();
   final TextEditingController wagonsController = TextEditingController();
   
   // Internal Loop Safeguard Flag for Bidirectional Coupling
-  bool _isUpdatingAxlesOrWagons = false;
-  
+  bool _isUpdatingAxlesOrWagons = false;  
   // Validation & Live Calculated Metric States
   String? axleValidationError;
   double totalTrainLength = 0.0;
   double totalBufferPlay = 0.0;
   double totalBrakingPercentage = 0.0;
+  // // ===========================================================================
+  // // STEP 2 CODE: Vacuum Control Flags & Vacuum Brake Isolation Control
+  // // Locomotive classes supporting dual-brake/vacuum isolation
+  // // ===========================================================================
+  // bool isVacuumDisabled = false;  
+  //  final List<String> dualBrakeLocoClasses = [
+  //   '33D_Class',
+  //   '34D_Class',
+  //   '35D_Class',
+  //   '35-800D_Class',
+  //   '36D_Class',
+  //   '37D_Class',
+  //   '38D_Class',
+  // ];
 
-  // Vacuum Brake Isolation Control
-  bool isVacuumDisabled = false;
+  List<Map<String, String>> get availableBrakeTypes {
+    final selectedLocoData = locos.firstWhere(
+      (l) => l['value'] == selectedLoco,
+      orElse: () => {'supportsVacuum': true},
+    );
+    final bool supportsVacuum = selectedLocoData['supportsVacuum'] ?? true;
+
+    return brakeTypes.where((brake) {
+      if (brake['value'] == 'VACUUM' && !supportsVacuum) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
   
-  // Locomotive classes supporting dual-brake/vacuum isolation
-  final List<String> dualBrakeLocoClasses = [
-    '33D_Class',
-    '34D_Class',
-    '35D_Class',
-    '35-800D_Class',
-    '36D_Class',
-    '37D_Class',
-    '38D_Class',
-  ];
+
   
   // ===========================================================================
   // SECTION 4: BIDIRECTIONAL CALCULATORS & LISTENERS
@@ -496,33 +515,61 @@ Future<void> _exportAndProcessReceipt({
   // Locomotive Selection Configuration
   String selectedLoco = '18E_Class'; // Holds the active backend JSON key value
   
-  final List<Map<String, String>> locos = [
-    {'display': '5E1', 'value': '5E1_Class'},
-    {'display': '6E', 'value': '6E_Class'},
-    {'display': '6E1', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '16E', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '17E', 'value': '6E1_16E_17E_Class'}, 
-    {'display': '7E', 'value': '7E_10E_Class'},       
-    {'display': '10E', 'value': '7E_10E_Class'},      
-    {'display': '8E', 'value': '8E_Class'},
-    {'display': '18E', 'value': '18E_Class'},
-    {'display': '20E', 'value': '20E_Class'},
-    {'display': '22E', 'value': '22E_Class'},
-    {'display': '33D', 'value': '33D_Class'},
-    {'display': '34D', 'value': '34D_Class'},
-    {'display': '34 D Nexus', 'value': '37D_Class'},
-    {'display': '35D', 'value': '35D_Class'},
-    {'display': '35-800D', 'value': '35-800D_Class'},
-    {'display': '36D', 'value': '36D_Class'},
-    {'display': '37D', 'value': '37D_Class'},
-    {'display': '38D', 'value': '38D_Class'},
-    {'display': '39-000D', 'value': '39-000D_Class'},
-    {'display': '39-200D', 'value': '39-200D_Class'},
-    {'display': '43D', 'value': '43D_Class'},
-    {'display': '44D', 'value': '44D_Class'},
-    {'display': '45D', 'value': '45D_Class'}, 
-    {'display': 'TAL 2000', 'value': 'TAL2000_Class'},
-  ];
+  // final List<Map<String, String>> locos = [
+  //   {'display': '5E1', 'value': '5E1_Class'},
+  //   {'display': '6E', 'value': '6E_Class'},
+  //   {'display': '6E1', 'value': '6E1_16E_17E_Class'}, 
+  //   {'display': '16E', 'value': '6E1_16E_17E_Class'}, 
+  //   {'display': '17E', 'value': '6E1_16E_17E_Class'}, 
+  //   {'display': '7E', 'value': '7E_10E_Class'},       
+  //   {'display': '10E', 'value': '7E_10E_Class'},      
+  //   {'display': '8E', 'value': '8E_Class'},
+  //   {'display': '18E', 'value': '18E_Class'},
+  //   {'display': '20E', 'value': '20E_Class'},
+  //   {'display': '22E', 'value': '22E_Class'},
+  //   {'display': '33D', 'value': '33D_Class'},
+  //   {'display': '34D', 'value': '34D_Class'},
+  //   {'display': '34 D Nexus', 'value': '37D_Class'},
+  //   {'display': '35D', 'value': '35D_Class'},
+  //   {'display': '35-800D', 'value': '35-800D_Class'},
+  //   {'display': '36D', 'value': '36D_Class'},
+  //   {'display': '37D', 'value': '37D_Class'},
+  //   {'display': '38D', 'value': '38D_Class'},
+  //   {'display': '39-000D', 'value': '39-000D_Class'},
+  //   {'display': '39-200D', 'value': '39-200D_Class'},
+  //   {'display': '43D', 'value': '43D_Class'},
+  //   {'display': '44D', 'value': '44D_Class'},
+  //   {'display': '45D', 'value': '45D_Class'}, 
+  //   {'display': 'TAL 2000', 'value': 'TAL2000_Class'},
+  // ];
+
+  final List<Map<String, dynamic>> locos = [
+  {'display': '5E1', 'value': '5E1_Class', 'supportsVacuum': true},
+  {'display': '6E', 'value': '6E_Class', 'supportsVacuum': true},
+  {'display': '6E1', 'value': '6E1_16E_17E_Class', 'supportsVacuum': true},
+  {'display': '16E', 'value': '6E1_16E_17E_Class', 'supportsVacuum': true},
+  {'display': '17E', 'value': '6E1_16E_17E_Class', 'supportsVacuum': true},
+  {'display': '7E', 'value': '7E_10E_Class', 'supportsVacuum': true},
+  {'display': '10E', 'value': '7E_10E_Class', 'supportsVacuum': true},
+  {'display': '8E', 'value': '8E_Class', 'supportsVacuum': true},
+  {'display': '18E', 'value': '18E_Class', 'supportsVacuum': true},
+  {'display': '20E', 'value': '20E_Class', 'supportsVacuum': false}, // Airbrake-only
+  {'display': '22E', 'value': '22E_Class', 'supportsVacuum': false}, // Airbrake-only
+  {'display': '33D', 'value': '33D_Class', 'supportsVacuum': true},
+  {'display': '34D', 'value': '34D_Class', 'supportsVacuum': true},
+  {'display': '34 D Nexus', 'value': '37D_Class', 'supportsVacuum': true},
+  {'display': '35D', 'value': '35D_Class', 'supportsVacuum': true},
+  {'display': '35-800D', 'value': '35-800D_Class', 'supportsVacuum': true},
+  {'display': '36D', 'value': '36D_Class', 'supportsVacuum': true},
+  {'display': '37D', 'value': '37D_Class', 'supportsVacuum': true},
+  {'display': '38D', 'value': '38D_Class', 'supportsVacuum': true},
+  {'display': '39-000D', 'value': '39-000D_Class', 'supportsVacuum': true},
+  {'display': '39-200D', 'value': '39-200D_Class', 'supportsVacuum': true},
+  {'display': '43D', 'value': '43D_Class', 'supportsVacuum': true},
+  {'display': '44D', 'value': '44D_Class', 'supportsVacuum': true},
+  {'display': '45D', 'value': '45D_Class', 'supportsVacuum': true},
+  {'display': 'TAL 2000', 'value': 'TAL2000_Class', 'supportsVacuum': true},
+];
   
   // Consist Sizing
   int selectedLocoCount = 4; 
@@ -1125,7 +1172,26 @@ if (latestVersion != null) {
                                       value: loco['value'], 
                                       child: Text(loco['display']!),
                                     )).toList(),
-                                    onChanged: (val) => setState(() => selectedLoco = val!),
+                                    onChanged: (newValue) {
+                                    if (newValue == null) return;
+
+                                    setState(() {
+                                      // 1. Update the selected locomotive
+                                      selectedLoco = newValue;
+
+                                      // 2. Check if the newly selected locomotive supports vacuum
+                                      final newlySelectedLocoData = locos.firstWhere(
+                                        (l) => l['value'] == selectedLoco,
+                                        orElse: () => {'supportsVacuum': true},
+                                      );
+                                      final bool supportsVacuum = newlySelectedLocoData['supportsVacuum'] ?? true;
+
+                                      // 3. SANITY CHECK: If vacuum isn't supported, but vacuum is currently selected, switch to AIR
+                                      if (!supportsVacuum && selectedBrakeType == 'VACUUM') {
+                                        selectedBrakeType = 'AIR'; // Or 'DUAL', depending on your default air brake key
+                                      }
+                                    });
+                                  },
                                   ),
                                   const SizedBox(height: 24),
                                   DropdownButtonFormField<String>(
@@ -1136,7 +1202,7 @@ if (latestVersion != null) {
                                       border: OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
-                                    items: brakeTypes.map((brake) => DropdownMenuItem<String>(
+                                    items: availableBrakeTypes.map((brake) => DropdownMenuItem<String>(
                                       value: brake['value'], 
                                       child: Text(brake['display']!),
                                     )).toList(),
@@ -1282,7 +1348,7 @@ if (latestVersion != null) {
                           value: selectedBrakeType.isEmpty ? null : selectedBrakeType,
                           hint: const Text("Select Brake Type"),
                           isExpanded: true,
-                          items: brakeTypes.map((type) {
+                          items: availableBrakeTypes.map((type) {
                             return DropdownMenuItem<String>(
                               value: type['value'], 
                               child: Text(type['display']!),
