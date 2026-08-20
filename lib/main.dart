@@ -468,7 +468,7 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.7.1"; // Static compile version string
+  final String currentAppVersion = "1.7.2"; // Static compile version string
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -718,6 +718,18 @@ if (latestVersion != null) {
       // Gracefully handled during processing if data is missing
     }
   }
+
+  Future<void> _handleRefresh() async {
+  setState(() {
+    // Reset your variables here
+    selectedLoco = locos.first['value'];
+    selectedBrakeType = 'AIR';
+    // Any other state variables you want to reset...
+  });
+
+  // Optional short delay so the user sees the spinner complete smoothly
+  await Future.delayed(const Duration(milliseconds: 300));
+}
   
   /// Core logic evaluating consist parameters against structural and database limits.
   void calculate() {
@@ -1104,11 +1116,11 @@ if (latestVersion != null) {
             ],
           ),
           actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: "Reset Form",
-            onPressed: () => _resetFields(),
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.refresh, color: Colors.white),
+          //   tooltip: "Reset Form",
+          //   onPressed: () => _resetFields(),
+          // ),
         ],
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
         ),
@@ -1120,7 +1132,22 @@ if (latestVersion != null) {
           child: Column(
             children: [
               // Scrollable Input Core Engine Area
-              Expanded(
+              RefreshIndicator(
+                onRefresh: () async {
+                  // Call the function that resets or refreshes your state
+                  await _handleRefresh(); 
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(), // Ensures swipe works even if content is short
+                  child: Column(
+                    children: [
+                      // Your existing form/UI widgets...
+                    ],
+                  ),
+                ),
+              ),
+
+Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
