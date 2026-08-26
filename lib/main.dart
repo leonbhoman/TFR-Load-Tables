@@ -86,6 +86,7 @@ class _LoadCalculatorFormState extends State<LoadCalculatorForm> {
   final tonsController = TextEditingController();
   final axlesController = TextEditingController();
   final TextEditingController wagonsController = TextEditingController();
+  final totalLocosController = TextEditingController();
   
   // Internal Loop Safeguard Flag for Bidirectional Coupling
   bool _isUpdatingAxlesOrWagons = false;  
@@ -468,7 +469,10 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.7.2"; // Static compile version string
+  final String currentAppVersion = "1.8.0"; 
+  // Static compile version string.
+  // Add 90 ton per dead/extra locomotive
+  
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -611,11 +615,11 @@ Future<void> _exportAndProcessReceipt({
     tonsController.dispose();
     axlesController.dispose();
     wagonsController.dispose();
+    totalLocosController.dispose();
     super.dispose();
   }
 
   /// Queries GitHub Pages host for remote version updates using cache-busting timestamp parameters.
-
   Future<void> checkForUpdates() async {
     if (_hasDeferredUpdate) return; 
     final String url = "https://leonbhoman.github.io/TFR-Load-Tables/version.json?v=${DateTime.now().millisecondsSinceEpoch}";
@@ -625,21 +629,19 @@ Future<void> _exportAndProcessReceipt({
       
       if (response.statusCode == 200) {
         final dynamic decoded = json.decode(response.body);
-      if (decoded is Map<String, dynamic>) {
-        final String? latestVersion = decoded['version']?.toString();
-        final String downloadUrl = decoded['url']?.toString() ?? "https://github.com/leonbhoman/TFR-Load-Tables/releases/latest";        if (latestVersion != null && downloadUrl != null) {
-if (latestVersion != null) {
-          if (latestVersion != currentAppVersion && mounted) {
+        if (decoded is Map<String, dynamic>) {
+          final String? latestVersion = decoded['version']?.toString();
+          final String downloadUrl = decoded['url']?.toString() ?? "https://github.com/leonbhoman/TFR-Load-Tables/releases/latest";
+          
+          if (latestVersion != null && latestVersion != currentAppVersion && mounted) {
             showUpdateDialog(latestVersion, downloadUrl);
           }
         }
-        }
       }
+    } catch (e) {
+      debugPrint("Update check error: $e");
     }
-  } catch (e) {
-    debugPrint("Update check error: $e");
   }
-}
 
   /// Displays the modal update alert dialog.
 
@@ -752,10 +754,26 @@ if (latestVersion != null) {
       return; // 👈 CRITICAL: Stops the rest of the calculate() function from running
     }
 
+    // double tons = double.tryParse(tonsController.text) ?? 0;
+    // double axles = double.tryParse(axlesController.text) ?? 1;
+    // double axleMass = (axles > 0) ? tons / axles : 0;
 
-    double tons = double.tryParse(tonsController.text) ?? 0;
-    double axles = double.tryParse(axlesController.text) ?? 1;
-    double axleMass = (axles > 0) ? tons / axles : 0;
+    // 1. Parse inputs
+double payloadTons = double.tryParse(tonsController.text) ?? 0;
+int totalLocos = int.tryParse(totalLocosController.text) ?? selectedLocoCount;
+
+// 2. Derive dead locos (Total minus Live dropdown value)
+int deadLocos = totalLocos > selectedLocoCount ? (totalLocos - selectedLocoCount) : 0;
+double totalDeadLocoMass = deadLocos * 90.0;
+
+// 3. Gross mass evaluated against route limits
+double tons = payloadTons + totalDeadLocoMass;
+
+// 4. Wagon axle load check remains strictly payload-based
+double axles = double.tryParse(axlesController.text) ?? 1;
+double axleMass = (axles > 0) ? payloadTons / axles : 0;
+
+  // ... rest of your calculation logic remains unchanged ...
     
     String blockKey = "";
     String warning = "";
@@ -1057,22 +1075,22 @@ if (latestVersion != null) {
                       Navigator.of(context).pop();
                       
                       await _exportAndProcessReceipt(
-                        locoCount: selectedLocoCount.toString(),
-                        locoName: displayLocoName,
-                        route: selectedRoute,
-                        gcValue: targetGC.toString(),
-                        baseCap: baselineMaxTons.toString(),
-                        wagonAllowance: allowanceTons.toString(),
-                        estWagons: estimatedWagons.toStringAsFixed(0),
-                        totalLimit: totalAllowedTons.toString(),
-                        inputTons: tons.toString(),
-                        weightMarginStr: combinedMarginStr,
-                        totalLength: totalTrainLength.toStringAsFixed(1),
-                        brakingPercentage: selectedBrakeType == 'AIRBRAKE' 
-                              ? "N/A for Airbrake" 
-                              : "${totalBrakingPercentage.toStringAsFixed(2)}%", // Pass fully formatted string                        
-                        bufferPlay: totalBufferPlay.toStringAsFixed(0),
-                      );
+                      locoCount: selectedLocoCount.toString(),
+                      locoName: displayLocoName,
+                      route: selectedRoute,
+                      gcValue: targetGC.toString(),
+                      baseCap: baselineMaxTons.toString(),
+                      wagonAllowance: allowanceTons.toString(),
+                      estWagons: estimatedWagons.toStringAsFixed(0),
+                      totalLimit: totalAllowedTons.toString(),
+                      inputTons: tons.toString(),
+                      weightMarginStr: combinedMarginStr,
+                      totalLength: totalTrainLength.toStringAsFixed(1),
+                      brakingPercentage: selectedBrakeType == 'AIRBRAKE' 
+                            ? "N/A for Airbrake" 
+                            : "${totalBrakingPercentage.toStringAsFixed(2)}%",                       
+                      bufferPlay: totalBufferPlay.toStringAsFixed(0),
+                    );
                     },
                     label: const Text("CONFIRM", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                   ),
@@ -1132,28 +1150,18 @@ if (latestVersion != null) {
           child: Column(
             children: [
               // Scrollable Input Core Engine Area
-              RefreshIndicator(
-                onRefresh: () async {
-                  // Call the function that resets or refreshes your state
-                  await _handleRefresh(); 
-                },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(), // Ensures swipe works even if content is short
-                  child: Column(
-                    children: [
-                      // Your existing form/UI widgets...
-                    ],
-                  ),
-                ),
-              ),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: _handleRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(), // Required for swipe to trigger when content fits screen
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+          if (isWideScreen) ...[
 
-Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (isWideScreen) ...[
+                       
                         // ===================================================================
                         // DESKTOP WIDE GRID VIEW (Unified Floating Label Architecture)
                         // ===================================================================
@@ -1267,22 +1275,43 @@ Expanded(
                                     onChanged: (val) => setState(() => selectedRoute = val!),
                                   ),
                                   const SizedBox(height: 24),
-                                  DropdownButtonFormField<int>(
-                                    initialValue: selectedLocoCount,
-                                    isExpanded: true,
-                                    decoration: const InputDecoration(
-                                      labelText: "Number of Locos (Live locos only)",
-                                      border: OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                                    ),
-                                    items: locoCounts.map((int value) {
-                                      return DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text("$value Locomotive${value > 1 ? 's' : ''}"),
-                                      );
-                                    }).toList(),
-                                    onChanged: (val) => setState(() => selectedLocoCount = val!),
-                                  ),
+                                 Row(
+  children: [
+    Expanded(
+      child: DropdownButtonFormField<int>(
+        initialValue: selectedLocoCount,
+        isExpanded: true,
+        decoration: const InputDecoration(
+          labelText: "Live Locos",
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        ),
+        items: locoCounts.map((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text("$value Live"),
+          );
+        }).toList(),
+        onChanged: (val) => setState(() => selectedLocoCount = val!),
+      ),
+    ),
+    const SizedBox(width: 12),
+    Expanded(
+      child: TextField(
+        controller: totalLocosController,
+        keyboardType: TextInputType.number,
+        onSubmitted: (_) => calculate(),
+        decoration: const InputDecoration(
+          labelText: "Total Locos",
+          hintText: "e.g. 5",
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        ),
+      ),
+    ),
+  ],
+),
+
                                   const SizedBox(height: 98),
                                   // const SizedBox(height: 58),
                                   // const SizedBox(height: 24),
@@ -1311,8 +1340,7 @@ Expanded(
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                          ]),
                             ),
 
                             // 4. Far Right Column (Empty Margin)
@@ -1424,7 +1452,7 @@ Expanded(
                                 ),
                               ),
                             ),
-                      ]
+                      ],
                       ),
                       ],
                       const SizedBox(height: 24),
@@ -1479,24 +1507,25 @@ if (totalTrainLength > 0 && axleValidationError == null) ...[
 
             const SizedBox(height: 40),
 
-              // Verify Load Button
-              Center(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
-                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                    shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0))),
-                    elevation: WidgetStateProperty.all<double>(3),
+              // Verify Load // Verify Load Button
+                      Center(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            minimumSize: WidgetStateProperty.all<Size>(const Size(240, 54)),
+                            backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) => states.contains(WidgetState.pressed) ? Colors.green.shade900 : Colors.green.shade700),
+                            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                            shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0))),
+                            elevation: WidgetStateProperty.all<double>(3),
+                          ),
+                          onPressed: calculate, 
+                          child: const Text("VERIFY LOAD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2)),
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: calculate, 
-                  child: const Text("VERIFY LOAD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2)),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
 
             // Co-authored Footer Bar
             Container(
@@ -1508,12 +1537,12 @@ if (totalTrainLength > 0 && axleValidationError == null) ...[
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade600, letterSpacing: 0.5),
               ),
-              ),
-            ],
-          ),
-        );
-      },
-    )
-    );
-  }
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+);
+}
 }
