@@ -472,7 +472,7 @@ Future<void> _exportAndProcessReceipt({
   final String currentAppVersion = "1.8.0"; 
   // Static compile version string.
   // Add 90 ton per dead/extra locomotive
-  
+
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -1289,7 +1289,7 @@ double axleMass = (axles > 0) ? payloadTons / axles : 0;
         items: locoCounts.map((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text("$value Live"),
+            child: Text("$value"),
           );
         }).toList(),
         onChanged: (val) => setState(() => selectedLocoCount = val!),
