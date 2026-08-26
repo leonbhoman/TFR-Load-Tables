@@ -88052,7 +88052,7 @@ return this.a.ch=s},
 $S:0}
 B.apv.prototype={
 $1(a){var s=null
-return B.kW(B.bR(""+a+" Live",s,s,s,s,s,s),a,t.S)},
+return B.kW(B.bR(""+a,s,s,s,s,s,s),a,t.S)},
 $S:193}
 B.apw.prototype={
 $1(a){var s=this.a
