@@ -825,9 +825,19 @@ double axleMass = (axles > 0) ? payloadTons / axles : 0;
     int baselineMaxTons = 0;
     bool foundRowMatch = false;
 
+    // Map individual UI loco keys to shared JSON data keys
+  String jsonLocoKey = selectedLoco;
+  if (['6E1_Class', '16E_Class', '17E_Class'].contains(selectedLoco)) {
+    jsonLocoKey = '6E1_16E_17E_Class';
+  } else if (['7E_Class', '10E_Class'].contains(selectedLoco)) {
+    jsonLocoKey = '7E_10E_Class';
+  } else if (['34D_Nexus_Class', '37D_Class'].contains(selectedLoco)) {
+    jsonLocoKey = '37D_Class';
+  }
+
     // Database Lookup Engine
-        if (locoData.containsKey(selectedLoco)) {
-      var classData = locoData[selectedLoco];
+        if (locoData.containsKey(jsonLocoKey)) {
+      var classData = locoData[jsonLocoKey];
       if (classData != null && classData.containsKey(blockKey)) {
         List<dynamic> blockDataList = classData[blockKey];
         Map<String, dynamic>? rowMatch;
@@ -880,7 +890,7 @@ double axleMass = (axles > 0) ? payloadTons / axles : 0;
       Color headerColor = isFailureState ? Colors.red : Colors.green;
       
       String displayLocoName = locos.firstWhere((l) => l['value'] == selectedLoco)['display']!;
-      
+
       showDialog(
         context: context,
         barrierDismissible: false, // Prevents accidentally tapping outside to close
