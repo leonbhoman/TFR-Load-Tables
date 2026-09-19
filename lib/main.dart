@@ -24,6 +24,7 @@ import 'package:share_plus/share_plus.dart'; // Native OS sharing sheet
 import 'package:path_provider/path_provider.dart'; // Native local file paths
 import 'package:universal_html/html.dart' as html; // Web DOM/Blob handling
 import 'package:qr_flutter/qr_flutter.dart'; // Handles screen rendering of QR codes
+import 'package:package_info_plus/package_info_plus.dart';
 
 // =============================================================================
 // SECTION 2: MAIN APPLICATION ENTRY POINT
@@ -469,10 +470,9 @@ Future<void> _exportAndProcessReceipt({
   // SECTION 6: VERSION CONTROL & LIVE AUTOMATIC UPDATER
   // =========================================================================== 
 
-  final String currentAppVersion = "1.8.0"; 
+  // final String currentAppVersion = "1.8.0"; 
   // Static compile version string.
-  // Add 90 ton per dead/extra locomotive
-
+  String currentAppVersion = 'Loading...';
   bool _hasDeferredUpdate = false; // Prevents update dialog spamming
   
   // Operational Configurations & Static Route Data
@@ -593,6 +593,7 @@ Future<void> _exportAndProcessReceipt({
 @override
   void initState() {
     super.initState();
+    _loadAppVersion();
     
     // Bind input listeners
     axlesController.addListener(_onAxlesChanged);
@@ -605,6 +606,14 @@ Future<void> _exportAndProcessReceipt({
       }
     });
   }
+
+  Future<void> _loadAppVersion() async {
+  final packageInfo = await PackageInfo.fromPlatform();
+  setState(() {
+    currentAppVersion = packageInfo.version; 
+    // Or use: 'v${packageInfo.version}+${packageInfo.buildNumber}'
+  });
+}
 
   @override
   void dispose() {

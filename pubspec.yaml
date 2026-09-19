@@ -2,7 +2,7 @@ name: load_tables
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.8.0+1
+version: 1.8.1+1
 
 environment:
   sdk: ^3.11.5
@@ -19,6 +19,7 @@ dependencies:
   share_plus: ^13.2.0
   path_provider: ^2.1.1
   universal_html: ^2.3.0
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:
